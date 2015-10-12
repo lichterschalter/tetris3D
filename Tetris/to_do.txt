@@ -26,3 +26,16 @@ x animation verlangsamen, stockend machen
 - userdefinierte pixel per block
 - grid
 x background color
+
+
+-------
+LAB Ib:
+-------
+
+- gravitation
+- mehr objekte
+- nicht überlappend
+- game border
+- scoring
+- user interface
+- texture

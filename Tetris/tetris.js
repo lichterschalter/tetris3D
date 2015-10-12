@@ -178,6 +178,21 @@ function rotateObject() {
     }
 }
 
+
+var gravitySpeed = 0.5;
+var timeElapsed = new Date().getSeconds();
+
+function gravity() {
+  var timeNow = new Date().getSeconds();
+  gravitySpeed -= ( timeNow - timeElapsed );
+  timeElapsed = timeNow;
+  console.log( timeElapsed, timeNow, gravitySpeed );
+  if ( gravitySpeed <= 0 || gravitySpeed > 0.5){
+    positionY_four_x_four -= 1;
+    gravitySpeed = 0.5;
+  }
+}
+
 var one_x_fourVertexPositionBuffer;
 var one_x_fourVertexColorBuffer;
 var four_x_fourPositionBuffer;
@@ -265,6 +280,30 @@ function initBuffers() {
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
     bgColorBuffer.itemSize = 4;
     bgColorBuffer.numItems = 4;
+
+
+    //GAME BORDER
+    gameBorderPositionBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, gameBorderPositionBuffer);
+    vertices = [
+         9.5,  7.0,  0.0,
+        -0.5,  7.0,  0.0,
+         9.5, -7.0,  0.0,
+        -0.5, -7.0,  0.0
+        ];
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+    gameBorderPositionBuffer.itemSize = 3;
+    gameBorderPositionBuffer.numItems = 4;
+
+    gameBorderColorBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, gameBorderColorBuffer);
+    colors = []
+    for (var i=0; i < 4; i++) {
+        colors = colors.concat([ (red + 0.4) , (green + 0.4), (blue + 0.4), 1.0]);
+    }
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
+    gameBorderColorBuffer.itemSize = 4;
+    gameBorderColorBuffer.numItems = 4;
 }
 
 
@@ -273,7 +312,7 @@ var rotate_one_x_four = 0;
 var rotate_four_x_four = 0;
 var positionX_one_x_four = -1.0;
 var positionY_one_x_four = 0.0;
-var positionZ_one_x_four = -7.0;
+var positionZ_one_x_four = -20.0;
 var positionX_four_x_four = 2.5;
 var positionY_four_x_four = 0.0;
 var positionZ_four_x_four = 0.0;
@@ -286,7 +325,9 @@ function drawScene() {
 
     mat4.identity(mvMatrix);
 
+    //not shure if this is a good part for this code snippet
     rotateObject();
+    gravity();
 
 
     //DRAW ONE X FOUR
@@ -324,8 +365,27 @@ function drawScene() {
     mvPopMatrix();
 
 
+    //DRAW GAME BORDER
+    mat4.identity(mvMatrix);
+    mat4.translate(mvMatrix, [0, 0, -20]);
+
+    mvPushMatrix();
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, gameBorderPositionBuffer);
+    gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, gameBorderPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, gameBorderColorBuffer);
+    gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, gameBorderColorBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+    setMatrixUniforms();
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, gameBorderPositionBuffer.numItems);
+
+    mvPopMatrix();
+
+
     //DRAW BACKGROUND
-    mat4.translate(mvMatrix, [0, 0, -10]);
+    mat4.identity(mvMatrix);
+    mat4.translate(mvMatrix, [0, 0, -20.1]);
 
     mvPushMatrix();
 
@@ -342,19 +402,9 @@ function drawScene() {
 }
 
 
-var lastTime = 0;
+
 
 function animate() {
-  /*
-    var timeNow = new Date().getTime();
-    if (lastTime != 0) {
-        var elapsed = timeNow - lastTime;
-
-        rotate_one_x_four += (90 * elapsed) / 1000.0;
-        rotate_four_x_four += (75 * elapsed) / 1000.0;
-    }
-    lastTime = timeNow;
-  */
 }
 
 
