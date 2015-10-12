@@ -25,3 +25,4 @@ x animation verlangsamen, stockend machen
   designentscheidung: bewegung nur durch tastendrücken, nicht durch halten
 - userdefinierte pixel per block
 - grid
+x background color
