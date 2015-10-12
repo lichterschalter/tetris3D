@@ -15,12 +15,12 @@ x richtige objekte initialisieren
   x- einfärbig
   x- zufallsfarbe
 x objekte am grid ausrichten
-- bewegung mit keypads einfügen
+x bewegung mit keypads einfügen
   x- position
   x- rotation
   x- rotation mit einschnappen
   x- rotation rundungsfehler beseitigen
-  -- rotation nicht mit gegensätzlichem key unterbrechen können
+  x- rotation nicht mit gegensätzlichem key unterbrechen können
 x animation verlangsamen, stockend machen
   designentscheidung: bewegung nur durch tastendrücken, nicht durch halten
 - userdefinierte pixel per block
@@ -33,9 +33,15 @@ LAB Ib:
 -------
 
 - gravitation
+  x- basic gravitation
+  x- toogle on/off
+  -- arrow down it falls down
+- grid & nicht überlappend
+  -- grid array
+  -- colision detection
+  -- am boden ankommen & neues objekt
 - mehr objekte
-- nicht überlappend
-- game border
 - scoring
+  -- reiche voll, löschen, alles darüber nach unten
 - user interface
 - texture
