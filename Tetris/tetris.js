@@ -132,25 +132,29 @@ function handleKeys() {
         rotate_clockwise = true;
         currentlyPressedKeys[51] = false;
     }
-    if (currentlyPressedKeys[37]) {
-        // Left cursor key
+    if (currentlyPressedKeys[37] || currentlyPressedKeys[65]) {
+        // Left cursor key or a
         positionX_four_x_four -= 1;
         currentlyPressedKeys[37] = false;
+        currentlyPressedKeys[65] = false;
     }
-    if (currentlyPressedKeys[39]) {
-        // Right cursor key
+    if (currentlyPressedKeys[39] || currentlyPressedKeys[68]) {
+        // Right cursor key or d
         positionX_four_x_four += 1;
         currentlyPressedKeys[39] = false;
+        currentlyPressedKeys[68] = false;
     }
-    if (currentlyPressedKeys[38]) {
-        // Up cursor key
+    if (currentlyPressedKeys[38] || currentlyPressedKeys[87]) {
+        // Up cursor key or w
         positionY_four_x_four += 1;
         currentlyPressedKeys[38] = false;
+        currentlyPressedKeys[87] = false;
     }
-    if (currentlyPressedKeys[40]) {
-        // Down cursor key
+    if (currentlyPressedKeys[40] || currentlyPressedKeys[83]) {
+        // Down cursor key or s
         positionY_four_x_four -= 1;
         currentlyPressedKeys[40] = false;
+        currentlyPressedKeys[83] = false;
     }
 }
 
