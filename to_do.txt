@@ -1,0 +1,8 @@
+to do:
+
+x bewegung entfernen
+x richtige objekte initialisieren
+  x- richtige größe
+  x- einfärbig
+  x- zufallsfarbe
+- bewegung mit keypads einfügen
