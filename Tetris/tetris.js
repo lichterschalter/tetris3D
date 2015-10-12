@@ -118,15 +118,19 @@ function handleKeyUp(event) {
     currentlyPressedKeys[event.keyCode] = false;
 }
 
+var rotate_clockwise = false;
+var rotate_counterclock = false;
 
 function handleKeys() {
-    if (currentlyPressedKeys[33]) {
-        // Page Up
-
+    if (currentlyPressedKeys[49]) {
+        // Number One
+        rotate_counterclock = true;
+        currentlyPressedKeys[49] = false;
     }
-    if (currentlyPressedKeys[34]) {
-        // Page Down
-
+    if (currentlyPressedKeys[51]) {
+        // Number Three
+        rotate_clockwise = true;
+        currentlyPressedKeys[51] = false;
     }
     if (currentlyPressedKeys[37]) {
         // Left cursor key
@@ -150,6 +154,25 @@ function handleKeys() {
     }
 }
 
+var rotationTrace = 0;
+function rotateObject() {
+    var change = degToRad( 45 );
+    if ( rotationTrace <= 90 ){
+       if ( rotate_clockwise ){
+         rotate_four_x_four += change;
+         rotationTrace += change;
+       }
+       if ( rotate_counterclock ){
+         rotate_four_x_four -= change;
+         rotationTrace += change;
+       }
+    }else{
+      rotate_clockwise = false;
+      rotate_counterclock = false;
+      rotationTrace = 0;
+      rotate_four_x_four = Math.round( rotate_four_x_four);
+    }
+}
 
 var one_x_fourVertexPositionBuffer;
 var one_x_fourVertexColorBuffer;
@@ -228,10 +251,13 @@ function drawScene() {
 
     mat4.identity(mvMatrix);
 
+    rotateObject();
+
+
     mat4.translate(mvMatrix, [positionX_one_x_four, positionY_one_x_four, positionZ_one_x_four]);
 
     mvPushMatrix();
-    mat4.rotate(mvMatrix, degToRad(rotate_one_x_four), [0, 1, 0]);
+    mat4.rotate(mvMatrix, degToRad(rotate_one_x_four), [0, 0, 1]);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, one_x_fourVertexPositionBuffer);
     gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, one_x_fourVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
@@ -247,7 +273,7 @@ function drawScene() {
     mat4.translate(mvMatrix, [positionX_four_x_four, positionY_four_x_four, positionZ_four_x_four]);
 
     mvPushMatrix();
-    mat4.rotate(mvMatrix, degToRad(rotate_four_x_four), [1, 0, 0]);
+    mat4.rotate(mvMatrix, degToRad(rotate_four_x_four), [0, 0, 1]);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, four_x_fourPositionBuffer);
     gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, four_x_fourPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
