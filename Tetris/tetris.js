@@ -146,13 +146,14 @@ function handleKeys() {
     }
     if (currentlyPressedKeys[38] || currentlyPressedKeys[87]) {
         // Up cursor key or w
-        positionY_four_x_four += 1;
+        gravityIsOn = false;
         currentlyPressedKeys[38] = false;
         currentlyPressedKeys[87] = false;
     }
     if (currentlyPressedKeys[40] || currentlyPressedKeys[83]) {
         // Down cursor key or s
-        positionY_four_x_four -= 1;
+        gravityIsOn = true;
+        timeElapsed = new Date().getSeconds();
         currentlyPressedKeys[40] = false;
         currentlyPressedKeys[83] = false;
     }
@@ -178,18 +179,20 @@ function rotateObject() {
     }
 }
 
-
+var gravityIsOn = false;
 var gravitySpeed = 0.5;
 var timeElapsed = new Date().getSeconds();
 
 function gravity() {
-  var timeNow = new Date().getSeconds();
-  gravitySpeed -= ( timeNow - timeElapsed );
-  timeElapsed = timeNow;
-  console.log( timeElapsed, timeNow, gravitySpeed );
-  if ( gravitySpeed <= 0 || gravitySpeed > 0.5){
-    positionY_four_x_four -= 1;
-    gravitySpeed = 0.5;
+  if( gravityIsOn ){
+    var timeNow = new Date().getSeconds();
+    gravitySpeed -= ( timeNow - timeElapsed );
+    timeElapsed = timeNow;
+    console.log( timeElapsed, timeNow, gravitySpeed );
+    if ( gravitySpeed <= 0 || gravitySpeed > 0.5){
+      positionY_four_x_four -= 1;
+      gravitySpeed = 0.5;
+    }
   }
 }
 
