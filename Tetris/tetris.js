@@ -122,12 +122,12 @@ var rotate_clockwise = false;
 var rotate_counterclock = false;
 
 function handleKeys() {
-    if (currentlyPressedKeys[49]) {
+    if (currentlyPressedKeys[49] && !rotate_clockwise) {
         // Number One
         rotate_counterclock = true;
         currentlyPressedKeys[49] = false;
     }
-    if (currentlyPressedKeys[51]) {
+    if (currentlyPressedKeys[51] && !rotate_counterclock) {
         // Number Three
         rotate_clockwise = true;
         currentlyPressedKeys[51] = false;
