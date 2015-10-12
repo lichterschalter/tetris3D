@@ -213,10 +213,10 @@ function initBuffers() {
 
 var rotate_one_x_four = 0;
 var rotate_four_x_four = 0;
-var positionX_one_x_four = -1.5;
+var positionX_one_x_four = -1.0;
 var positionY_one_x_four = 0.0;
 var positionZ_one_x_four = -7.0;
-var positionX_four_x_four = 3.0;
+var positionX_four_x_four = 2.5;
 var positionY_four_x_four = 0.0;
 var positionZ_four_x_four = 0.0;
 

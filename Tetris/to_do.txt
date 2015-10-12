@@ -1,0 +1,23 @@
+TO DO FILE:
+
+---------------------------------------------------------------------
+this file is not a documentation file, it just helps me to keep track
+of the things i need to code.
+---------------------------------------------------------------------
+
+-------
+LAB Ia:
+-------
+
+x bewegung entfernen
+x richtige objekte initialisieren
+  x- richtige größe
+  x- einfärbig
+  x- zufallsfarbe
+x objekte am grid ausrichten
+- bewegung mit keypads einfügen
+  x- position
+  -- rotation
+x animation verlangsamen, stockend machen
+  designentscheidung: bewegung nur durch tastendrücken, nicht durch halten
+- grid
