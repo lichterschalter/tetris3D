@@ -23,4 +23,5 @@ x objekte am grid ausrichten
   -- rotation nicht mit gegensätzlichem key unterbrechen können
 x animation verlangsamen, stockend machen
   designentscheidung: bewegung nur durch tastendrücken, nicht durch halten
+- userdefinierte pixel per block
 - grid

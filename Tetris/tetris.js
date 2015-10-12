@@ -179,7 +179,10 @@ var one_x_fourVertexColorBuffer;
 var four_x_fourPositionBuffer;
 var four_x_fourColorBuffer;
 
+
 function initBuffers() {
+
+    //ONE X FOUR OBJECT
     one_x_fourVertexPositionBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, one_x_fourVertexPositionBuffer);
     var vertices = [
@@ -206,6 +209,7 @@ function initBuffers() {
     one_x_fourVertexColorBuffer.numItems = 4;
 
 
+    //FOUR X FOUR OBJECT
     four_x_fourPositionBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, four_x_fourPositionBuffer);
     vertices = [
@@ -230,6 +234,33 @@ function initBuffers() {
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
     four_x_fourColorBuffer.itemSize = 4;
     four_x_fourColorBuffer.numItems = 4;
+
+
+    //BACKGROUND
+    bgPositionBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, bgPositionBuffer);
+    vertices = [
+         100.0,  100.0,  0.0,
+        -100.0,  100.0,  0.0,
+         100.0, -100.0,  0.0,
+        -100.0, -100.0,  0.0
+        ];
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+    bgPositionBuffer.itemSize = 3;
+    bgPositionBuffer.numItems = 4;
+
+    bgColorBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, bgColorBuffer);
+    var red = Math.random();
+    var green = Math.random();
+    var blue = Math.random();
+    colors = []
+    for (var i=0; i < 4; i++) {
+        colors = colors.concat([red, green, blue, 1.0]);
+    }
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
+    bgColorBuffer.itemSize = 4;
+    bgColorBuffer.numItems = 4;
 }
 
 
@@ -254,6 +285,7 @@ function drawScene() {
     rotateObject();
 
 
+    //DRAW ONE X FOUR
     mat4.translate(mvMatrix, [positionX_one_x_four, positionY_one_x_four, positionZ_one_x_four]);
 
     mvPushMatrix();
@@ -270,6 +302,7 @@ function drawScene() {
     mvPopMatrix();
 
 
+    //DRAW FOUR X FOUR
     mat4.translate(mvMatrix, [positionX_four_x_four, positionY_four_x_four, positionZ_four_x_four]);
 
     mvPushMatrix();
@@ -283,6 +316,23 @@ function drawScene() {
 
     setMatrixUniforms();
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, four_x_fourPositionBuffer.numItems);
+
+    mvPopMatrix();
+
+
+    //DRAW BACKGROUND
+    mat4.translate(mvMatrix, [0, 0, -10]);
+
+    mvPushMatrix();
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, bgPositionBuffer);
+    gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, bgPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, bgColorBuffer);
+    gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, bgColorBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+    setMatrixUniforms();
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, bgPositionBuffer.numItems);
 
     mvPopMatrix();
 }
