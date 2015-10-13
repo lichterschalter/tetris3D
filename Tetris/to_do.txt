@@ -21,6 +21,7 @@ x bewegung mit keypads einfügen
   x- rotation mit einschnappen
   x- rotation rundungsfehler beseitigen
   x- rotation nicht mit gegensätzlichem key unterbrechen können
+  -- rotation darf position nicht verändern
 x animation verlangsamen, stockend machen
   designentscheidung: bewegung nur durch tastendrücken, nicht durch halten
 - userdefinierte pixel per block
@@ -37,9 +38,12 @@ LAB Ib:
   x- toogle on/off
   -- arrow down it falls down
 - grid & nicht überlappend
-  -- grid array
+  x- grid array true/false
+  -- grid array mit mehr infos: welches objekt, position,...
   -- colision detection
   -- am boden ankommen & neues objekt
+- objekt orientiert
+  -- alle tetris objekte verkapseln
 - mehr objekte
 - scoring
   -- reiche voll, löschen, alles darüber nach unten
