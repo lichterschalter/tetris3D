@@ -118,6 +118,7 @@ function handleKeyUp(event) {
     currentlyPressedKeys[event.keyCode] = false;
 }
 
+
 var rotate_clockwise = false;
 var rotate_counterclock = false;
 
@@ -161,7 +162,9 @@ function handleKeys() {
     }
 }
 
+
 var rotationTrace = 0;
+
 function rotateObject() {
     var change = degToRad( 45 );
     if ( rotationTrace <= 90 ){
@@ -181,6 +184,7 @@ function rotateObject() {
     }
 }
 
+
 var gravityIsOn = false;
 var gravitySpeed = 0.5;
 var timeElapsed = new Date().getSeconds();
@@ -198,11 +202,42 @@ function gravity() {
   }
 }
 
+
+function gridArray() {
+    //create grid array
+    this.blocks = new Array(15); //y-axis
+    for ( var i = 0; i < this.blocks.length; ++i ){
+        this.blocks[ i ] = new Array(10);
+        for ( var j = 0; j < this.blocks[ i ].length; ++j ){ //x-axis
+            this.blocks[ i ][ j ] = false;
+        }
+    }
+
+    this.getInfo = function() {
+        for ( var i = 0; i < this.blocks.length; ++i ){
+            console.log(
+              i + ": " +
+              "|" +
+              this.blocks[ i ][ 0 ].toString() + " | " +
+              this.blocks[ i ][ 1 ].toString() + " | " +
+              this.blocks[ i ][ 2 ].toString() + " | " +
+              this.blocks[ i ][ 3 ].toString() + " | " +
+              this.blocks[ i ][ 4 ].toString() + " | " +
+              this.blocks[ i ][ 5 ].toString() + " | " +
+              this.blocks[ i ][ 6 ].toString() + " | " +
+              this.blocks[ i ][ 7 ].toString() + " | " +
+              this.blocks[ i ][ 8 ].toString() + " | " +
+              this.blocks[ i ][ 9 ].toString() + " | "
+            );
+        }
+    }
+}
+
+
 var one_x_fourVertexPositionBuffer;
 var one_x_fourVertexColorBuffer;
 var four_x_fourPositionBuffer;
 var four_x_fourColorBuffer;
-
 
 function initBuffers() {
 
@@ -312,7 +347,6 @@ function initBuffers() {
 }
 
 
-
 var rotate_one_x_four = 0;
 var rotate_four_x_four = 0;
 var positionX_one_x_four = -1.0;
@@ -407,8 +441,6 @@ function drawScene() {
 }
 
 
-
-
 function animate() {
 }
 
@@ -432,6 +464,11 @@ function webGLStart() {
 
     document.onkeydown = handleKeyDown;
     document.onkeyup = handleKeyUp;
+
+    /*
+    grid = new gridArray();
+    grid.getInfo();
+    */
 
     tick();
 }
