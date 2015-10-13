@@ -147,12 +147,14 @@ function handleKeys() {
     if (currentlyPressedKeys[38] || currentlyPressedKeys[87]) {
         // Up cursor key or w
         gravityIsOn = false;
+        positionY_four_x_four += 1;
         currentlyPressedKeys[38] = false;
         currentlyPressedKeys[87] = false;
     }
     if (currentlyPressedKeys[40] || currentlyPressedKeys[83]) {
         // Down cursor key or s
-        gravityIsOn = true;
+        gravityIsOn = false;
+        positionY_four_x_four -= 1;
         timeElapsed = new Date().getSeconds();
         currentlyPressedKeys[40] = false;
         currentlyPressedKeys[83] = false;
@@ -208,10 +210,10 @@ function initBuffers() {
     one_x_fourVertexPositionBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, one_x_fourVertexPositionBuffer);
     var vertices = [
-        0.5,  2.0,  0.0,
-       -0.5,  2.0,  0.0,
-        0.5, -2.0,  0.0,
-       -0.5, -2.0,  0.0
+        0.0,  2.5,  0.0,
+       -1.0,  2.5,  0.0,
+        0.0, -1.5,  0.0,
+       -1.0, -1.5,  0.0
     ];
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
     one_x_fourVertexPositionBuffer.itemSize = 3;
@@ -235,10 +237,10 @@ function initBuffers() {
     four_x_fourPositionBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, four_x_fourPositionBuffer);
     vertices = [
-         1.0,  1.0,  0.0,
-        -1.0,  1.0,  0.0,
-         1.0, -1.0,  0.0,
-        -1.0, -1.0,  0.0
+         0.5,  1.5,  0.0,
+        -1.5,  1.5,  0.0,
+         0.5, -0.5,  0.0,
+        -1.5, -0.5,  0.0
         ];
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
     four_x_fourPositionBuffer.itemSize = 3;
@@ -289,10 +291,10 @@ function initBuffers() {
     gameBorderPositionBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, gameBorderPositionBuffer);
     vertices = [
-         9.5,  7.0,  0.0,
-        -0.5,  7.0,  0.0,
-         9.5, -7.0,  0.0,
-        -0.5, -7.0,  0.0
+        10.0,  7.5,  0.0,
+         0.0,  7.5,  0.0,
+        10.0, -7.5,  0.0,
+         0.0, -7.5,  0.0
         ];
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
     gameBorderPositionBuffer.itemSize = 3;
