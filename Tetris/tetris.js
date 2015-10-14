@@ -148,14 +148,14 @@ function handleKeys() {
     if (currentlyPressedKeys[38] || currentlyPressedKeys[87]) {
         // Up cursor key or w
         gravityIsOn = false;
-        positionY_four_x_four += 1;
+        //positionY_four_x_four += 1;
         currentlyPressedKeys[38] = false;
         currentlyPressedKeys[87] = false;
     }
     if (currentlyPressedKeys[40] || currentlyPressedKeys[83]) {
         // Down cursor key or s
-        gravityIsOn = false;
-        positionY_four_x_four -= 1;
+        gravityIsOn = true;
+        //positionY_four_x_four -= 1;
         timeElapsed = new Date().getSeconds();
         currentlyPressedKeys[40] = false;
         currentlyPressedKeys[83] = false;
@@ -424,7 +424,7 @@ function drawScene() {
 
     //DRAW BACKGROUND
     mat4.identity(mvMatrix);
-    mat4.translate(mvMatrix, [0, 0, -20.1]);
+    mat4.translate(mvMatrix, [0, 0, -30.1]);
 
     mvPushMatrix();
 
@@ -465,10 +465,8 @@ function webGLStart() {
     document.onkeydown = handleKeyDown;
     document.onkeyup = handleKeyUp;
 
-    /*
     grid = new gridArray();
     grid.getInfo();
-    */
 
     tick();
 }

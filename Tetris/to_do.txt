@@ -39,13 +39,39 @@ LAB Ib:
   -- arrow down it falls down
 - grid & nicht überlappend
   x- grid array true/false
-  -- grid array mit mehr infos: welches objekt, position,...
-  -- colision detection
+  -- aktives objekt im grid array mitverfolgen (position true setzen)
   -- am boden ankommen & neues objekt
-- objekt orientiert
-  -- alle tetris objekte verkapseln
+     objekt zerstören und ident im netz nachbilden
+     neues objekt erzeugen
+  -- globale vars nur für aktives objekt
+  -- collision detection (in gravity und handlekeys)
+     überprüfen ob anliegendes array kästchen im grid frei ist
+- random aktives objekt
+  flag in draw setzen und nur eines der vier objekte
+  an der immer gleichen position zeichnen
 - mehr objekte
 - scoring
   -- reiche voll, löschen, alles darüber nach unten
 - user interface
 - texture
+
+
+OBJEKTORIENTIERUNG ??
+
+- tetris objekt (buffer, draw)
+  -- vars: position, rotation, farbe, form
+  -- zeichnen funktion (position, farbe, zeichnen)
+
+
+VARIANTENAUSWAHL
+- aktives objekt im netz mitverfolgen, aber besteht auserhalb davon
+  collision detection: einfach benachbarte kästchen anschaun
+- das netz repräsentiert inaktive objekte
+
+
+-------
+QUESTIONS TUTORIUM
+-------
+
+- rotation not centered
+- units per block
