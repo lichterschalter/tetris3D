@@ -164,7 +164,6 @@ function handleKeys() {
 
 
 var rotationTrace = 0;
-
 function rotateObject() {
     var change = degToRad( 45 );
     if ( rotationTrace <= 90 ){
@@ -272,10 +271,10 @@ function initBuffers() {
     four_x_fourPositionBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, four_x_fourPositionBuffer);
     vertices = [
-         0.5,  1.5,  0.0,
-        -1.5,  1.5,  0.0,
-         0.5, -0.5,  0.0,
-        -1.5, -0.5,  0.0
+         1.0,  1.0,  0.0,
+        -1.0,  1.0,  0.0,
+         1.0, -1.0,  0.0,
+        -1.0, -1.0,  0.0
         ];
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
     four_x_fourPositionBuffer.itemSize = 3;
@@ -352,7 +351,7 @@ var rotate_four_x_four = 0;
 var positionX_one_x_four = -1.0;
 var positionY_one_x_four = 0.0;
 var positionZ_one_x_four = -20.0;
-var positionX_four_x_four = 2.5;
+var positionX_four_x_four = 2.0;
 var positionY_four_x_four = 0.0;
 var positionZ_four_x_four = 0.0;
 
