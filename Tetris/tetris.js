@@ -125,37 +125,37 @@ var rotate_counterclock = false;
 function handleKeys() {
     if (currentlyPressedKeys[49] && !rotate_clockwise) {
         // Number One
-        rotate_counterclock = true;
+        rotate_clockwise = true;
         currentlyPressedKeys[49] = false;
     }
     if (currentlyPressedKeys[51] && !rotate_counterclock) {
         // Number Three
-        rotate_clockwise = true;
+        rotate_counterclock = true;
         currentlyPressedKeys[51] = false;
     }
     if (currentlyPressedKeys[37] || currentlyPressedKeys[65]) {
         // Left cursor key or a
-        positionX_four_x_four -= 1;
+        positionX_one_x_four -= 1;
         currentlyPressedKeys[37] = false;
         currentlyPressedKeys[65] = false;
     }
     if (currentlyPressedKeys[39] || currentlyPressedKeys[68]) {
         // Right cursor key or d
-        positionX_four_x_four += 1;
+        positionX_one_x_four += 1;
         currentlyPressedKeys[39] = false;
         currentlyPressedKeys[68] = false;
     }
     if (currentlyPressedKeys[38] || currentlyPressedKeys[87]) {
         // Up cursor key or w
         gravityIsOn = false;
-        //positionY_four_x_four += 1;
+        positionY_one_x_four += 1;
         currentlyPressedKeys[38] = false;
         currentlyPressedKeys[87] = false;
     }
     if (currentlyPressedKeys[40] || currentlyPressedKeys[83]) {
         // Down cursor key or s
-        gravityIsOn = true;
-        //positionY_four_x_four -= 1;
+        //gravityIsOn = true;
+        positionY_one_x_four -= 1;
         timeElapsed = new Date().getSeconds();
         currentlyPressedKeys[40] = false;
         currentlyPressedKeys[83] = false;
@@ -168,18 +168,18 @@ function rotateObject() {
     var change = degToRad( 45 );
     if ( rotationTrace <= 90 ){
        if ( rotate_clockwise ){
-         rotate_four_x_four += change;
+         rotate_one_x_four += change;
          rotationTrace += change;
        }
        if ( rotate_counterclock ){
-         rotate_four_x_four -= change;
+         rotate_one_x_four -= change;
          rotationTrace += change;
        }
     }else{
       rotate_clockwise = false;
       rotate_counterclock = false;
       rotationTrace = 0;
-      rotate_four_x_four = Math.round( rotate_four_x_four);
+      rotate_one_x_four = Math.round( rotate_one_x_four );
     }
 }
 
@@ -244,10 +244,10 @@ function initBuffers() {
     one_x_fourVertexPositionBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, one_x_fourVertexPositionBuffer);
     var vertices = [
-        0.0,  2.5,  0.0,
-       -1.0,  2.5,  0.0,
-        0.0, -1.5,  0.0,
-       -1.0, -1.5,  0.0
+        0.0, -2.0,  0.0,
+        1.0, -2.0,  0.0,
+        0.0,  2.0,  0.0,
+        1.0,  2.0,  0.0
     ];
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
     one_x_fourVertexPositionBuffer.itemSize = 3;
@@ -348,12 +348,12 @@ function initBuffers() {
 
 var rotate_one_x_four = 0;
 var rotate_four_x_four = 0;
-var positionX_one_x_four = -1.0;
+var positionX_one_x_four = 0.0;
 var positionY_one_x_four = 0.0;
 var positionZ_one_x_four = -20.0;
 var positionX_four_x_four = 2.0;
 var positionY_four_x_four = 0.0;
-var positionZ_four_x_four = 0.0;
+var positionZ_four_x_four = -20.0;
 
 function drawScene() {
     gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
@@ -369,9 +369,10 @@ function drawScene() {
 
 
     //DRAW ONE X FOUR
+    mvPushMatrix();
+
     mat4.translate(mvMatrix, [positionX_one_x_four, positionY_one_x_four, positionZ_one_x_four]);
 
-    mvPushMatrix();
     mat4.rotate(mvMatrix, degToRad(rotate_one_x_four), [0, 0, 1]);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, one_x_fourVertexPositionBuffer);
@@ -382,13 +383,15 @@ function drawScene() {
 
     setMatrixUniforms();
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, one_x_fourVertexPositionBuffer.numItems);
+
     mvPopMatrix();
 
 
     //DRAW FOUR X FOUR
+    mvPushMatrix();
+
     mat4.translate(mvMatrix, [positionX_four_x_four, positionY_four_x_four, positionZ_four_x_four]);
 
-    mvPushMatrix();
     mat4.rotate(mvMatrix, degToRad(rotate_four_x_four), [0, 0, 1]);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, four_x_fourPositionBuffer);
@@ -404,10 +407,9 @@ function drawScene() {
 
 
     //DRAW GAME BORDER
-    mat4.identity(mvMatrix);
-    mat4.translate(mvMatrix, [0, 0, -20]);
-
     mvPushMatrix();
+
+    mat4.translate(mvMatrix, [0, 0, -20]);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, gameBorderPositionBuffer);
     gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, gameBorderPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
@@ -422,10 +424,9 @@ function drawScene() {
 
 
     //DRAW BACKGROUND
-    mat4.identity(mvMatrix);
-    mat4.translate(mvMatrix, [0, 0, -30.1]);
-
     mvPushMatrix();
+
+    mat4.translate(mvMatrix, [0, 0, -30.1]);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, bgPositionBuffer);
     gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, bgPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
@@ -440,7 +441,18 @@ function drawScene() {
 }
 
 
+
+//var lastTime = 0;
 function animate() {
+/*
+  var timeNow = new Date().getTime();
+  if (lastTime != 0) {
+    var elapsed = timeNow - lastTime;
+    rotate_one_x_four += (90 * elapsed) / 1000.0;
+    rotate_four_x_four += (75 * elapsed) / 1000.0;
+  }
+  lastTime = timeNow;
+*/
 }
 
 

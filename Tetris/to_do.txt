@@ -46,6 +46,7 @@ LAB Ib:
   -- globale vars nur für aktives objekt
   -- collision detection (in gravity und handlekeys)
      überprüfen ob anliegendes array kästchen im grid frei ist
+  -- delete game border and paint empty arrays instead
 - random aktives objekt
   flag in draw setzen und nur eines der vier objekte
   an der immer gleichen position zeichnen
