@@ -25,6 +25,7 @@ x bewegung mit keypads einfügen
 x animation verlangsamen, stockend machen
   designentscheidung: bewegung nur durch tastendrücken, nicht durch halten
 - userdefinierte pixel per block
+- animation mit time elapsed
 - grid
 x background color
 
@@ -62,7 +63,7 @@ OBJEKTORIENTIERUNG ??
 - tetris objekt (buffer, draw)
   -- vars: position, rotation, farbe, form
   -- zeichnen funktion (position, farbe, zeichnen)
-
+- class: tetrimon, class: forms
 
 VARIANTENAUSWAHL
 - aktives objekt im netz mitverfolgen, aber besteht auserhalb davon

@@ -123,12 +123,12 @@ var rotate_clockwise = false;
 var rotate_counterclock = false;
 
 function handleKeys() {
-    if (currentlyPressedKeys[49] && !rotate_clockwise) {
+    if (currentlyPressedKeys[49] && !rotate_counterclock) {
         // Number One
         rotate_clockwise = true;
         currentlyPressedKeys[49] = false;
     }
-    if (currentlyPressedKeys[51] && !rotate_counterclock) {
+    if (currentlyPressedKeys[51] && !rotate_clockwise) {
         // Number Three
         rotate_counterclock = true;
         currentlyPressedKeys[51] = false;
@@ -148,14 +148,14 @@ function handleKeys() {
     if (currentlyPressedKeys[38] || currentlyPressedKeys[87]) {
         // Up cursor key or w
         gravityIsOn = false;
-        positionY_one_x_four += 1;
+        //positionY_one_x_four += 1;
         currentlyPressedKeys[38] = false;
         currentlyPressedKeys[87] = false;
     }
     if (currentlyPressedKeys[40] || currentlyPressedKeys[83]) {
         // Down cursor key or s
-        //gravityIsOn = true;
-        positionY_one_x_four -= 1;
+        gravityIsOn = true;
+        //positionY_one_x_four -= 1;
         timeElapsed = new Date().getSeconds();
         currentlyPressedKeys[40] = false;
         currentlyPressedKeys[83] = false;
@@ -164,8 +164,9 @@ function handleKeys() {
 
 
 var rotationTrace = 0;
+var rotationSpeed = 85;
 function rotateObject() {
-    var change = degToRad( 45 );
+    var change = degToRad( rotationSpeed );
     if ( rotationTrace <= 90 ){
        if ( rotate_clockwise ){
          rotate_one_x_four += change;
@@ -193,10 +194,17 @@ function gravity() {
     var timeNow = new Date().getSeconds();
     gravitySpeed -= ( timeNow - timeElapsed );
     timeElapsed = timeNow;
-    console.log( timeElapsed, timeNow, gravitySpeed );
+    //console.log( timeElapsed, timeNow, gravitySpeed );
     if ( gravitySpeed <= 0 || gravitySpeed > 0.5){
-      positionY_four_x_four -= 1;
-      gravitySpeed = 0.5;
+        if( currentObject.checkIfBottomOccupied() ){
+            //implement handle collision here
+            console.log("collision");
+            gravityIsOn = false;
+        }else{
+          currentObject.moveObjectGravity();
+          positionY_one_x_four -= 1;
+          gravitySpeed = 0.5;
+        }
     }
   }
 }
@@ -204,11 +212,12 @@ function gravity() {
 
 function gridArray() {
     //create grid array
-    this.blocks = new Array(15); //y-axis
+    this.blocks = new Array(16); //y-axis; last row is bottom and always occupied, but invisible
     for ( var i = 0; i < this.blocks.length; ++i ){
         this.blocks[ i ] = new Array(10);
         for ( var j = 0; j < this.blocks[ i ].length; ++j ){ //x-axis
             this.blocks[ i ][ j ] = false;
+            //if( i == 4 ) this.blocks[ i ][ j ] = true;
         }
     }
 
@@ -229,6 +238,59 @@ function gridArray() {
               this.blocks[ i ][ 9 ].toString() + " | "
             );
         }
+        console.log();
+    }
+
+    this.setBlock = function( i, j, content ) {
+        if ( content == true || content == false ){
+          this.blocks[ i ][ j ] = content;
+        } else {
+          console.log( "to the grid array you can just put true or false!");
+        }
+    }
+
+    this.getBlock = function( i, j ){
+        return this.blocks[ i ][ j ];
+    }
+}
+
+
+function one_x_four() {
+    this.objectGridPosition = [
+        0, 3,
+        0, 4,
+        0, 5,
+        0, 6
+      ];
+
+    this.initObject = function() {
+        for ( var i = 0; i < 8; ++i ){
+            grid.setBlock( this.objectGridPosition[ i ], this.objectGridPosition[ i + 1 ], true );
+            ++i;
+        }
+        grid.getInfo();
+    }
+
+    this.checkIfBottomOccupied = function() {
+        var occupied = false;
+        for ( var i = 0; i < 8; ++i ){
+            occupiedOneBlock = grid.getBlock( ( this.objectGridPosition[ i ] + 1 ), this.objectGridPosition[ i + 1 ] );
+            //console.log( (this.objectGridPosition[ i ] + 1), this.objectGridPosition[ i + 1], "!!!!");
+            //console.log(occupiedOneBlock);
+            ++i;
+            if( occupiedOneBlock == true ) occupied = true;
+        }
+        return occupied;
+    }
+
+    this.moveObjectGravity = function() {
+      for ( var i = 0; i < 8; ++i ){
+          oldGridPos = this.objectGridPosition[ i ];
+          this.objectGridPosition[ i ] = oldGridPos + 1;
+          grid.setBlock( ( this.objectGridPosition[ i ] ), this.objectGridPosition[ i + 1 ], true );
+          grid.getInfo();
+          ++i;
+      }
     }
 }
 
@@ -346,13 +408,13 @@ function initBuffers() {
 }
 
 
-var rotate_one_x_four = 0;
+var rotate_one_x_four = 90;
 var rotate_four_x_four = 0;
-var positionX_one_x_four = 0.0;
-var positionY_one_x_four = 0.5;
+var positionX_one_x_four = 5.0;
+var positionY_one_x_four = 6.5;
 var positionZ_one_x_four = -20.0;
 var positionX_four_x_four = 2.0;
-var positionY_four_x_four = 0.5;
+var positionY_four_x_four = -6.5;
 var positionZ_four_x_four = -20.0;
 
 function drawScene() {
@@ -441,26 +503,26 @@ function drawScene() {
 }
 
 
-
-//var lastTime = 0;
-function animate() {
 /*
+var lastTime = 0;
+function animate( notTimeSensitiveAnim ) {
+
   var timeNow = new Date().getTime();
   if (lastTime != 0) {
     var elapsed = timeNow - lastTime;
-    rotate_one_x_four += (90 * elapsed) / 1000.0;
-    rotate_four_x_four += (75 * elapsed) / 1000.0;
+    return ( (notTimeSensitiveAnim * elapsed) / 1000.0 );
   }
   lastTime = timeNow;
-*/
-}
+  return notTimeSensitiveAnim;
 
+}
+*/
 
 function tick() {
     requestAnimFrame(tick);
     handleKeys();
     drawScene();
-    animate();
+    //animate();
 }
 
 
@@ -478,6 +540,9 @@ function webGLStart() {
 
     grid = new gridArray();
     grid.getInfo();
+
+    currentObject = new one_x_four();
+    currentObject.initObject();
 
     tick();
 }
