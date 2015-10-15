@@ -349,10 +349,10 @@ function initBuffers() {
 var rotate_one_x_four = 0;
 var rotate_four_x_four = 0;
 var positionX_one_x_four = 0.0;
-var positionY_one_x_four = 0.0;
+var positionY_one_x_four = 0.5;
 var positionZ_one_x_four = -20.0;
 var positionX_four_x_four = 2.0;
-var positionY_four_x_four = 0.0;
+var positionY_four_x_four = 0.5;
 var positionZ_four_x_four = -20.0;
 
 function drawScene() {
