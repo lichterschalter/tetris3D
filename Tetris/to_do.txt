@@ -41,6 +41,9 @@ LAB Ib:
 - grid & nicht überlappend
   x- grid array true/false
   -- aktives objekt im grid array mitverfolgen (position true setzen)
+     x- gravitation mitverfolgen
+     -- key movement mitverfolgen
+     -- rotation mitverfolgen
   -- am boden ankommen & neues objekt
      objekt zerstören und ident im netz nachbilden
      neues objekt erzeugen
@@ -69,6 +72,9 @@ VARIANTENAUSWAHL
 - aktives objekt im netz mitverfolgen, aber besteht auserhalb davon
   collision detection: einfach benachbarte kästchen anschaun
 - das netz repräsentiert inaktive objekte
+
+ARRAY GRID
+- vielleicht einfacher position von objekt ins array rechnen?
 
 
 -------

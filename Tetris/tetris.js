@@ -221,6 +221,11 @@ function gridArray() {
         }
     }
 
+    //make all bottom blocks true
+    for ( var i = 0; i < this.blocks[ 15 ].length; ++i ){
+        this.blocks[ 15 ][ i ] = true;
+    }
+
     this.getInfo = function() {
         for ( var i = 0; i < this.blocks.length; ++i ){
             console.log(
