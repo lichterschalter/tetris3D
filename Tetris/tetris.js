@@ -135,27 +135,27 @@ function handleKeys() {
     }
     if (currentlyPressedKeys[37] || currentlyPressedKeys[65]) {
         // Left cursor key or a
-        positionX_one_x_four -= 1;
+        positionX_tetrimon -= 1;
         currentlyPressedKeys[37] = false;
         currentlyPressedKeys[65] = false;
     }
     if (currentlyPressedKeys[39] || currentlyPressedKeys[68]) {
         // Right cursor key or d
-        positionX_one_x_four += 1;
+        positionX_tetrimon += 1;
         currentlyPressedKeys[39] = false;
         currentlyPressedKeys[68] = false;
     }
     if (currentlyPressedKeys[38] || currentlyPressedKeys[87]) {
         // Up cursor key or w
         gravityIsOn = false;
-        //positionY_one_x_four += 1;
+        //positionY_tetrimon += 1;
         currentlyPressedKeys[38] = false;
         currentlyPressedKeys[87] = false;
     }
     if (currentlyPressedKeys[40] || currentlyPressedKeys[83]) {
         // Down cursor key or s
         gravityIsOn = true;
-        //positionY_one_x_four -= 1;
+        //positionY_tetrimon -= 1;
         timeElapsed = new Date().getSeconds();
         currentlyPressedKeys[40] = false;
         currentlyPressedKeys[83] = false;
@@ -169,18 +169,18 @@ function rotateObject() {
     var change = degToRad( rotationSpeed );
     if ( rotationTrace <= 90 ){
        if ( rotate_clockwise ){
-         rotate_one_x_four += change;
+         rotate_tetrimon += change;
          rotationTrace += change;
        }
        if ( rotate_counterclock ){
-         rotate_one_x_four -= change;
+         rotate_tetrimon -= change;
          rotationTrace += change;
        }
     }else{
       rotate_clockwise = false;
       rotate_counterclock = false;
       rotationTrace = 0;
-      rotate_one_x_four = Math.round( rotate_one_x_four );
+      rotate_tetrimon = Math.round( rotate_tetrimon );
     }
 }
 
@@ -199,10 +199,10 @@ function gravity() {
         if( currentObject.checkIfBottomOccupied() ){
             //implement handle collision here
             console.log("collision");
-            gravityIsOn = false;
+            makeNewTetrimon();
         }else{
           currentObject.moveObjectGravity();
-          positionY_one_x_four -= 1;
+          positionY_tetrimon -= 1;
           gravitySpeed = 0.5;
         }
     }
@@ -260,6 +260,11 @@ function gridArray() {
 }
 
 
+function makeNewTetrimon() {
+    gravityIsOn = false;
+}
+
+
 function one_x_four() {
     this.objectGridPosition = [
         0, 3,
@@ -290,6 +295,7 @@ function one_x_four() {
 
     this.moveObjectGravity = function() {
       for ( var i = 0; i < 8; ++i ){
+          grid.setBlock( ( this.objectGridPosition[ i ] ), this.objectGridPosition[ i + 1 ], false );
           oldGridPos = this.objectGridPosition[ i ];
           this.objectGridPosition[ i ] = oldGridPos + 1;
           grid.setBlock( ( this.objectGridPosition[ i ] ), this.objectGridPosition[ i + 1 ], true );
@@ -388,39 +394,35 @@ function initBuffers() {
     bgColorBuffer.numItems = 4;
 
 
-    //GAME BORDER
-    gameBorderPositionBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, gameBorderPositionBuffer);
+    //GRID BLOCK
+    gridBlockPositionBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, gridBlockPositionBuffer);
     vertices = [
-        10.0,  7.5,  0.0,
-         0.0,  7.5,  0.0,
-        10.0, -7.5,  0.0,
-         0.0, -7.5,  0.0
+        0.0,  0.0,  0.0,
+        1.0,  0.0,  0.0,
+        0.0,  1.0,  0.0,
+        1.0,  1.0,  0.0
         ];
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
-    gameBorderPositionBuffer.itemSize = 3;
-    gameBorderPositionBuffer.numItems = 4;
+    gridBlockPositionBuffer.itemSize = 3;
+    gridBlockPositionBuffer.numItems = 4;
 
-    gameBorderColorBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, gameBorderColorBuffer);
+    gridBlockColorBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, gridBlockColorBuffer);
     colors = []
     for (var i=0; i < 4; i++) {
         colors = colors.concat([ (red + 0.4) , (green + 0.4), (blue + 0.4), 1.0]);
     }
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
-    gameBorderColorBuffer.itemSize = 4;
-    gameBorderColorBuffer.numItems = 4;
+    gridBlockColorBuffer.itemSize = 4;
+    gridBlockColorBuffer.numItems = 4;
 }
 
 
-var rotate_one_x_four = 90;
-var rotate_four_x_four = 0;
-var positionX_one_x_four = 5.0;
-var positionY_one_x_four = 6.5;
-var positionZ_one_x_four = -20.0;
-var positionX_four_x_four = 2.0;
-var positionY_four_x_four = -6.5;
-var positionZ_four_x_four = -20.0;
+var rotate_tetrimon = 90;
+var positionX_tetrimon = 5.0;
+var positionY_tetrimon = 6.5;
+var positionZ_tetrimon = -20.0;
 
 function drawScene() {
     gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
@@ -436,58 +438,45 @@ function drawScene() {
 
 
     //DRAW ONE X FOUR
-    mvPushMatrix();
+    if ( tetrimonType == "one_x_four"){
+        mvPushMatrix();
 
-    mat4.translate(mvMatrix, [positionX_one_x_four, positionY_one_x_four, positionZ_one_x_four]);
+        mat4.translate(mvMatrix, [positionX_tetrimon, positionY_tetrimon, positionZ_tetrimon]);
 
-    mat4.rotate(mvMatrix, degToRad(rotate_one_x_four), [0, 0, 1]);
+        mat4.rotate(mvMatrix, degToRad(rotate_tetrimon), [0, 0, 1]);
 
-    gl.bindBuffer(gl.ARRAY_BUFFER, one_x_fourVertexPositionBuffer);
-    gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, one_x_fourVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+        gl.bindBuffer(gl.ARRAY_BUFFER, one_x_fourVertexPositionBuffer);
+        gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, one_x_fourVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
-    gl.bindBuffer(gl.ARRAY_BUFFER, one_x_fourVertexColorBuffer);
-    gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, one_x_fourVertexColorBuffer.itemSize, gl.FLOAT, false, 0, 0);
+        gl.bindBuffer(gl.ARRAY_BUFFER, one_x_fourVertexColorBuffer);
+        gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, one_x_fourVertexColorBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
-    setMatrixUniforms();
-    gl.drawArrays(gl.TRIANGLE_STRIP, 0, one_x_fourVertexPositionBuffer.numItems);
+        setMatrixUniforms();
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, one_x_fourVertexPositionBuffer.numItems);
 
-    mvPopMatrix();
+        mvPopMatrix();
+    }
 
 
     //DRAW FOUR X FOUR
-    mvPushMatrix();
+    if ( tetrimonType == "four_x_four"){
+        mvPushMatrix();
 
-    mat4.translate(mvMatrix, [positionX_four_x_four, positionY_four_x_four, positionZ_four_x_four]);
+        mat4.translate(mvMatrix, [positionX_tetrimon, positionY_tetrimon, positionZ_tetrimon]);
 
-    mat4.rotate(mvMatrix, degToRad(rotate_four_x_four), [0, 0, 1]);
+        mat4.rotate(mvMatrix, degToRad(rotate_tetrimon), [0, 0, 1]);
 
-    gl.bindBuffer(gl.ARRAY_BUFFER, four_x_fourPositionBuffer);
-    gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, four_x_fourPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+        gl.bindBuffer(gl.ARRAY_BUFFER, four_x_fourPositionBuffer);
+        gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, four_x_fourPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
-    gl.bindBuffer(gl.ARRAY_BUFFER, four_x_fourColorBuffer);
-    gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, four_x_fourColorBuffer.itemSize, gl.FLOAT, false, 0, 0);
+        gl.bindBuffer(gl.ARRAY_BUFFER, four_x_fourColorBuffer);
+        gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, four_x_fourColorBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
-    setMatrixUniforms();
-    gl.drawArrays(gl.TRIANGLE_STRIP, 0, four_x_fourPositionBuffer.numItems);
+        setMatrixUniforms();
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, four_x_fourPositionBuffer.numItems);
 
-    mvPopMatrix();
-
-
-    //DRAW GAME BORDER
-    mvPushMatrix();
-
-    mat4.translate(mvMatrix, [0, 0, -20]);
-
-    gl.bindBuffer(gl.ARRAY_BUFFER, gameBorderPositionBuffer);
-    gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, gameBorderPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
-
-    gl.bindBuffer(gl.ARRAY_BUFFER, gameBorderColorBuffer);
-    gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, gameBorderColorBuffer.itemSize, gl.FLOAT, false, 0, 0);
-
-    setMatrixUniforms();
-    gl.drawArrays(gl.TRIANGLE_STRIP, 0, gameBorderPositionBuffer.numItems);
-
-    mvPopMatrix();
+        mvPopMatrix();
+    }
 
 
     //DRAW BACKGROUND
@@ -505,6 +494,49 @@ function drawScene() {
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, bgPositionBuffer.numItems);
 
     mvPopMatrix();
+
+
+    //DRAW GRID ARRAY
+    var gridBlockX = 0.0; //x point upper left
+    var gridBlockY = 6.5; //y point upper left
+    for( var i = 0; i < 15; ++i ){
+      for( var j = 0; j < 10; ++j ){
+        mvPushMatrix();
+
+        mat4.translate(mvMatrix, [ gridBlockX, gridBlockY, -20.01]);
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, gridBlockPositionBuffer);
+        gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, gridBlockPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, gridBlockColorBuffer);
+        gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, gridBlockColorBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+        setMatrixUniforms();
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, gridBlockPositionBuffer.numItems);
+
+        mvPopMatrix();
+
+        ++gridBlockX;
+      }
+      gridBlockX = 0.0;
+      --gridBlockY;
+    }
+}
+
+
+var tetrimonType = "one_x_four";
+function typeOfCurrentTetrimon() {
+    //implement random finding of the type
+    return tetrimonType;
+}
+
+
+function initGame() {
+    grid = new gridArray();
+    grid.getInfo();
+
+    currentObject = new one_x_four();
+    currentObject.initObject();
 }
 
 
@@ -536,18 +568,13 @@ function webGLStart() {
     initGL(canvas);
     initShaders()
     initBuffers();
+    initGame();
 
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
     gl.enable(gl.DEPTH_TEST);
 
     document.onkeydown = handleKeyDown;
     document.onkeyup = handleKeyUp;
-
-    grid = new gridArray();
-    grid.getInfo();
-
-    currentObject = new one_x_four();
-    currentObject.initObject();
 
     tick();
 }
