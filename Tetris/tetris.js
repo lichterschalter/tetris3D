@@ -216,8 +216,8 @@ function gridArray() {
     for ( var i = 0; i < this.blocks.length; ++i ){
         this.blocks[ i ] = new Array(10);
         for ( var j = 0; j < this.blocks[ i ].length; ++j ){ //x-axis
-            this.blocks[ i ][ j ] = false;
-            //if( i == 4 ) this.blocks[ i ][ j ] = true;
+            this.blocks[ i ][ j ] = [ 0.0, 0.0, 0.0, 1.0 ];
+            //this.blocks[ i ][ j ] = false;
         }
     }
 
@@ -254,8 +254,8 @@ function gridArray() {
         }
     }
 
-    this.getBlock = function( i, j ){
-        return this.blocks[ i ][ j ];
+    this.getBlock = function( i, j, k ){
+        return this.blocks[ i ][ j ][ k ];
     }
 }
 
@@ -275,7 +275,7 @@ function one_x_four() {
 
     this.initObject = function() {
         for ( var i = 0; i < 8; ++i ){
-            grid.setBlock( this.objectGridPosition[ i ], this.objectGridPosition[ i + 1 ], true );
+            //grid.setBlock( this.objectGridPosition[ i ], this.objectGridPosition[ i + 1 ], true );
             ++i;
         }
         grid.getInfo();
@@ -288,7 +288,7 @@ function one_x_four() {
             //console.log( (this.objectGridPosition[ i ] + 1), this.objectGridPosition[ i + 1], "!!!!");
             //console.log(occupiedOneBlock);
             ++i;
-            if( occupiedOneBlock == true ) occupied = true;
+            //if( occupiedOneBlock == true ) occupied = true;
         }
         return occupied;
     }
@@ -355,9 +355,9 @@ function initBuffers() {
 
     four_x_fourColorBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, four_x_fourColorBuffer);
-    var red = Math.random();
-    var green = Math.random();
-    var blue = Math.random();
+    red = Math.random();
+    green = Math.random();
+    blue = Math.random();
     colors = []
     for (var i=0; i < 4; i++) {
         colors = colors.concat([red, green, blue, 1.0]);
@@ -382,9 +382,9 @@ function initBuffers() {
 
     bgColorBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, bgColorBuffer);
-    var red = Math.random();
-    var green = Math.random();
-    var blue = Math.random();
+    red = Math.random();
+    green = Math.random();
+    blue = Math.random();
     colors = []
     for (var i = 0; i < 4; ++i) {
         colors = colors.concat([red, green, blue, 1.0]);
@@ -410,20 +410,25 @@ function initBuffers() {
         }
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
     gridBlocksPositionBuffer.itemSize = 3;
-    gridBlocksPositionBuffer.numItems = 600;
+    gridBlocksPositionBuffer.numItems = 150;
 
     gridBlocksColorBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, gridBlocksColorBuffer);
     colors = []
-    for (var i = 0; i < 600; ++i) {
-      var red = Math.random();
-      var green = Math.random();
-      var blue = Math.random();
-        colors = colors.concat([red + 0.4, green + 0.4, blue + 0.4, 1.0]);
+    for( var y = 0; y < 15; ++y ){
+      for( var x = 0; x < 10; ++x ){
+        colors = colors.concat([
+        grid.getBlock(y,x,0),
+        grid.getBlock(y,x,1),
+        grid.getBlock(y,x,2),
+        grid.getBlock(y,x,3),
+        ]);
+      }
     }
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
     gridBlocksColorBuffer.itemSize = 4;
-    gridBlocksColorBuffer.numItems = 600;
+    gridBlocksColorBuffer.numItems = 150;
+
 }
 
 
