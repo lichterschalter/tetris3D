@@ -76,6 +76,7 @@ VARIANTENAUSWAHL
 
 ARRAY GRID
 - vielleicht einfacher position von objekt ins array rechnen?
+- im grid die farben speichern, in das init buffer alle 150 farben reinladen
 
 
 -------
