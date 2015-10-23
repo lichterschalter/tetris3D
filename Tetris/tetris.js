@@ -220,7 +220,7 @@ function gridArray() {
             //this.blocks[ i ][ j ] = false;
             if( i == 0 && j == 1 ) this.blocks[ i ][ j ] = [ 1.0, 0.0, 0.0, 1.0 ];
             if( i == 0 && j == 2 ) this.blocks[ i ][ j ] = [ 0.0, 1.0, 0.0, 1.0 ];
-            if( i == 1 && j == 4 ) this.blocks[ i ][ j ] = [ 0.0, 0.0, 1.0, 1.0 ];
+            if( i == 7 && j == 4 ) this.blocks[ i ][ j ] = [ 0.0, 0.0, 1.0, 1.0 ];
 
         }
     }
@@ -402,7 +402,7 @@ function initBuffers() {
     gridBlocksOnePositionBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, gridBlocksOnePositionBuffer);
     vertices = []
-      for( var y = 0.0; y > -3; --y ){
+      for( var y = 0.0; y > -15; --y ){
         var z = 0.0;
         for( var x = 0.0; x < 10; ++x ){
             vertices = vertices.concat([
@@ -418,7 +418,7 @@ function initBuffers() {
         }
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
     gridBlocksOnePositionBuffer.itemSize = 3;
-    gridBlocksOnePositionBuffer.numItems = 122;
+    gridBlocksOnePositionBuffer.numItems = 614; //plus one for every new row, for triangle hiding
 
     gridBlocksOneColorBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, gridBlocksOneColorBuffer);
@@ -449,151 +449,6 @@ function initBuffers() {
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
     gridBlocksOneColorBuffer.itemSize = 4;
     gridBlocksOneColorBuffer.numItems = 120;
-
-/*
-    //GRID BLOCKS two (from top to bottom)
-    gridBlocksTwoPositionBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, gridBlocksTwoPositionBuffer);
-    vertices = []
-      for( var y = -3.0; y > -6.0; --y ){
-        for( var x = 0.0; x < 10; ++x ){
-            vertices = vertices.concat([
-              x,        (y + 1),  0.0,
-              (x + 1),  (y + 1),  0.0,
-              x,        y,        0.0,
-              (x + 1),  y,        0.0,
-            ]);
-          }
-        }
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
-    gridBlocksTwoPositionBuffer.itemSize = 3;
-    gridBlocksTwoPositionBuffer.numItems = 120;
-
-    gridBlocksTwoColorBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, gridBlocksTwoColorBuffer);
-    colors = []
-    for( var y = 0; y < 15; ++y ){
-      for( var x = 0; x < 10; ++x ){
-        colors = colors.concat([
-        grid.getBlock(y,x,0),
-        grid.getBlock(y,x,1),
-        grid.getBlock(y,x,2),
-        grid.getBlock(y,x,3),
-        ]);
-      }
-    }
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
-    gridBlocksTwoColorBuffer.itemSize = 4;
-    gridBlocksTwoColorBuffer.numItems = 120;
-
-
-    //GRID BLOCKS three (from top to bottom)
-    gridBlocksThreePositionBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, gridBlocksThreePositionBuffer);
-    vertices = []
-      for( var y = -6.0; y > -9.0; --y ){
-        for( var x = 0.0; x < 10; ++x ){
-            vertices = vertices.concat([
-              x,        (y + 1),  0.0,
-              (x + 1),  (y + 1),  0.0,
-              x,        y,        0.0,
-              (x + 1),  y,        0.0,
-            ]);
-          }
-        }
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
-    gridBlocksThreePositionBuffer.itemSize = 3;
-    gridBlocksThreePositionBuffer.numItems = 120;
-
-    gridBlocksThreeColorBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, gridBlocksThreeColorBuffer);
-    colors = []
-    for( var y = 0; y < 15; ++y ){
-      for( var x = 0; x < 10; ++x ){
-        colors = colors.concat([
-        grid.getBlock(y,x,0),
-        grid.getBlock(y,x,1),
-        grid.getBlock(y,x,2),
-        grid.getBlock(y,x,3),
-        ]);
-      }
-    }
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
-    gridBlocksThreeColorBuffer.itemSize = 4;
-    gridBlocksThreeColorBuffer.numItems = 120;
-
-
-    //GRID BLOCKS four (from top to bottom)
-    gridBlocksFourPositionBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, gridBlocksFourPositionBuffer);
-    vertices = []
-      for( var y = -9.0; y > -12.0; --y ){
-        for( var x = 0.0; x < 10; ++x ){
-            vertices = vertices.concat([
-              x,        (y + 1),  0.0,
-              (x + 1),  (y + 1),  0.0,
-              x,        y,        0.0,
-              (x + 1),  y,        0.0,
-            ]);
-          }
-        }
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
-    gridBlocksFourPositionBuffer.itemSize = 3;
-    gridBlocksFourPositionBuffer.numItems = 120;
-
-    gridBlocksFourColorBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, gridBlocksFourColorBuffer);
-    colors = []
-    for( var y = 0; y < 15; ++y ){
-      for( var x = 0; x < 10; ++x ){
-        colors = colors.concat([
-        grid.getBlock(y,x,0),
-        grid.getBlock(y,x,1),
-        grid.getBlock(y,x,2),
-        grid.getBlock(y,x,3),
-        ]);
-      }
-    }
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
-    gridBlocksFourColorBuffer.itemSize = 4;
-    gridBlocksFourColorBuffer.numItems = 120;
-
-
-    //GRID BLOCKS five (from top to bottom)
-    gridBlocksFivePositionBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, gridBlocksFivePositionBuffer);
-    vertices = []
-      for( var y = -12.0; y > -15.0; --y ){
-        for( var x = 0.0; x < 10; ++x ){
-            vertices = vertices.concat([
-              x,        (y + 1),  0.0,
-              (x + 1),  (y + 1),  0.0,
-              x,        y,        0.0,
-              (x + 1),  y,        0.0,
-            ]);
-          }
-        }
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
-    gridBlocksFivePositionBuffer.itemSize = 3;
-    gridBlocksFivePositionBuffer.numItems = 120;
-
-    gridBlocksFiveColorBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, gridBlocksFiveColorBuffer);
-    colors = []
-    for( var y = 0; y < 15; ++y ){
-      for( var x = 0; x < 10; ++x ){
-        colors = colors.concat([
-        grid.getBlock(y,x,0),
-        grid.getBlock(y,x,1),
-        grid.getBlock(y,x,2),
-        grid.getBlock(y,x,3),
-        ]);
-      }
-    }
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
-    gridBlocksFiveColorBuffer.itemSize = 4;
-    gridBlocksFiveColorBuffer.numItems = 120;
-*/
 }
 
 
@@ -690,78 +545,6 @@ function drawScene() {
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, gridBlocksOnePositionBuffer.numItems);
 
     mvPopMatrix();
-
-/*
-    //DRAW GRID ARRAY Part two (top down)
-
-    mvPushMatrix();
-
-    mat4.translate(mvMatrix, [ 0.0, 6.5, -20.01]);
-
-    gl.bindBuffer(gl.ARRAY_BUFFER, gridBlocksTwoPositionBuffer);
-    gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, gridBlocksTwoPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
-
-    gl.bindBuffer(gl.ARRAY_BUFFER, gridBlocksTwoColorBuffer);
-    gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, gridBlocksTwoColorBuffer.itemSize, gl.FLOAT, false, 0, 0);
-
-    setMatrixUniforms();
-    gl.drawArrays(gl.TRIANGLE_STRIP, 0, gridBlocksTwoPositionBuffer.numItems);
-
-    mvPopMatrix();
-
-
-    /*DRAW GRID ARRAY Part three (top down)
-
-    mvPushMatrix();
-
-    mat4.translate(mvMatrix, [ 0.0, 6.5, -20.01]);
-
-    gl.bindBuffer(gl.ARRAY_BUFFER, gridBlocksThreePositionBuffer);
-    gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, gridBlocksThreePositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
-
-    gl.bindBuffer(gl.ARRAY_BUFFER, gridBlocksThreeColorBuffer);
-    gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, gridBlocksThreeColorBuffer.itemSize, gl.FLOAT, false, 0, 0);
-
-    setMatrixUniforms();
-    gl.drawArrays(gl.TRIANGLE_STRIP, 0, gridBlocksThreePositionBuffer.numItems);
-
-    mvPopMatrix();
-
-
-    //DRAW GRID ARRAY Part four (top down)
-
-    mvPushMatrix();
-
-    mat4.translate(mvMatrix, [ 0.0, 6.5, -20.01]);
-
-    gl.bindBuffer(gl.ARRAY_BUFFER, gridBlocksFourPositionBuffer);
-    gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, gridBlocksFourPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
-
-    gl.bindBuffer(gl.ARRAY_BUFFER, gridBlocksFourColorBuffer);
-    gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, gridBlocksFourColorBuffer.itemSize, gl.FLOAT, false, 0, 0);
-
-    setMatrixUniforms();
-    gl.drawArrays(gl.TRIANGLE_STRIP, 0, gridBlocksFourPositionBuffer.numItems);
-
-    mvPopMatrix();
-
-
-    //DRAW GRID ARRAY Part five (top down)
-
-    mvPushMatrix();
-
-    mat4.translate(mvMatrix, [ 0.0, 6.5, -20.01]);
-
-    gl.bindBuffer(gl.ARRAY_BUFFER, gridBlocksFivePositionBuffer);
-    gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, gridBlocksFivePositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
-
-    gl.bindBuffer(gl.ARRAY_BUFFER, gridBlocksFiveColorBuffer);
-    gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, gridBlocksFiveColorBuffer.itemSize, gl.FLOAT, false, 0, 0);
-
-    setMatrixUniforms();
-    gl.drawArrays(gl.TRIANGLE_STRIP, 0, gridBlocksFivePositionBuffer.numItems);
-
-    mvPopMatrix();*/
 
 }
 
