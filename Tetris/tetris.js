@@ -216,18 +216,18 @@ function gridArray() {
     for ( var i = 0; i < this.blocks.length; ++i ){
         this.blocks[ i ] = new Array(10);
         for ( var j = 0; j < this.blocks[ i ].length; ++j ){ //x-axis
-            this.blocks[ i ][ j ] = [ 0.0, 0.0, 0.0, 1.0 ];
+            this.blocks[ i ][ j ] = [ 0.0, 0.0, 0.0, 1.0, false ];
             //this.blocks[ i ][ j ] = false;
-            if( i == 0 && j == 1 ) this.blocks[ i ][ j ] = [ 1.0, 0.0, 0.0, 1.0 ];
-            if( i == 0 && j == 2 ) this.blocks[ i ][ j ] = [ 0.0, 1.0, 0.0, 1.0 ];
-            if( i == 7 && j == 4 ) this.blocks[ i ][ j ] = [ 0.0, 0.0, 1.0, 1.0 ];
+            if( i == 0 && j == 1 ) this.blocks[ i ][ j ] = [ 1.0, 0.0, 0.0, 1.0, false ];
+            if( i == 0 && j == 2 ) this.blocks[ i ][ j ] = [ 0.0, 1.0, 0.0, 1.0, false ];
+            if( i == 7 && j == 4 ) this.blocks[ i ][ j ] = [ 0.0, 0.0, 1.0, 1.0, false ];
 
         }
     }
 
     //make all bottom blocks true
-    for ( var i = 0; i < this.blocks[ 15 ].length; ++i ){
-        this.blocks[ 15 ][ i ] = true;
+    for ( var j = 0; j < this.blocks[ 15 ].length; ++j ){
+        this.blocks[ 15 ][ j ] = [ 0.0, 0.0, 1.0, 1.0, true ];
     }
 
     this.getInfo = function() {
@@ -251,11 +251,11 @@ function gridArray() {
     }
 
     this.setBlock = function( i, j, content ) {
-        if ( content == true || content == false ){
-          this.blocks[ i ][ j ] = content;
-        } else {
-          console.log( "to the grid array you can just put true or false!");
-        }
+        this.blocks[ i ][ j ] = content;
+    }
+
+    this.setBlockOccupied = function( i, j, occupied ){
+        this.blocks[ i ][ j ][ 4 ] = occupied;
     }
 
     this.getBlock = function( x, y, color ){
@@ -279,7 +279,7 @@ function one_x_four() {
 
     this.initObject = function() {
         for ( var i = 0; i < 8; ++i ){
-            //grid.setBlock( this.objectGridPosition[ i ], this.objectGridPosition[ i + 1 ], true );
+            grid.setBlockOccupied( this.objectGridPosition[ i ], this.objectGridPosition[ i + 1 ], true );
             ++i;
         }
         grid.getInfo();
@@ -288,21 +288,21 @@ function one_x_four() {
     this.checkIfBottomOccupied = function() {
         var occupied = false;
         for ( var i = 0; i < 8; ++i ){
-            occupiedOneBlock = grid.getBlock( ( this.objectGridPosition[ i ] + 1 ), this.objectGridPosition[ i + 1 ] );
+            occupiedOneBlock = grid.getBlock( ( this.objectGridPosition[ i ] + 1 ), this.objectGridPosition[ i + 1 ], 4 );
             //console.log( (this.objectGridPosition[ i ] + 1), this.objectGridPosition[ i + 1], "!!!!");
-            //console.log(occupiedOneBlock);
             ++i;
-            //if( occupiedOneBlock == true ) occupied = true;
+            if( occupiedOneBlock == true ) occupied = true;
         }
+        console.log(occupied);
         return occupied;
     }
 
     this.moveObjectGravity = function() {
       for ( var i = 0; i < 8; ++i ){
-          grid.setBlock( ( this.objectGridPosition[ i ] ), this.objectGridPosition[ i + 1 ], false );
+          grid.setBlockOccupied( ( this.objectGridPosition[ i ] ), this.objectGridPosition[ i + 1 ], false );
           oldGridPos = this.objectGridPosition[ i ];
           this.objectGridPosition[ i ] = oldGridPos + 1;
-          grid.setBlock( ( this.objectGridPosition[ i ] ), this.objectGridPosition[ i + 1 ], true );
+          grid.setBlockOccupied( ( this.objectGridPosition[ i ] ), this.objectGridPosition[ i + 1 ], true );
           grid.getInfo();
           ++i;
       }
@@ -411,8 +411,8 @@ function initBuffers() {
               (x + 1),  y,        z,
               (x + 1),  (y + 1),  z,
             ]);
-            //the next if prevents drawing a triangle from the end of the row
-            // to the beginning of the next row
+            //the next if-statement prevents drawing a triangle from the end of the row
+            //to the beginning of the next row by drawing it behind the current row
             if( x == 9 ) vertices = vertices.concat([ x - 9, y + 1, z - 0.1,]);
           }
         }
@@ -433,8 +433,8 @@ function initBuffers() {
           grid.getBlock(y,x,3),
           ]);
         }
-        //the next if prevents drawing a triangle from the end of the row
-        // to the beginning of the next row
+        //the next if-statement prevents drawing a triangle from the end of the row
+        //to the beginning of the next row by drawing it behind the current row
         if( x == 9 ) {
           colors = colors.concat([
           grid.getBlock(y,x,0),
@@ -445,7 +445,6 @@ function initBuffers() {
         }
       }
     }
-    console.log(colors);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
     gridBlocksOneColorBuffer.itemSize = 4;
     gridBlocksOneColorBuffer.numItems = 120;
