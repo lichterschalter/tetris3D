@@ -197,7 +197,6 @@ function gravity() {
     //console.log( timeElapsed, timeNow, gravitySpeed );
     if ( gravitySpeed <= 0 || gravitySpeed > 0.5){
         if( currentObject.checkIfBottomOccupied() ){
-            //implement handle collision here
             console.log("collision");
             makeNewTetrimon();
         }else{
@@ -218,9 +217,9 @@ function gridArray() {
         for ( var j = 0; j < this.blocks[ i ].length; ++j ){ //x-axis
             this.blocks[ i ][ j ] = [ 0.0, 0.0, 0.0, 1.0, false ];
             //this.blocks[ i ][ j ] = false;
-            if( i == 0 && j == 1 ) this.blocks[ i ][ j ] = [ 1.0, 0.0, 0.0, 1.0, false ];
-            if( i == 0 && j == 2 ) this.blocks[ i ][ j ] = [ 0.0, 1.0, 0.0, 1.0, false ];
-            if( i == 7 && j == 4 ) this.blocks[ i ][ j ] = [ 0.0, 0.0, 1.0, 1.0, false ];
+            if( i == 0 && j == 1 ) this.blocks[ i ][ j ] = [ 1.0, 0.0, 0.0, 1.0, true ];
+            if( i == 0 && j == 2 ) this.blocks[ i ][ j ] = [ 0.0, 1.0, 0.0, 1.0, true ];
+            if( i == 4 && j == 4 ) this.blocks[ i ][ j ] = [ 0.0, 0.0, 1.0, 1.0, true ];
 
         }
     }
@@ -250,6 +249,26 @@ function gridArray() {
         console.log();
     }
 
+    this.getInfoOccupation = function() {
+        for ( var i = 0; i < this.blocks.length; ++i ){
+            console.log(
+              i + ": " +
+              "|" +
+              this.blocks[ i ][ 0 ][ 4 ].toString() + " | " +
+              this.blocks[ i ][ 1 ][ 4 ].toString() + " | " +
+              this.blocks[ i ][ 2 ][ 4 ].toString() + " | " +
+              this.blocks[ i ][ 3 ][ 4 ].toString() + " | " +
+              this.blocks[ i ][ 4 ][ 4 ].toString() + " | " +
+              this.blocks[ i ][ 5 ][ 4 ].toString() + " | " +
+              this.blocks[ i ][ 6 ][ 4 ].toString() + " | " +
+              this.blocks[ i ][ 7 ][ 4 ].toString() + " | " +
+              this.blocks[ i ][ 8 ][ 4 ].toString() + " | " +
+              this.blocks[ i ][ 9 ][ 4 ].toString() + " | "
+            );
+        }
+        console.log();
+    }
+
     this.setBlock = function( i, j, content ) {
         this.blocks[ i ][ j ] = content;
     }
@@ -266,23 +285,53 @@ function gridArray() {
 
 function makeNewTetrimon() {
     gravityIsOn = false;
+
+    //save arrived tetrimon to grid array
+    currentTetrimonColor = currentObject.getColor();
+    currentTetrimonColor = currentTetrimonColor.concat( true );
+    for( var i = 0; i < 8; ++i ){
+      grid.setBlock( currentObject.getObjectGridPosition()[ i ], currentObject.getObjectGridPosition()[ i + 1 ], currentTetrimonColor );
+      ++i;
+    }
+    grid.getInfo();
+    positionX_tetrimon = 5.0;
+    positionY_tetrimon = 6.5;
+    positionZ_tetrimon = -20.0;
+    initBuffers();
+    currentObject = new one_x_four();
+    currentObject.initObject();
+
 }
 
 
 function one_x_four() {
+    //startposition in the grid
     this.objectGridPosition = [
         0, 3,
         0, 4,
         0, 5,
         0, 6
       ];
+    this.objectColor = [];
+
+    this.setColor = function( setColor ) {
+        this.objectColor = setColor;
+    }
+
+    this.getColor = function(){
+        return this.objectColor;
+    }
+
+    this.getObjectGridPosition = function() {
+       return this.objectGridPosition;
+    }
 
     this.initObject = function() {
         for ( var i = 0; i < 8; ++i ){
             grid.setBlockOccupied( this.objectGridPosition[ i ], this.objectGridPosition[ i + 1 ], true );
             ++i;
         }
-        grid.getInfo();
+        grid.getInfoOccupation();
     }
 
     this.checkIfBottomOccupied = function() {
@@ -303,7 +352,7 @@ function one_x_four() {
           oldGridPos = this.objectGridPosition[ i ];
           this.objectGridPosition[ i ] = oldGridPos + 1;
           grid.setBlockOccupied( ( this.objectGridPosition[ i ] ), this.objectGridPosition[ i + 1 ], true );
-          grid.getInfo();
+          grid.getInfoOccupation();
           ++i;
       }
     }
@@ -338,6 +387,7 @@ function initBuffers() {
     colors = []
     for (var i=0; i < 4; i++) {
         colors = colors.concat([red, green, blue, 1.0]);
+        currentObject.setColor([red, green, blue, 1.0]);
     }
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
     one_x_fourVertexColorBuffer.itemSize = 4;
@@ -593,6 +643,7 @@ function webGLStart() {
     initShaders();
     initGame();
     initBuffers();
+    console.log( currentObject.getColor() );
 
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
     gl.enable(gl.DEPTH_TEST);
