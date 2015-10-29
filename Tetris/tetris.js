@@ -147,14 +147,14 @@ function handleKeys() {
     }
     if (currentlyPressedKeys[38] || currentlyPressedKeys[87]) {
         // Up cursor key or w
-        gravityIsOn = false;
+        switchGravityOff();
         //positionY_tetrimon += 1;
         currentlyPressedKeys[38] = false;
         currentlyPressedKeys[87] = false;
     }
     if (currentlyPressedKeys[40] || currentlyPressedKeys[83]) {
         // Down cursor key or s
-        gravityIsOn = true;
+        switchGravityOn();
         //positionY_tetrimon -= 1;
         timeElapsed = new Date().getSeconds();
         currentlyPressedKeys[40] = false;
@@ -186,23 +186,35 @@ function rotateObject() {
 
 
 var gravityIsOn = false;
-var gravitySpeed = 0.5;
-var timeElapsed = new Date().getSeconds();
 
-function gravity() {
+function switchGravityOn() {
+    gravityIsOn = true;
+    gravitySpeed = 0.5;
+    gravityTimeElapsed = new Date().getSeconds();
+}
+
+function switchGravityOff() {
+    gravityIsOn = false;
+}
+
+
+var gravitySpeed = 0.5;
+var gravityTimeElapsed = new Date().getSeconds();
+
+function gravity( elapsed ) {
   if( gravityIsOn ){
     var timeNow = new Date().getSeconds();
-    gravitySpeed -= ( timeNow - timeElapsed );
-    timeElapsed = timeNow;
+    gravitySpeed -= ( timeNow - gravityTimeElapsed );
+    gravityTimeElapsed = timeNow;
     //console.log( timeElapsed, timeNow, gravitySpeed );
     if ( gravitySpeed <= 0 || gravitySpeed > 0.5){
         if( currentObject.checkIfBottomOccupied() ){
             console.log("collision");
             makeNewTetrimon();
         }else{
-          currentObject.moveObjectGravity();
-          positionY_tetrimon -= 1;
-          gravitySpeed = 0.5;
+            currentObject.moveObjectGravity();
+            positionY_tetrimon -= 1;
+            gravitySpeed = 0.5;
         }
     }
   }
@@ -284,7 +296,7 @@ function gridArray() {
 
 
 function makeNewTetrimon() {
-    gravityIsOn = false;
+    switchGravityOff();
 
     //save arrived tetrimon to grid array
     currentTetrimonColor = currentObject.getColor();
@@ -300,6 +312,8 @@ function makeNewTetrimon() {
     currentObject = new one_x_four();
     currentObject.initObject();
     initBuffers();
+
+    switchGravityOn();
 }
 
 
@@ -519,10 +533,6 @@ function drawScene() {
 
     mat4.identity(mvMatrix);
 
-    //not shure if this is a good part for this code snippet
-    rotateObject();
-    gravity();
-
 
     //DRAW ONE X FOUR
     if ( tetrimonType == "one_x_four"){
@@ -624,26 +634,29 @@ function initGame() {
 }
 
 
-/*
+
 var lastTime = 0;
-function animate( notTimeSensitiveAnim ) {
+function animate() {
+
+  gravity( elapsed );
 
   var timeNow = new Date().getTime();
   if (lastTime != 0) {
     var elapsed = timeNow - lastTime;
-    return ( (notTimeSensitiveAnim * elapsed) / 1000.0 );
+    
+    rotateObject();
+
   }
   lastTime = timeNow;
-  return notTimeSensitiveAnim;
 
 }
-*/
+
 
 function tick() {
     requestAnimFrame(tick);
     handleKeys();
     drawScene();
-    //animate();
+    animate();
 }
 
 

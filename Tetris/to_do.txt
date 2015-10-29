@@ -46,8 +46,9 @@ LAB Ib:
      -- rotation mitverfolgen
   -- am boden ankommen & neues objekt
      x- simples ankommen
-     -- objekt zerstören und ident im netz nachbilden
-     -- neues objekt erzeugen
+     x- objekt zerstören und ident im netz nachbilden
+     x- neues objekt erzeugen
+     -- verschiedene objekte
   x- globale vars nur für aktives objekt
   -- collision detection (in gravity und handlekeys)
      überprüfen ob anliegendes array kästchen im grid frei ist
