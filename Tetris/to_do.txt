@@ -62,6 +62,8 @@ LAB Ib:
   -- reiche voll, löschen, alles darüber nach unten
 - user interface
 - texture
+- user definierte pixel per block
+- translation flüssig
 
 
 OBJEKTORIENTIERUNG ??

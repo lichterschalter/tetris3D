@@ -270,6 +270,7 @@ function gridArray() {
     }
 
     this.setBlock = function( i, j, content ) {
+        console.log( "i : " + i + " j : " + j + " content: " + content );
         this.blocks[ i ][ j ] = content;
     }
 
@@ -288,7 +289,9 @@ function makeNewTetrimon() {
 
     //save arrived tetrimon to grid array
     currentTetrimonColor = currentObject.getColor();
+    console.log(currentTetrimonColor);
     currentTetrimonColor = currentTetrimonColor.concat( true );
+    console.log(currentTetrimonColor);
     for( var i = 0; i < 8; ++i ){
       grid.setBlock( currentObject.getObjectGridPosition()[ i ], currentObject.getObjectGridPosition()[ i + 1 ], currentTetrimonColor );
       ++i;
@@ -297,10 +300,9 @@ function makeNewTetrimon() {
     positionX_tetrimon = 5.0;
     positionY_tetrimon = 6.5;
     positionZ_tetrimon = -20.0;
-    initBuffers();
     currentObject = new one_x_four();
     currentObject.initObject();
-
+    initBuffers();
 }
 
 
@@ -312,13 +314,16 @@ function one_x_four() {
         0, 5,
         0, 6
       ];
+    //saves the value of 4 vertices
     this.objectColor = [];
 
     this.setColor = function( setColor ) {
         this.objectColor = setColor;
+        console.log(setColor);
     }
 
     this.getColor = function(){
+        console.log("colr:" + this.objectColor);
         return this.objectColor;
     }
 
@@ -352,9 +357,9 @@ function one_x_four() {
           oldGridPos = this.objectGridPosition[ i ];
           this.objectGridPosition[ i ] = oldGridPos + 1;
           grid.setBlockOccupied( ( this.objectGridPosition[ i ] ), this.objectGridPosition[ i + 1 ], true );
-          grid.getInfoOccupation();
           ++i;
       }
+      grid.getInfoOccupation();
     }
 }
 
@@ -364,61 +369,70 @@ var one_x_fourVertexColorBuffer;
 var four_x_fourPositionBuffer;
 var four_x_fourColorBuffer;
 
+var redBg;
+var greenBg;
+var blueBg;
+
 function initBuffers() {
 
     //ONE X FOUR OBJECT
-    one_x_fourVertexPositionBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, one_x_fourVertexPositionBuffer);
-    var vertices = [
-        0.0, -2.0,  0.0,
-        1.0, -2.0,  0.0,
-        0.0,  2.0,  0.0,
-        1.0,  2.0,  0.0
-    ];
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
-    one_x_fourVertexPositionBuffer.itemSize = 3;
-    one_x_fourVertexPositionBuffer.numItems = 4;
+    if( typeOfTetrimon == "one_x_four" ){
+      one_x_fourVertexPositionBuffer = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, one_x_fourVertexPositionBuffer);
+      var vertices = [
+          0.0, -2.0,  0.0,
+          1.0, -2.0,  0.0,
+          0.0,  2.0,  0.0,
+          1.0,  2.0,  0.0
+      ];
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+      one_x_fourVertexPositionBuffer.itemSize = 3;
+      one_x_fourVertexPositionBuffer.numItems = 4;
 
-    one_x_fourVertexColorBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, one_x_fourVertexColorBuffer);
-    var red = Math.random();
-    var green = Math.random();
-    var blue = Math.random();
-    colors = []
-    for (var i=0; i < 4; i++) {
-        colors = colors.concat([red, green, blue, 1.0]);
-        currentObject.setColor([red, green, blue, 1.0]);
+      one_x_fourVertexColorBuffer = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, one_x_fourVertexColorBuffer);
+      var red = Math.random();
+      var green = Math.random();
+      var blue = Math.random();
+      currentObject.setColor([red, green, blue, 1.0]);
+      colors = []
+      for (var i=0; i < 4; i++) {
+          colors = colors.concat([red, green, blue, 1.0]);
+      }
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
+      one_x_fourVertexColorBuffer.itemSize = 4;
+      one_x_fourVertexColorBuffer.numItems = 4;
     }
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
-    one_x_fourVertexColorBuffer.itemSize = 4;
-    one_x_fourVertexColorBuffer.numItems = 4;
 
 
     //FOUR X FOUR OBJECT
-    four_x_fourPositionBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, four_x_fourPositionBuffer);
-    vertices = [
-         1.0,  1.0,  0.0,
-        -1.0,  1.0,  0.0,
-         1.0, -1.0,  0.0,
-        -1.0, -1.0,  0.0
-        ];
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
-    four_x_fourPositionBuffer.itemSize = 3;
-    four_x_fourPositionBuffer.numItems = 4;
+    if ( typeOfTetrimon == "four_x_four" ){
+      four_x_fourPositionBuffer = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, four_x_fourPositionBuffer);
+      vertices = [
+           1.0,  1.0,  0.0,
+          -1.0,  1.0,  0.0,
+           1.0, -1.0,  0.0,
+          -1.0, -1.0,  0.0
+          ];
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+      four_x_fourPositionBuffer.itemSize = 3;
+      four_x_fourPositionBuffer.numItems = 4;
 
-    four_x_fourColorBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, four_x_fourColorBuffer);
-    red = Math.random();
-    green = Math.random();
-    blue = Math.random();
-    colors = []
-    for (var i=0; i < 4; i++) {
-        colors = colors.concat([red, green, blue, 1.0]);
+      four_x_fourColorBuffer = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, four_x_fourColorBuffer);
+      red = Math.random();
+      green = Math.random();
+      blue = Math.random();
+      currentObject.setColor([red, green, blue, 1.0]);
+      colors = []
+      for (var i=0; i < 4; i++) {
+          colors = colors.concat([red, green, blue, 1.0]);
+      }
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
+      four_x_fourColorBuffer.itemSize = 4;
+      four_x_fourColorBuffer.numItems = 4;
     }
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
-    four_x_fourColorBuffer.itemSize = 4;
-    four_x_fourColorBuffer.numItems = 4;
 
 
     //BACKGROUND
@@ -436,12 +450,9 @@ function initBuffers() {
 
     bgColorBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, bgColorBuffer);
-    red = Math.random();
-    green = Math.random();
-    blue = Math.random();
     colors = []
     for (var i = 0; i < 4; ++i) {
-        colors = colors.concat([red, green, blue, 1.0]);
+        colors = colors.concat([redBg, greenBg, blueBg, 1.0]);
     }
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
     bgColorBuffer.itemSize = 4;
@@ -605,12 +616,17 @@ function typeOfCurrentTetrimon() {
 }
 
 
+var typeOfTetrimon = "one_x_four";
 function initGame() {
     grid = new gridArray();
     grid.getInfo();
 
     currentObject = new one_x_four();
     currentObject.initObject();
+
+    redBg = Math.random();
+    greenBg = Math.random();
+    blueBg = Math.random();
 }
 
 
@@ -643,7 +659,6 @@ function webGLStart() {
     initShaders();
     initGame();
     initBuffers();
-    console.log( currentObject.getColor() );
 
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
     gl.enable(gl.DEPTH_TEST);
