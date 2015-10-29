@@ -492,7 +492,7 @@ function initBuffers() {
             ]);
             //the next if-statement prevents drawing a triangle from the end of the row
             //to the beginning of the next row by drawing it behind the current row
-            if( x == 9 ) vertices = vertices.concat([ x - 9, y + 1, z - 0.1,]);
+            if( x == 9 ) vertices = vertices.concat([ x - 9, y + 1, z - 0.2,]);
           }
         }
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
