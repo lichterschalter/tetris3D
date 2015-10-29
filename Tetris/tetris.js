@@ -164,23 +164,33 @@ function handleKeys() {
 
 
 var rotationTrace = 0;
-var rotationSpeed = 85;
-function rotateObject() {
+var rotationSpeed = 5000;
+function rotateObject( timeElapsed ) {
     var change = degToRad( rotationSpeed );
     if ( rotationTrace <= 90 ){
        if ( rotate_clockwise ){
-         rotate_tetrimon += change;
-         rotationTrace += change;
+         rotate_tetrimon += ( change * timeElapsed ) / 1000.0;
+         rotationTrace += ( change * timeElapsed ) / 1000.0;
        }
        if ( rotate_counterclock ){
-         rotate_tetrimon -= change;
-         rotationTrace += change;
+         rotate_tetrimon -= ( change * timeElapsed ) / 1000.0;
+         rotationTrace += ( change * timeElapsed ) / 1000.0;
        }
     }else{
       rotate_clockwise = false;
       rotate_counterclock = false;
       rotationTrace = 0;
-      rotate_tetrimon = Math.round( rotate_tetrimon );
+
+      //round
+      if( rotate_tetrimon > 80 && rotate_tetrimon < 110 ) rotate_tetrimon = 90;
+      if( rotate_tetrimon > 170 && rotate_tetrimon < 190 ) rotate_tetrimon = 180;
+      if( rotate_tetrimon > 260 && rotate_tetrimon < 280 ) rotate_tetrimon = 270;
+      if( rotate_tetrimon > 350 ) rotate_tetrimon = 0;
+      if( rotate_tetrimon < -80 && rotate_tetrimon > -110 ) rotate_tetrimon = -90;
+      if( rotate_tetrimon < -170 && rotate_tetrimon > -190 ) rotate_tetrimon = -180;
+      if( rotate_tetrimon < -260 && rotate_tetrimon > -280 ) rotate_tetrimon = -270;
+      if( rotate_tetrimon < -350 ) rotate_tetrimon = 0;
+
     }
 }
 
@@ -467,7 +477,7 @@ function initBuffers() {
     bgColorBuffer.numItems = 4;
 
 
-    //GRID BLOCKS one (from top to bottom)
+    //GRID BLOCKS
     gridBlocksOnePositionBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, gridBlocksOnePositionBuffer);
     vertices = []
@@ -593,8 +603,7 @@ function drawScene() {
     mvPopMatrix();
 
 
-    //DRAW GRID ARRAY Part one (top down)
-
+    //DRAW GRID ARRAY
     mvPushMatrix();
 
     mat4.translate(mvMatrix, [ 0.0, 6.5, -20.01]);
@@ -638,13 +647,13 @@ function initGame() {
 var lastTime = 0;
 function animate() {
 
-  gravity( elapsed );
+  gravity();
 
   var timeNow = new Date().getTime();
   if (lastTime != 0) {
     var elapsed = timeNow - lastTime;
-    
-    rotateObject();
+
+    rotateObject( elapsed );
 
   }
   lastTime = timeNow;
