@@ -41,6 +41,7 @@ LAB Ib:
 - grid & nicht überlappend
   x- grid array true/false
   -- aktives objekt im grid array mitverfolgen (position true setzen)
+     und collision detection
      x- gravitation mitverfolgen
      -- key movement mitverfolgen
      -- rotation mitverfolgen
@@ -50,15 +51,13 @@ LAB Ib:
      x- neues objekt erzeugen
      -- verschiedene objekte
   x- globale vars nur für aktives objekt
-  -- collision detection (in gravity und handlekeys)
-     überprüfen ob anliegendes array kästchen im grid frei ist
-  -- delete game border and paint empty arrays instead
+  x- delete game border and paint empty arrays instead
      x- paint grid blocks
-     -- take color from grid array
+     x- take color from grid array
 - random aktives objekt
   flag in draw setzen und nur eines der vier objekte
   an der immer gleichen position zeichnen
-- mehr objekte
+- more objects
 - scoring
   -- reiche voll, löschen, alles darüber nach unten
 - user interface
@@ -74,20 +73,9 @@ OBJEKTORIENTIERUNG ??
   -- zeichnen funktion (position, farbe, zeichnen)
 - class: tetrimon, class: forms
 
-VARIANTENAUSWAHL
-- aktives objekt im netz mitverfolgen, aber besteht auserhalb davon
-  collision detection: einfach benachbarte kästchen anschaun
-- das netz repräsentiert inaktive objekte
-
-ARRAY GRID
-- vielleicht einfacher position von objekt ins array rechnen?
-- im grid die farben speichern, in das init buffer alle 150 farben reinladen
-2 4
-1 3
-
 
 -------
-QUESTIONS TUTORIUM
+QUESTIONS TUTORIUM Lab 1a
 -------
 
 x rotation not centered. answer: rotation um den ursprung!!
