@@ -270,7 +270,6 @@ function gridArray() {
     }
 
     this.setBlock = function( i, j, content ) {
-        console.log( "i : " + i + " j : " + j + " content: " + content );
         this.blocks[ i ][ j ] = content;
     }
 
@@ -289,9 +288,7 @@ function makeNewTetrimon() {
 
     //save arrived tetrimon to grid array
     currentTetrimonColor = currentObject.getColor();
-    console.log(currentTetrimonColor);
     currentTetrimonColor = currentTetrimonColor.concat( true );
-    console.log(currentTetrimonColor);
     for( var i = 0; i < 8; ++i ){
       grid.setBlock( currentObject.getObjectGridPosition()[ i ], currentObject.getObjectGridPosition()[ i + 1 ], currentTetrimonColor );
       ++i;
@@ -319,11 +316,9 @@ function one_x_four() {
 
     this.setColor = function( setColor ) {
         this.objectColor = setColor;
-        console.log(setColor);
     }
 
     this.getColor = function(){
-        console.log("colr:" + this.objectColor);
         return this.objectColor;
     }
 
@@ -347,7 +342,6 @@ function one_x_four() {
             ++i;
             if( occupiedOneBlock == true ) occupied = true;
         }
-        console.log(occupied);
         return occupied;
     }
 
