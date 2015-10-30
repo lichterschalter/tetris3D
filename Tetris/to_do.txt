@@ -37,13 +37,15 @@ LAB Ib:
 - gravitation
   x- basic gravitation
   x- toogle on/off
+  -- gravitation for rotated object
   -- arrow down it falls down
 - grid & nicht überlappend
   x- grid array true/false
   -- aktives objekt im grid array mitverfolgen (position true setzen)
      und collision detection
      x- gravitation mitverfolgen
-     -- key movement mitverfolgen
+     x- key movement mitverfolgen ohne rotation
+     -- key movement mitverfolgen auch für rotiertes tetrimon
      -- rotation mitverfolgen
   -- am boden ankommen & neues objekt
      x- simples ankommen
