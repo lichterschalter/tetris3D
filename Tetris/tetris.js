@@ -251,9 +251,9 @@ function gridArray() {
         for ( var j = 0; j < this.blocks[ i ].length; ++j ){ //x-axis
             this.blocks[ i ][ j ] = [ 0.0, 0.0, 0.0, 1.0, false ];
             //this.blocks[ i ][ j ] = false;
-            if( i == 0 && j == 1 ) this.blocks[ i ][ j ] = [ 1.0, 0.0, 0.0, 1.0, true ];
+            //if( i == 0 && j == 1 ) this.blocks[ i ][ j ] = [ 1.0, 0.0, 0.0, 1.0, true ];
             //if( i == 1 && j == 1 ) this.blocks[ i ][ j ] = [ 0.0, 1.0, 0.0, 1.0, true ];
-            if( i == 7 && j == 4 ) this.blocks[ i ][ j ] = [ 0.0, 0.0, 1.0, 1.0, true ];
+            //if( i == 7 && j == 4 ) this.blocks[ i ][ j ] = [ 0.0, 0.0, 1.0, 1.0, true ];
 
         }
     }
@@ -317,26 +317,35 @@ function gridArray() {
 }
 
 
+var gameOver = false;
 function makeNewTetrimon() {
     switchGravityOff();
     falling = false;
 
-    //save arrived tetrimon to grid array
-    currentTetrimonColor = currentObject.getColor();
-    currentTetrimonColor = currentTetrimonColor.concat( true );
-    for( var i = 0; i < 8; ++i ){
-      grid.setBlock( currentObject.getObjectGridPosition()[ i ], currentObject.getObjectGridPosition()[ i + 1 ], currentTetrimonColor );
-      ++i;
+    //check if game is over
+    for( var i = 3; i < 7 && !gameOver; ++i ){
+        gameOver = grid.getBlock( 0, i, 4 );
     }
-    //grid.getInfo();
-    positionX_tetrimon = 5.0;
-    positionY_tetrimon = 6.5;
-    positionZ_tetrimon = -20.0;
-    currentObject = new one_x_four();
-    currentObject.initObject();
-    initBuffers();
+    console.log(gameOver);
 
-    switchGravityOn();
+    if( !gameOver ){
+        //save arrived tetrimon to grid array
+        currentTetrimonColor = currentObject.getColor();
+        currentTetrimonColor = currentTetrimonColor.concat( true );
+        for( var i = 0; i < 8; ++i ){
+          grid.setBlock( currentObject.getObjectGridPosition()[ i ], currentObject.getObjectGridPosition()[ i + 1 ], currentTetrimonColor );
+          ++i;
+        }
+        //grid.getInfo();
+        positionX_tetrimon = 5.0;
+        positionY_tetrimon = 6.5;
+        positionZ_tetrimon = -20.0;
+        currentObject = new one_x_four();
+        currentObject.initObject();
+        initBuffers();
+
+        switchGravityOn();
+    }
 }
 
 
@@ -804,10 +813,14 @@ function animate() {
 
 
 function tick() {
-    requestAnimFrame(tick);
-    handleKeys();
-    drawScene();
-    animate();
+    if( !gameOver ){
+        requestAnimFrame(tick);
+        handleKeys();
+        drawScene();
+        animate();
+    }else{
+        window.alert("Game Over!");
+    }
 }
 
 
