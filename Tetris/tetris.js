@@ -249,7 +249,7 @@ function gridArray() {
     for ( var i = 0; i < this.blocks.length; ++i ){
         this.blocks[ i ] = new Array(10);
         for ( var j = 0; j < this.blocks[ i ].length; ++j ){ //x-axis
-            this.blocks[ i ][ j ] = [ 0.0, 0.0, 0.0, 1.0, false ];
+            this.blocks[ i ][ j ] = [ redBg + 0.4, greenBg + 0.4, blueBg + 0.4, 1.0, false ];
             //this.blocks[ i ][ j ] = false;
             //if( i == 0 && j == 1 ) this.blocks[ i ][ j ] = [ 1.0, 0.0, 0.0, 1.0, true ];
             //if( i == 1 && j == 1 ) this.blocks[ i ][ j ] = [ 0.0, 1.0, 0.0, 1.0, true ];
@@ -282,6 +282,7 @@ function gridArray() {
         }
         console.log();
     }
+    this.getInfo();
 
     this.getInfoOccupation = function() {
         for ( var i = 0; i < this.blocks.length; ++i ){
@@ -781,6 +782,10 @@ function typeOfCurrentTetrimon() {
 
 var typeOfTetrimon = "one_x_four";
 function initGame() {
+    redBg = Math.random();
+    greenBg = Math.random();
+    blueBg = Math.random();
+
     setGravitySpeed();
     grid = new gridArray();
     //grid.getInfo();
@@ -788,9 +793,7 @@ function initGame() {
     currentObject = new one_x_four();
     currentObject.initObject();
 
-    redBg = Math.random();
-    greenBg = Math.random();
-    blueBg = Math.random();
+
 }
 
 
