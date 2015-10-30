@@ -201,8 +201,8 @@ var gravityIsOn = false;
 
 function switchGravityOn() {
     gravityIsOn = true;
-    gravitySpeed = 0.5;
-    gravityTimeElapsed = new Date().getSeconds();
+    gravitySpeed = 20.0;
+    gravityTimeElapsed = ( new Date().getTime() / 1000 );
 }
 
 function switchGravityOff() {
@@ -210,23 +210,23 @@ function switchGravityOff() {
 }
 
 
-var gravitySpeed = 0.5;
-var gravityTimeElapsed = new Date().getSeconds();
+var gravitySpeed = 2.0;
+var gravityTimeElapsed = ( new Date().getTime() / 1000 );
 
-function gravity( elapsed ) {
+function gravity() {
   if( gravityIsOn ){
-    var timeNow = new Date().getSeconds();
+    var timeNow = ( new Date().getTime() / 1000 );
     gravitySpeed -= ( timeNow - gravityTimeElapsed );
     gravityTimeElapsed = timeNow;
-    //console.log( timeElapsed, timeNow, gravitySpeed );
-    if ( gravitySpeed <= 0 || gravitySpeed > 0.5){
+    if ( gravitySpeed <= 0 ){
         if( currentObject.checkIfBottomOccupied() ){
-            console.log("collision");
+            //console.log("collision");
             makeNewTetrimon();
+            gravitySpeed = 2.0;
         }else{
             currentObject.moveObjectGravity();
             positionY_tetrimon -= 1;
-            gravitySpeed = 0.5;
+            gravitySpeed = 2.0;
         }
     }
   }
@@ -317,7 +317,7 @@ function makeNewTetrimon() {
       grid.setBlock( currentObject.getObjectGridPosition()[ i ], currentObject.getObjectGridPosition()[ i + 1 ], currentTetrimonColor );
       ++i;
     }
-    grid.getInfo();
+    //grid.getInfo();
     positionX_tetrimon = 5.0;
     positionY_tetrimon = 6.5;
     positionZ_tetrimon = -20.0;
@@ -358,7 +358,7 @@ function one_x_four() {
             grid.setBlockOccupied( this.objectGridPosition[ i ], this.objectGridPosition[ i + 1 ], true );
             ++i;
         }
-        grid.getInfoOccupation();
+        //grid.getInfoOccupation();
     }
 
     this.checkIfBottomOccupied = function() {
@@ -380,13 +380,13 @@ function one_x_four() {
             grid.setBlockOccupied( ( this.objectGridPosition[ i ] ), this.objectGridPosition[ i + 1 ], true );
             ++i;
         }
-        grid.getInfoOccupation();
+        //grid.getInfoOccupation();
     }
 
     this.checkIfLeftIsOccupied = function() {
         var occupied = null;
 
-        //vertical
+        //horizontal
         if ( rotate_tetrimon == 90 || rotate_tetrimon == 270 || rotate_tetrimon == -90 || rotate_tetrimon == -270 ){
             var min, posLeft;
             var minLeft = this.objectGridPosition[ 1 ];
@@ -402,7 +402,7 @@ function one_x_four() {
             }
         }
 
-        //horizontal still missing
+        //vertical still missing
 
         return occupied;
     }
@@ -410,7 +410,7 @@ function one_x_four() {
     this.checkIfRightIsOccupied = function() {
         var occupied = null;
 
-        //vertical
+        //horizontal
         if ( rotate_tetrimon == 90 || rotate_tetrimon == 270 || rotate_tetrimon == -90 || rotate_tetrimon == -270 ){
             var max, posRight;
             var maxLeft = this.objectGridPosition[ 1 ];
@@ -426,7 +426,7 @@ function one_x_four() {
             }
         }
 
-        //horizontal still missing
+        //vertical still missing
 
         return occupied;
     }
@@ -719,7 +719,7 @@ function typeOfCurrentTetrimon() {
 var typeOfTetrimon = "one_x_four";
 function initGame() {
     grid = new gridArray();
-    grid.getInfo();
+    //grid.getInfo();
 
     currentObject = new one_x_four();
     currentObject.initObject();
