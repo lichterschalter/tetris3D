@@ -201,7 +201,7 @@ var gravityIsOn = false;
 
 function switchGravityOn() {
     gravityIsOn = true;
-    gravitySpeed = 20.0;
+    setGravitySpeed();
     gravityTimeElapsed = ( new Date().getTime() / 1000 );
 }
 
@@ -209,8 +209,12 @@ function switchGravityOff() {
     gravityIsOn = false;
 }
 
+function setGravitySpeed( speed ) {
+    if( speed != undefined) gravitySpeed = speed;
+    else gravitySpeed = 1.0;
+}
 
-var gravitySpeed = 2.0;
+var gravitySpeed;
 var gravityTimeElapsed = ( new Date().getTime() / 1000 );
 
 function gravity() {
@@ -222,11 +226,11 @@ function gravity() {
         if( currentObject.checkIfBottomOccupied() ){
             //console.log("collision");
             makeNewTetrimon();
-            gravitySpeed = 2.0;
+            setGravitySpeed();
         }else{
             currentObject.moveObjectGravity();
             positionY_tetrimon -= 1;
-            gravitySpeed = 2.0;
+            setGravitySpeed();
         }
     }
   }
@@ -718,6 +722,7 @@ function typeOfCurrentTetrimon() {
 
 var typeOfTetrimon = "one_x_four";
 function initGame() {
+    setGravitySpeed();
     grid = new gridArray();
     //grid.getInfo();
 
