@@ -57,10 +57,11 @@ LAB Ib:
   x- delete game border and paint empty arrays instead
      x- paint grid blocks
      x- take color from grid array
-- random aktives objekt
   flag in draw setzen und nur eines der vier objekte
   an der immer gleichen position zeichnen
 - more objects
+  -- alle implementieren
+  -- random aktives objekt
 - scoring
   -- reiche voll, löschen, alles darüber nach unten
 - user interface

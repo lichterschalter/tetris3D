@@ -240,7 +240,20 @@ function checkIfRowFull(){
     }
     //console.log( usedRows );
 
-    
+    //check if these rows are full
+    var fullRows = [];
+    while( usedRows.length != 0 ){
+        var activeRow = usedRows.pop();
+        //console.log("testIfRow " + activeRow + " is full!");
+        //var occupied = [];
+        var rowIsFull = true;
+        for( var i = 0; i < 10 && rowIsFull; ++i ){
+            //occupied.push( grid.getBlock( activeRow, i, 4 ) );
+            rowIsFull = grid.getBlock( activeRow, i, 4 );
+        }
+        //console.log(occupied);
+        if( rowIsFull ) //DELETE ROW HERE
+    }
 
 }
 
@@ -348,7 +361,7 @@ function makeNewTetrimon() {
     for( var i = 3; i < 7 && !gameOver; ++i ){
         gameOver = grid.getBlock( 0, i, 4 );
     }
-    console.log(gameOver);
+    console.log("gameOver: ", gameOver);
 
     if( !gameOver ){
         //save arrived tetrimon to grid array
