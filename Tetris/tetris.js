@@ -220,10 +220,13 @@ function setGravitySpeed( speed ) {
     else gravitySpeed = 1.0;
 }
 
-var gravitySpeed;
-var gravityTimeElapsed = ( new Date().getTime() / 1000 );
+
+var score = 0;
+var somethingDestroyed;
 
 function checkIfRowFull(){
+
+
 
     //get every row that is occupied by the dropped element, but just once
     var posTetrimon = currentObject.getObjectGridPosition();
@@ -238,7 +241,15 @@ function checkIfRowFull(){
             }
         }
     }
-    //console.log( usedRows );
+
+    //save currentTetrimon to the grid
+    currentTetrimonColor = currentObject.getColor();
+    currentTetrimonColor = currentTetrimonColor.concat( true );
+    for( var i = 0; i < 8; ++i ){
+      grid.setBlock( currentObject.getObjectGridPosition()[ i ], currentObject.getObjectGridPosition()[ i + 1 ], currentTetrimonColor );
+      ++i;
+    }
+
 
     //check if these rows are full
     var fullRows = [];
@@ -250,12 +261,39 @@ function checkIfRowFull(){
         for( var i = 0; i < 10 && rowIsFull; ++i ){
             //occupied.push( grid.getBlock( activeRow, i, 4 ) );
             rowIsFull = grid.getBlock( activeRow, i, 4 );
+            //console.log( activeRow, i, rowIsFull );
         }
-        //console.log(occupied);
-        if( rowIsFull ); //DELETE ROW HERE
+        if( rowIsFull ){
+            ++score;
+            document.getElementById("score").innerHTML = "Score: " + score.toString();
+            fullRows.push( activeRow );
+        }
     }
 
+
+    //destroy full rows
+    amountOfFullRows = fullRows.length;
+    if( fullRows.length == 0) somethingDestroyed = false;
+    while( fullRows.length != 0 ){
+        somethingDestroyed = true;
+        var activeRow = fullRows.pop();
+        var content = [redGrid, greenGrid, blueGrid, 1.0, false];
+        for( var i = 0; i < 10; ++i ){
+            grid.setBlock( activeRow, i, content );
+        }
+    }
+    if( somethingDestroyed )grid.getInfoOccupation(); //!
+    if( somethingDestroyed ) initBuffers();
+
+    console.log("afterRowDelete");
+    grid.getInfoOccupation();
+
+
 }
+
+
+var gravitySpeed;
+var gravityTimeElapsed = ( new Date().getTime() / 1000 );
 
 function gravity() {
   if( gravityIsOn ){
@@ -264,7 +302,7 @@ function gravity() {
     gravityTimeElapsed = timeNow;
     if ( gravitySpeed <= 0 ){
         if( currentObject.checkIfBottomOccupied() ){
-            console.log("collision");
+            //console.log("collision");
             checkIfRowFull();
             makeNewTetrimon();
             setGravitySpeed();
@@ -284,7 +322,7 @@ function gridArray() {
     for ( var i = 0; i < this.blocks.length; ++i ){
         this.blocks[ i ] = new Array(10);
         for ( var j = 0; j < this.blocks[ i ].length; ++j ){ //x-axis
-            this.blocks[ i ][ j ] = [ redBg + 0.4, greenBg + 0.4, blueBg + 0.4, 1.0, false ];
+            this.blocks[ i ][ j ] = [ redGrid, greenGrid, blueGrid, 1.0, false ];
             //this.blocks[ i ][ j ] = false;
             //if( i == 0 && j == 1 ) this.blocks[ i ][ j ] = [ 1.0, 0.0, 0.0, 1.0, true ];
             //if( i == 1 && j == 1 ) this.blocks[ i ][ j ] = [ 0.0, 1.0, 0.0, 1.0, true ];
@@ -364,14 +402,18 @@ function makeNewTetrimon() {
     //console.log("gameOver: ", gameOver);
 
     if( !gameOver ){
+
         //save arrived tetrimon to grid array
+        if( !somethingDestroyed ){
         currentTetrimonColor = currentObject.getColor();
         currentTetrimonColor = currentTetrimonColor.concat( true );
         for( var i = 0; i < 8; ++i ){
           grid.setBlock( currentObject.getObjectGridPosition()[ i ], currentObject.getObjectGridPosition()[ i + 1 ], currentTetrimonColor );
           ++i;
         }
+        }
         //grid.getInfo();
+
         positionX_tetrimon = 5.0;
         positionY_tetrimon = 6.5;
         positionZ_tetrimon = -20.0;
@@ -381,7 +423,7 @@ function makeNewTetrimon() {
 
         switchGravityOn();
     }
-    grid.getInfoOccupation();
+    //grid.getInfoOccupation();
 }
 
 
@@ -621,7 +663,6 @@ function two_x_two() {
             grid.setBlockOccupied( ( this.objectGridPosition[ i ] ), this.objectGridPosition[ i + 1 ], true );
             ++i;
         }
-        grid.getInfoOccupation();
     }
 
     this.checkIfLeftIsOccupied = function() {
@@ -753,6 +794,9 @@ var two_x_twoColorBuffer;
 var redBg;
 var greenBg;
 var blueBg;
+var redGrid;
+var greenGrid;
+var blueGrid;
 
 function initBuffers() {
 
@@ -997,6 +1041,9 @@ function initGame() {
     redBg = Math.random();
     greenBg = Math.random();
     blueBg = Math.random();
+    redGrid = redBg + 0.4;
+    greenGrid = greenBg + 0.4;
+    blueGrid = blueBg + 0.4;
 
     setGravitySpeed();
     grid = new gridArray();
@@ -1005,7 +1052,7 @@ function initGame() {
     //currentObject = new one_x_four();
     currentObject.initObject();
 
-    grid.getInfoOccupation();
+    //grid.getInfoOccupation();
 }
 
 

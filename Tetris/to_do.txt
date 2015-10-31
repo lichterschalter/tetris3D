@@ -44,6 +44,7 @@ LAB Ib:
      und collision detection
      x- gravitation mitverfolgen
      x- key movement mitverfolgen ohne rotation
+     -- rotation
   -- rotation
      -- im grid mitverfolgen und collision detection (feld 4 x 4?)
      -- key movement mitverfolgen bei rotiertem objekt
