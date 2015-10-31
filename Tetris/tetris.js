@@ -252,7 +252,7 @@ function checkIfRowFull(){
             rowIsFull = grid.getBlock( activeRow, i, 4 );
         }
         //console.log(occupied);
-        if( rowIsFull ) //DELETE ROW HERE
+        if( rowIsFull ); //DELETE ROW HERE
     }
 
 }
@@ -569,8 +569,8 @@ function one_x_four() {
 
 var one_x_fourVertexPositionBuffer;
 var one_x_fourVertexColorBuffer;
-var four_x_fourPositionBuffer;
-var four_x_fourColorBuffer;
+var two_x_twoPositionBuffer;
+var two_x_twoColorBuffer;
 
 var redBg;
 var greenBg;
@@ -579,7 +579,7 @@ var blueBg;
 function initBuffers() {
 
     //ONE X FOUR OBJECT
-    if( typeOfTetrimon == "one_x_four" ){
+    if( tetrimonType == "one_x_four" ){
       one_x_fourVertexPositionBuffer = gl.createBuffer();
       gl.bindBuffer(gl.ARRAY_BUFFER, one_x_fourVertexPositionBuffer);
       var vertices = [
@@ -609,9 +609,9 @@ function initBuffers() {
 
 
     //FOUR X FOUR OBJECT
-    if ( typeOfTetrimon == "four_x_four" ){
-      four_x_fourPositionBuffer = gl.createBuffer();
-      gl.bindBuffer(gl.ARRAY_BUFFER, four_x_fourPositionBuffer);
+    if ( tetrimonType == "two_x_two" ){
+      two_x_twoPositionBuffer = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, two_x_twoPositionBuffer);
       vertices = [
            1.0,  1.0,  0.0,
           -1.0,  1.0,  0.0,
@@ -619,11 +619,11 @@ function initBuffers() {
           -1.0, -1.0,  0.0
           ];
       gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
-      four_x_fourPositionBuffer.itemSize = 3;
-      four_x_fourPositionBuffer.numItems = 4;
+      two_x_twoPositionBuffer.itemSize = 3;
+      two_x_twoPositionBuffer.numItems = 4;
 
-      four_x_fourColorBuffer = gl.createBuffer();
-      gl.bindBuffer(gl.ARRAY_BUFFER, four_x_fourColorBuffer);
+      two_x_twoColorBuffer = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, two_x_twoColorBuffer);
       red = Math.random();
       green = Math.random();
       blue = Math.random();
@@ -633,8 +633,8 @@ function initBuffers() {
           colors = colors.concat([red, green, blue, 1.0]);
       }
       gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
-      four_x_fourColorBuffer.itemSize = 4;
-      four_x_fourColorBuffer.numItems = 4;
+      two_x_twoColorBuffer.itemSize = 4;
+      two_x_twoColorBuffer.numItems = 4;
     }
 
 
@@ -750,22 +750,22 @@ function drawScene() {
     }
 
 
-    //DRAW FOUR X FOUR
-    if ( tetrimonType == "four_x_four"){
+    //DRAW TWO X TWO
+    if ( tetrimonType == "two_x_two"){
         mvPushMatrix();
 
         mat4.translate(mvMatrix, [positionX_tetrimon, positionY_tetrimon, positionZ_tetrimon]);
 
         mat4.rotate(mvMatrix, degToRad(rotate_tetrimon), [0, 0, 1]);
 
-        gl.bindBuffer(gl.ARRAY_BUFFER, four_x_fourPositionBuffer);
-        gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, four_x_fourPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+        gl.bindBuffer(gl.ARRAY_BUFFER, two_x_twoPositionBuffer);
+        gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, two_x_twoPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
-        gl.bindBuffer(gl.ARRAY_BUFFER, four_x_fourColorBuffer);
-        gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, four_x_fourColorBuffer.itemSize, gl.FLOAT, false, 0, 0);
+        gl.bindBuffer(gl.ARRAY_BUFFER, two_x_twoColorBuffer);
+        gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, two_x_twoColorBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
         setMatrixUniforms();
-        gl.drawArrays(gl.TRIANGLE_STRIP, 0, four_x_fourPositionBuffer.numItems);
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, two_x_twoPositionBuffer.numItems);
 
         mvPopMatrix();
     }
@@ -814,7 +814,6 @@ function typeOfCurrentTetrimon() {
 }
 
 
-var typeOfTetrimon = "one_x_four";
 function initGame() {
     redBg = Math.random();
     greenBg = Math.random();
@@ -824,6 +823,7 @@ function initGame() {
     grid = new gridArray();
     //grid.getInfo();
 
+    //currentObject = new two_x_two();
     currentObject = new one_x_four();
     currentObject.initObject();
 
