@@ -226,8 +226,6 @@ var somethingDestroyed;
 
 function checkIfRowFull(){
 
-
-
     //get every row that is occupied by the dropped element, but just once
     var posTetrimon = currentObject.getObjectGridPosition();
     var usedRows = [];
@@ -271,18 +269,17 @@ function checkIfRowFull(){
     }
 
 
-    //destroy full rows
+    //destroy full rows and fill destroyed lines
     amountOfFullRows = fullRows.length;
     if( fullRows.length == 0) somethingDestroyed = false;
     while( fullRows.length != 0 ){
         somethingDestroyed = true;
         var activeRow = fullRows.pop();
-        var content = [redGrid, greenGrid, blueGrid, 1.0, false];
+        var content = [ redGrid, greenGrid, blueGrid, 1.0, false ];
         for( var i = 0; i < 10; ++i ){
             grid.setBlock( activeRow, i, content );
         }
     }
-    if( somethingDestroyed )grid.getInfoOccupation(); //!
     if( somethingDestroyed ) initBuffers();
 
     console.log("afterRowDelete");
@@ -302,7 +299,7 @@ function gravity() {
     gravityTimeElapsed = timeNow;
     if ( gravitySpeed <= 0 ){
         if( currentObject.checkIfBottomOccupied() ){
-            //console.log("collision");
+            console.log("collision");
             checkIfRowFull();
             makeNewTetrimon();
             setGravitySpeed();
@@ -310,6 +307,7 @@ function gravity() {
             currentObject.moveObjectGravity();
             positionY_tetrimon -= 1;
             setGravitySpeed();
+            grid.getInfoOccupation();
         }
     }
   }
@@ -405,19 +403,19 @@ function makeNewTetrimon() {
 
         //save arrived tetrimon to grid array
         if( !somethingDestroyed ){
-        currentTetrimonColor = currentObject.getColor();
-        currentTetrimonColor = currentTetrimonColor.concat( true );
-        for( var i = 0; i < 8; ++i ){
-          grid.setBlock( currentObject.getObjectGridPosition()[ i ], currentObject.getObjectGridPosition()[ i + 1 ], currentTetrimonColor );
-          ++i;
-        }
+          currentTetrimonColor = currentObject.getColor();
+          currentTetrimonColor = currentTetrimonColor.concat( true );
+          for( var i = 0; i < 8; ++i ){
+            grid.setBlock( currentObject.getObjectGridPosition()[ i ], currentObject.getObjectGridPosition()[ i + 1 ], currentTetrimonColor );
+            ++i;
+          }
         }
         //grid.getInfo();
 
         positionX_tetrimon = 5.0;
         positionY_tetrimon = 6.5;
         positionZ_tetrimon = -20.0;
-        currentObject = new two_x_two();
+        typeOfCurrentTetrimon();
         currentObject.initObject();
         initBuffers();
 
@@ -1029,11 +1027,25 @@ function drawScene() {
 }
 
 
-var tetrimonType = "two_x_two";
+function getRandomNumber(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+
+var tetrimonType;
 //var tetrimonType = "one_x_four";
 function typeOfCurrentTetrimon() {
-    //implement random finding of the type
-    return tetrimonType;
+    type = getRandomNumber(0,1);
+
+    if( type == 0){
+    currentObject = new two_x_two();
+    tetrimonType = "two_x_two";
+    }
+
+    if( type == 1){
+    currentObject = new one_x_four();
+    tetrimonType = "one_x_four";
+    }
 }
 
 
@@ -1048,7 +1060,7 @@ function initGame() {
     setGravitySpeed();
     grid = new gridArray();
 
-    currentObject = new two_x_two();
+    typeOfCurrentTetrimon();
     //currentObject = new one_x_four();
     currentObject.initObject();
 
