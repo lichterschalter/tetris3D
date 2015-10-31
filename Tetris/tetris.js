@@ -273,16 +273,28 @@ function checkIfRowFull(){
     amountOfFullRows = fullRows.length;
     if( fullRows.length == 0) somethingDestroyed = false;
     while( fullRows.length != 0 ){
+        console.log("movingArround");
+        grid.getInfoOccupation();
         somethingDestroyed = true;
         var activeRow = fullRows.pop();
-        var content = [ redGrid, greenGrid, blueGrid, 1.0, false ];
-        for( var i = 0; i < 10; ++i ){
-            grid.setBlock( activeRow, i, content );
+        var content = [ 0.0, 0.0, 0.0, 1.0, false ];
+        for( ; activeRow >= 0; --activeRow ){
+            if( activeRow == 0 ){
+                for( var i = 0; i < 10; ++i ){
+                    grid.setBlock( activeRow, i, content );
+                }
+                console.log("er45er");
+            }
+            else{
+                rowAbove = grid.getRow( activeRow - 1 );
+                grid.setRow( activeRow, rowAbove );
+                console.log("4rer");
+            }
         }
     }
     if( somethingDestroyed ) initBuffers();
 
-    console.log("afterRowDelete");
+    console.log("afterRowCheckFull");
     grid.getInfoOccupation();
 
 
@@ -385,6 +397,14 @@ function gridArray() {
     this.getBlock = function( x, y, color ){
         return this.blocks[ x ][ y ][ color ];
     }
+
+    this.getRow = function( row ){
+        return this.blocks[ row ];
+    }
+
+    this.setRow = function( row, content ){
+        this.blocks[ row ] = content;
+    }
 }
 
 
@@ -450,11 +470,16 @@ function one_x_four() {
     }
 
     this.initObject = function() {
+        console.log("before init 1x4");
+        grid.getInfoOccupation();
         for ( var i = 0; i < 8; ++i ){
             grid.setBlockOccupied( this.objectGridPosition[ i ], this.objectGridPosition[ i + 1 ], true );
+            console.log("THE init 1x4", i);
+            grid.getInfoOccupation();
             ++i;
         }
-        //grid.getInfoOccupation();
+        console.log("init 1x4");
+        grid.getInfoOccupation();
     }
 
     this.checkIfBottomOccupied = function() {
@@ -636,7 +661,6 @@ function two_x_two() {
             grid.setBlockOccupied( this.objectGridPosition[ i ], this.objectGridPosition[ i + 1 ], true );
             ++i;
         }
-        //grid.getInfoOccupation();
     }
 
     this.checkIfBottomOccupied = function() {
