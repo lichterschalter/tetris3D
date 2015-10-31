@@ -223,6 +223,27 @@ function setGravitySpeed( speed ) {
 var gravitySpeed;
 var gravityTimeElapsed = ( new Date().getTime() / 1000 );
 
+function checkIfRowFull(){
+
+    //get every row that is occupied by the dropped element
+    var posTetrimon = currentObject.getObjectGridPosition();
+    var usedRows = [];
+    usedRows.push( posTetrimon[0], posTetrimon[2], posTetrimon[4], posTetrimon[6] );
+    for( var i = 0; i < usedRows.length; ++i ){
+        for( var j = ( i + 1 ); j < usedRows.length; ++j ){
+            if( usedRows[ i ] == usedRows[ j ] ){
+              //console.log("splieced ", i, j);
+              usedRows.splice( j, 1 );
+              j = i;
+            }
+        }
+    }
+    //console.log( usedRows );
+
+    
+
+}
+
 function gravity() {
   if( gravityIsOn ){
     var timeNow = ( new Date().getTime() / 1000 );
@@ -230,7 +251,8 @@ function gravity() {
     gravityTimeElapsed = timeNow;
     if ( gravitySpeed <= 0 ){
         if( currentObject.checkIfBottomOccupied() ){
-            //console.log("collision");
+            console.log("collision");
+            checkIfRowFull();
             makeNewTetrimon();
             setGravitySpeed();
         }else{
@@ -282,7 +304,6 @@ function gridArray() {
         }
         console.log();
     }
-    this.getInfo();
 
     this.getInfoOccupation = function() {
         for ( var i = 0; i < this.blocks.length; ++i ){
