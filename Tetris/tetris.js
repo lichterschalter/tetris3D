@@ -576,7 +576,20 @@ function one_x_four() {
             }
         }
 
-        //vertical still missing
+        //vertical
+        if ( rotate_tetrimon == 0 || rotate_tetrimon == 180 || rotate_tetrimon == -180 ){
+            if( ( this.objectGridPosition[ 1 ] - 1 ) < 0 ) occupied = true;
+            else{
+                var one = grid.getBlock( this.objectGridPosition[ 0 ], this.objectGridPosition[ 1 ] - 1, 4 );
+                var two = grid.getBlock( this.objectGridPosition[ 2 ], this.objectGridPosition[ 1 ] - 1, 4 );
+                var three = grid.getBlock( this.objectGridPosition[ 4 ], this.objectGridPosition[ 1 ] - 1, 4 );
+                var four = grid.getBlock( this.objectGridPosition[ 6 ], this.objectGridPosition[ 1 ] - 1, 4 );
+
+                if( !one && !two && !three && !four) occupied = false;
+                else occupied = true;
+            }
+        }
+
 
         return occupied;
     }
@@ -600,7 +613,19 @@ function one_x_four() {
             }
         }
 
-        //vertical still missing
+        //vertical
+        if ( rotate_tetrimon == 0 || rotate_tetrimon == 180 || rotate_tetrimon == -180 ){
+            if( ( this.objectGridPosition[ 1 ] + 1 ) > 9 ) occupied = true;
+            else{
+                var one = grid.getBlock( this.objectGridPosition[ 0 ], this.objectGridPosition[ 1 ] + 1, 4 );
+                var two = grid.getBlock( this.objectGridPosition[ 2 ], this.objectGridPosition[ 1 ] + 1, 4 );
+                var three = grid.getBlock( this.objectGridPosition[ 4 ], this.objectGridPosition[ 1 ] + 1, 4 );
+                var four = grid.getBlock( this.objectGridPosition[ 6 ], this.objectGridPosition[ 1 ] + 1, 4 );
+
+                if( !one && !two && !three && !four) occupied = false;
+                else occupied = true;
+            }
+        }
 
         return occupied;
     }
