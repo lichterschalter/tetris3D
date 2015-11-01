@@ -178,6 +178,7 @@ function handleKeys() {
 
 var rotationTrace = 0;
 var rotationSpeed = 5000;
+var rotationFixed = 90;
 function rotateObject( timeElapsed ) {
     var change = degToRad( rotationSpeed );
     if ( rotationTrace <= 90 ){
@@ -191,7 +192,7 @@ function rotateObject( timeElapsed ) {
        }
     }else{
 
-      //round
+      /*round
       if( rotate_tetrimon > 80 && rotate_tetrimon < 110 ) rotate_tetrimon = 90;
       if( rotate_tetrimon > 170 && rotate_tetrimon < 190 ) rotate_tetrimon = 180;
       if( rotate_tetrimon > 260 && rotate_tetrimon < 280 ) rotate_tetrimon = 270;
@@ -201,6 +202,15 @@ function rotateObject( timeElapsed ) {
       if( rotate_tetrimon < -260 && rotate_tetrimon > -280 ) rotate_tetrimon = -270;
       if( rotate_tetrimon < -350 ) rotate_tetrimon = 0;
       if( rotate_tetrimon > -10 && rotate_tetrimon < 10 ) rotate_tetrimon = 0;
+      */
+
+      if( rotate_clockwise ) rotationFixed += 90;
+      if( rotate_counterclock ) rotationFixed -= 90;
+      console.log("rotation");
+      console.log( rotationFixed );
+      console.log( rotate_tetrimon );
+      rotate_tetrimon = rotationFixed;
+
 
       currentObject.posRotateToGrid();
       tetrimon_beforeRotation = rotate_tetrimon;
@@ -329,7 +339,7 @@ function gravity() {
             currentObject.moveObjectGravity();
             positionY_tetrimon -= 1;
             setGravitySpeed();
-            //grid.getInfoOccupation();
+            grid.getInfoOccupation();
         }
     }
   }
@@ -344,7 +354,7 @@ function gridArray() {
         for ( var j = 0; j < this.blocks[ i ].length; ++j ){ //x-axis
             this.blocks[ i ][ j ] = [ redGrid, greenGrid, blueGrid, 1.0, false ];
             //this.blocks[ i ][ j ] = false;
-            if( i == 3 && j == 4 ) this.blocks[ i ][ j ] = [ 1.0, 0.0, 0.0, 1.0, true ];
+            //if( i == 3 && j == 4 ) this.blocks[ i ][ j ] = [ 1.0, 0.0, 0.0, 1.0, true ];
             //if( i == 1 && j == 1 ) this.blocks[ i ][ j ] = [ 0.0, 1.0, 0.0, 1.0, true ];
             //if( i == 7 && j == 4 ) this.blocks[ i ][ j ] = [ 0.0, 0.0, 1.0, 1.0, true ];
 
@@ -422,6 +432,7 @@ var gameOver = false;
 function makeNewTetrimon() {
     switchGravityOff();
     rotate_tetrimon = 90;
+    rotationFixed = 90;
     falling = false;
 
     //check if game is over
@@ -495,18 +506,46 @@ function one_x_four() {
 
     this.checkIfBottomOccupied = function() {
         var occupied = false;
-        for ( var i = 0; i < 8; ++i ){
-            occupiedOneBlock = grid.getBlock( ( this.objectGridPosition[ i ] + 1 ), this.objectGridPosition[ i + 1 ], 4 );
-            //console.log( (this.objectGridPosition[ i ] + 1), this.objectGridPosition[ i + 1], "!!!!");
-            ++i;
-            if( occupiedOneBlock == true ) occupied = true;
+
+        //horizontal
+        if ( rotate_tetrimon == 90 || rotate_tetrimon == 270 || rotate_tetrimon == -90 || rotate_tetrimon == -270 ){
+            for ( var i = 0; i < 8; ++i ){
+                occupiedOneBlock = grid.getBlock( ( this.objectGridPosition[ i ] + 1 ), this.objectGridPosition[ i + 1 ], 4 );
+                //console.log( (this.objectGridPosition[ i ] + 1), this.objectGridPosition[ i + 1], "!!!!");
+                ++i;
+                if( occupiedOneBlock == true ) occupied = true;
+            }
         }
+
+        //vertical
+        if ( rotate_tetrimon == 0 || rotate_tetrimon == 180 || rotate_tetrimon == -180 ){
+          console.log("hello");
+          var posDown;
+          var minUp = this.objectGridPosition[ 0 ];
+          var minDown = this.objectGridPosition[ 6 ];
+          if( minUp > minDown ) posDown = this.objectGridPosition[ 0 ];
+          if( minDown > minUp ) posDown = this.objectGridPosition[ 6 ];
+          console.log(this.objectGridPosition );
+
+          if( posDown < 14 && !grid.getBlock( posDown + 1, this.objectGridPosition[ 1 ], 4 ) ){
+              console.log("down false", posDown + 1);
+              return false;
+          }else{
+              console.log("down true", posDown + 1);
+              return true;
+          }
+
+        }
+
         return occupied;
     }
 
     this.moveObjectGravity = function() {
         for ( var i = 0; i < 8; ++i ){
             grid.setBlockOccupied( ( this.objectGridPosition[ i ] ), this.objectGridPosition[ i + 1 ], false );
+            ++i;
+        }
+        for ( var i = 0; i < 8; ++i ){
             oldGridPos = this.objectGridPosition[ i ];
             this.objectGridPosition[ i ] = oldGridPos + 1;
             grid.setBlockOccupied( ( this.objectGridPosition[ i ] ), this.objectGridPosition[ i + 1 ], true );
@@ -579,6 +618,7 @@ function one_x_four() {
           //console.log( this.objectGridPosition );
           ////grid.getInfoOccupation();
         }
+        grid.getInfoOccupation();
     }
 
     this.moveObjectRight = function() {
@@ -597,6 +637,7 @@ function one_x_four() {
           //console.log( this.objectGridPosition );
           ////grid.getInfoOccupation();
         }
+        grid.getInfoOccupation();
     }
 
     this.dropTetrimon = function() {
