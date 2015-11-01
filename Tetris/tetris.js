@@ -128,7 +128,7 @@ function handleKeys() {
     if (currentlyPressedKeys[49] && !rotating) {
         // Number One
         if( currentObject.rotationAllowed() ){
-            rotate_clockwise = true;
+            rotate_counterclock = true;
             rotating = true;
         }
         currentlyPressedKeys[49] = false;
@@ -136,7 +136,7 @@ function handleKeys() {
     if (currentlyPressedKeys[51] && !rotating) {
         // Number Three
         if( currentObject.rotationAllowed() ){
-            rotate_counterclock = true;
+            rotate_clockwise = true;
             rotating = true;
         }
         currentlyPressedKeys[51] = false;
@@ -183,11 +183,11 @@ function rotateObject( timeElapsed ) {
     var change = degToRad( rotationSpeed );
     if ( rotationTrace <= 90 ){
        if ( rotate_clockwise ){
-         rotate_tetrimon += ( change * timeElapsed ) / 1000.0;
+         rotate_tetrimon -= ( change * timeElapsed ) / 1000.0;
          rotationTrace += ( change * timeElapsed ) / 1000.0;
        }
        if ( rotate_counterclock ){
-         rotate_tetrimon -= ( change * timeElapsed ) / 1000.0;
+         rotate_tetrimon += ( change * timeElapsed ) / 1000.0;
          rotationTrace += ( change * timeElapsed ) / 1000.0;
        }
     }else{
@@ -204,8 +204,8 @@ function rotateObject( timeElapsed ) {
       if( rotate_tetrimon > -10 && rotate_tetrimon < 10 ) rotate_tetrimon = 0;
       */
 
-      if( rotate_clockwise ) rotationFixed += 90;
-      if( rotate_counterclock ) rotationFixed -= 90;
+      if( rotate_clockwise ) rotationFixed -= 90;
+      if( rotate_counterclock ) rotationFixed += 90;
       console.log("rotation");
       console.log( rotationFixed );
       console.log( rotate_tetrimon );
@@ -354,7 +354,7 @@ function gridArray() {
         for ( var j = 0; j < this.blocks[ i ].length; ++j ){ //x-axis
             this.blocks[ i ][ j ] = [ redGrid, greenGrid, blueGrid, 1.0, false ];
             //this.blocks[ i ][ j ] = false;
-            if( i == 3 && j == 2 ) this.blocks[ i ][ j ] = [ 1.0, 0.0, 0.0, 1.0, true ];
+            //if( i == 3 && j == 2 ) this.blocks[ i ][ j ] = [ 1.0, 0.0, 0.0, 1.0, true ];
             //if( i == 1 && j == 1 ) this.blocks[ i ][ j ] = [ 0.0, 1.0, 0.0, 1.0, true ];
             //if( i == 7 && j == 4 ) this.blocks[ i ][ j ] = [ 0.0, 0.0, 1.0, 1.0, true ];
 
@@ -824,14 +824,38 @@ function one_x_four() {
           if( minUp > minDown ) posUp = 0;
           if( minDown > minUp ) posUp = 6;
       }
-
+/*
       //console.log( posLeft, posUp, tetrimon_beforeRotation );
       //the rotation in the if, is the rotationDegree wicht the tetrimon has AFTER the rotation
       if( rotate_clockwise &&  ( tetrimon_beforeRotation == 90 || tetrimon_beforeRotation == -90 ) ){
 
-      }
-      if( rotate_counterclock && ( tetrimon_beforeRotation == 90 || tetrimon_beforeRotation == -90 ) ){
+          //delete tetrimon from grid
+          for( var i = 0; i < 8; ++i ){
+              grid.setBlockOccupied( this.objectGridPosition[ i ], this.objectGridPosition[ i + 1 ], false);
+              ++i;
+          }
 
+          //console.log(this.objectGridPosition);
+          //compute new tetrimonPosition and save it to grid
+          //left
+          this.objectGridPosition[ posLeft ] += 1; //one right
+          this.objectGridPosition[ posLeft - 1 ] += 2;//two down
+          //leftmiddle
+          this.objectGridPosition[ posLeft + 2 ] += 1;//one right
+          //rightmiddle
+          this.objectGridPosition[ posLeft + 3 ] += 1;//one down
+          //right
+          this.objectGridPosition[ posLeft + 5 ] += 2;//two down
+          this.objectGridPosition[ posLeft + 6 ] -= 1;//one left
+          //console.log(this.objectGridPosition);
+          for( var i = 0; i < 8; ++i ){
+              grid.setBlockOccupied( this.objectGridPosition[ i ], this.objectGridPosition[ i + 1 ], true);
+              ++i;
+          }
+      }
+
+      if( rotate_clockwise && ( tetrimon_beforeRotation == 90 || tetrimon_beforeRotation == -90 ) ){
+          console.log("clockwise");
           //delete tetrimon from grid
           for( var i = 0; i < 8; ++i ){
               grid.setBlockOccupied( this.objectGridPosition[ i ], this.objectGridPosition[ i + 1 ], false);
@@ -856,10 +880,11 @@ function one_x_four() {
               grid.setBlockOccupied( this.objectGridPosition[ i ], this.objectGridPosition[ i + 1 ], true);
               ++i;
           }
-      }
+      }// end if
+
       //console.log("afterRotateToGrid()");
       grid.getInfoOccupation();
-
+*/
 
     }
 
