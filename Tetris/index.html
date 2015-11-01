@@ -36,13 +36,17 @@
 
 <body onload="webGLStart()";>
   <canvas id="lesson03-canvas" style="border: none;" width="800" height="600"></canvas>
-  <h3 id="score">Score:
+  <h3 id="score3">Score:
     <script>
       document.write( score );
     </script>
-  </h3>
+  </br>
+  Game size:
+  <button type="button" onclick="makeGameSmaller()"> - </button>
+  <button type="button" onclick="makeGameBigger()"> + </button>
+</h3>
   <p>
-    To play use Arrow Keys or w,a,s,d. If you don´t like the colors, reload the page :)
+    To play use Arrow Keys or w,a,s,d and to rotate 1 and 3. If you don´t like the colors, reload the page :)
   </p>
 </body>
 

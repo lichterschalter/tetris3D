@@ -224,7 +224,7 @@ function setGravitySpeed( speed ) {
 var score = 0;
 var somethingDestroyed;
 
-function checkIfRowFull(){
+function checkIfRowFull(){/*
 
     //get every row that is occupied by the dropped element, but just once
     var posTetrimon = currentObject.getObjectGridPosition();
@@ -283,12 +283,10 @@ function checkIfRowFull(){
                 for( var i = 0; i < 10; ++i ){
                     grid.setBlock( activeRow, i, content );
                 }
-                console.log("er45er");
             }
             else{
                 rowAbove = grid.getRow( activeRow - 1 );
                 grid.setRow( activeRow, rowAbove );
-                console.log("4rer");
             }
         }
     }
@@ -297,7 +295,7 @@ function checkIfRowFull(){
     console.log("afterRowCheckFull");
     grid.getInfoOccupation();
 
-
+*/
 }
 
 
@@ -963,12 +961,13 @@ var rotate_tetrimon = 90;
 var positionX_tetrimon = 5.0;
 var positionY_tetrimon = 6.5;
 var positionZ_tetrimon = -20.0;
+var gameSize = 45;
 
 function drawScene() {
     gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-    mat4.perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0, pMatrix);
+    mat4.perspective(gameSize, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0, pMatrix);
 
     mat4.identity(mvMatrix);
 
@@ -1053,6 +1052,16 @@ function drawScene() {
 
 function getRandomNumber(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+
+function makeGameSmaller() {
+    gameSize += 10;
+}
+
+
+function makeGameBigger() {
+    gameSize -= 10;
 }
 
 
