@@ -354,7 +354,7 @@ function gridArray() {
         for ( var j = 0; j < this.blocks[ i ].length; ++j ){ //x-axis
             this.blocks[ i ][ j ] = [ redGrid, greenGrid, blueGrid, 1.0, false ];
             //this.blocks[ i ][ j ] = false;
-            //if( i == 3 && j == 4 ) this.blocks[ i ][ j ] = [ 1.0, 0.0, 0.0, 1.0, true ];
+            if( i == 3 && j == 2 ) this.blocks[ i ][ j ] = [ 1.0, 0.0, 0.0, 1.0, true ];
             //if( i == 1 && j == 1 ) this.blocks[ i ][ j ] = [ 0.0, 1.0, 0.0, 1.0, true ];
             //if( i == 7 && j == 4 ) this.blocks[ i ][ j ] = [ 0.0, 0.0, 1.0, 1.0, true ];
 
@@ -893,7 +893,10 @@ function two_x_two() {
         if( minRight < minLeft ) posLeft = ( this.objectGridPosition[ 7 ] - 1 );
 
         if ( posLeft >= 0 ) {
-          occupied = grid.getBlock( this.objectGridPosition[ 0 ], posLeft, 4  ); //y,x,occupation
+          var one = grid.getBlock( this.objectGridPosition[ 0 ], posLeft, 4  ); //y,x,occupation
+          var two = grid.getBlock( this.objectGridPosition[ 4 ], posLeft, 4  ); //y,x,occupation
+          if( !one && !two ) occupied = false;
+          else occupied = true;
         }
 
         return occupied;
@@ -911,7 +914,10 @@ function two_x_two() {
         if( maxRight > maxLeft ) posRight = ( this.objectGridPosition[ 7 ] + 1 );
 
         if ( posRight <= 9 ) {
-          occupied = grid.getBlock( this.objectGridPosition[ 0 ], posRight, 4  ); //y,x,occupation
+          var one = grid.getBlock( this.objectGridPosition[ 0 ], posRight, 4  ); //y,x,occupation
+          var two = grid.getBlock( this.objectGridPosition[ 4 ], posRight, 4  ); //y,x,occupation
+          if( !one && !two ) occupied = false;
+          else occupied = true;
         }
 
         return occupied;
