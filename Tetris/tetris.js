@@ -851,7 +851,7 @@ function initBuffers() {
     }
 
 
-    //FOUR X FOUR OBJECT
+    //TWO X TWO OBJECT
     if ( tetrimonType == "two_x_two" ){
       two_x_twoPositionBuffer = gl.createBuffer();
       gl.bindBuffer(gl.ARRAY_BUFFER, two_x_twoPositionBuffer);
