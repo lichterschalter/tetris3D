@@ -433,6 +433,7 @@ function makeNewTetrimon() {
     switchGravityOff();
     rotate_tetrimon = 90;
     rotationFixed = 90;
+    tetrimon_beforeRotation = 90;
     falling = false;
 
     //check if game is over
@@ -463,6 +464,8 @@ function makeNewTetrimon() {
 
         switchGravityOn();
     }
+    console.log("newTetrimon");
+    console.log(currentObject.getObjectGridPosition());
     ////grid.getInfoOccupation();
 }
 
@@ -771,6 +774,8 @@ function one_x_four() {
               ++i;
           }
 
+
+          console.log(this.objectGridPosition);
           //compute new tetrimonPosition and save it to grid
           //left
           this.objectGridPosition[ posLeft ] += 2; //two right
@@ -788,6 +793,7 @@ function one_x_four() {
               ++i;
           }
       }
+      console.log("afterRotateToGrid()");
       grid.getInfoOccupation();
 
 
