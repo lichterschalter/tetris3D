@@ -215,9 +215,10 @@ function switchGravityOff() {
     gravityIsOn = false;
 }
 
+var gravSpeed = 1.0;
 function setGravitySpeed( speed ) {
     if( speed != undefined) gravitySpeed = speed;
-    else gravitySpeed = 1.0;
+    else gravitySpeed = gravSpeed;
 }
 
 
@@ -1062,6 +1063,27 @@ function makeGameSmaller() {
 
 function makeGameBigger() {
     gameSize -= 10;
+}
+
+
+var level = 5;
+function makeGameSlower() {
+    if( level > 0 ){
+        gravSpeed += 0.2;
+        --level;
+        document.getElementById("level").innerHTML = "Level: " + level.toString() + " " +
+        "<button type=\"button\" onclick=\"makeGameSlower()\"> - </button>" + " " +
+        "<button type=\"button\" onclick=\"makeGameFaster()\"> + </button>";
+    }
+}
+
+
+function makeGameFaster() {
+        gravSpeed -= 0.2;
+        ++level;
+        document.getElementById("level").innerHTML = "Level: " + level.toString() + " " +
+        "<button type=\"button\" onclick=\"makeGameSlower()\"> - </button>" + " " +
+        "<button type=\"button\" onclick=\"makeGameFaster()\"> + </button>";
 }
 
 

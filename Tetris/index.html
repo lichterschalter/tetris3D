@@ -40,11 +40,19 @@
     <script>
       document.write( score );
     </script>
-  </br>
-  Game size:
-  <button type="button" onclick="makeGameSmaller()"> - </button>
-  <button type="button" onclick="makeGameBigger()"> + </button>
-</h3>
+    </br>
+    Game size:
+    <button type="button" onclick="makeGameSmaller()"> - </button>
+    <button type="button" onclick="makeGameBigger()"> + </button>
+    <div id="level">
+      Level:
+      <script>
+        document.write( level );
+      </script>
+      <button type="button" onclick="makeGameSlower()"> - </button>
+      <button type="button" onclick="makeGameFaster()"> + </button>
+    </div>
+  </h3>
   <p>
     To play use Arrow Keys or w,a,s,d and to rotate 1 and 3. If you don´t like the colors, reload the page :)
   </p>
