@@ -329,7 +329,7 @@ function drawScene() {
     gl.drawArrays(gl.LINES, 0, gridBackVerticalPositionBuffer.numItems);
 
     mvPopMatrix();
-/*
+
     //--side III horizontal lines--
     mvPushMatrix();
 
@@ -397,7 +397,7 @@ function drawScene() {
     gl.drawArrays(gl.LINES, 0, gridBackVerticalPositionBuffer.numItems);
 
     mvPopMatrix();
-*/
+
     //--bottom vertical lines--
     mvPushMatrix();
 
@@ -421,6 +421,44 @@ function drawScene() {
     mvPushMatrix();
 
     mat4.translate(mvMatrix, [-7, -8, 7]);
+
+    mat4.rotate(mvMatrix, degToRad(45), [0, 1, 0]);
+    mat4.rotate(mvMatrix, degToRad(-90), [1, 0, 0]);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, gridBackBottomPositionBuffer);
+    gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, gridBackBottomPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, gridBackBottomColorBuffer);
+    gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, gridBackBottomColorBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+    setMatrixUniforms();
+    gl.drawArrays(gl.LINES, 0, gridBackBottomPositionBuffer.numItems);
+
+    mvPopMatrix();
+
+    //--top vertical lines--
+    mvPushMatrix();
+
+    mat4.translate(mvMatrix, [0, 7, 0]);
+
+    mat4.rotate(mvMatrix, degToRad(-45), [0, 1, 0]);
+    mat4.rotate(mvMatrix, degToRad(-90), [1, 0, 0]);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, gridBackBottomPositionBuffer);
+    gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, gridBackBottomPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, gridBackBottomColorBuffer);
+    gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, gridBackBottomColorBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+    setMatrixUniforms();
+    gl.drawArrays(gl.LINES, 0, gridBackBottomPositionBuffer.numItems);
+
+    mvPopMatrix();
+
+    //--top vertical lines--
+    mvPushMatrix();
+
+    mat4.translate(mvMatrix, [-7, 7, 7]);
 
     mat4.rotate(mvMatrix, degToRad(45), [0, 1, 0]);
     mat4.rotate(mvMatrix, degToRad(-90), [1, 0, 0]);
