@@ -234,7 +234,7 @@ function drawScene() {
     //horizontal lines
     mvPushMatrix();
 
-    mat4.translate(mvMatrix, [0, 0, -40]);
+    mat4.translate(mvMatrix, [-5, 7, -40]);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, gridBackHorizontalPositionBuffer);
     gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, gridBackHorizontalPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
@@ -250,7 +250,7 @@ function drawScene() {
     //vertical lines
     mvPushMatrix();
 
-    mat4.translate(mvMatrix, [0, 0, -40]);
+    mat4.translate(mvMatrix, [-5, 7, -40]);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, gridBackVerticalPositionBuffer);
     gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, gridBackVerticalPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
