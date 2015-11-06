@@ -122,11 +122,15 @@ function handleKeyUp(event) {
 function handleKeys() {
     if (currentlyPressedKeys[83] ) {
         //s key
-        ++zoom;
+        zoom += 0.05;
     }
     if (currentlyPressedKeys[65] ) {
         //s key
-        --zoom;
+        if( zoom > 0 ){
+          zoom -= 0.05;
+        }else{
+          zoom = 0;
+        }
     }
 }
 
@@ -326,28 +330,22 @@ function initBuffers() {
 }
 
 
-var cameraX = 0;
-var cameraY = 0;
-var zoom = -40;
+var zoom = 1;
 function drawScene() {
     gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
     mat4.perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0, pMatrix);
+    //mat4.ortho(pMatrix, -1.0, 1.0, -1.0, 1.0, 0.1, 100);
 
     mat4.identity(mvMatrix);
 
     mvPushMatrix();
 
-    mat4.translate(mvMatrix, [cameraX, cameraY, zoom]);
-
-    //CAMERA START (inverse world)
-/*  mat4.rotate( mvMatrix, degToRad(0), [1, 0, 0] );
-    mat4.rotate( mvMatrix, degToRad(0), [0, 1, 0] );
-    mat4.rotate( mvMatrix, degToRad(0), [0, 0, 1] );
-*/
+    mat4.translate(mvMatrix, [0, 0, -40]);
 
     //CAMERA (inverse world)
+    mat4.scale(mvMatrix, [1/zoom,1/zoom,1/zoom]);
     mat4.multiply(mvMatrix, cameraPositionMatrix);
     mat4.multiply(mvMatrix, cameraRotationMatrix);
 
@@ -573,7 +571,7 @@ function drawScene() {
     //DRAW BACKGROUND
     mvPushMatrix();
 
-    mat4.translate(mvMatrix, [0, 0, -90.1]);
+    mat4.translate(mvMatrix, [0, 0, -99]);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, bgPositionBuffer);
     gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, bgPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
