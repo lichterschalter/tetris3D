@@ -305,6 +305,80 @@ function drawScene() {
 
     mvPopMatrix();
 
+    //--side III--
+    //horizontal lines
+    mvPushMatrix();
+
+    mat4.translate(mvMatrix, [0, 0, -40]);
+    mat4.rotate(mvMatrix, degToRad(-135), [0, 1, 0]);
+    mat4.translate(mvMatrix, [0, 7, -10]);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, gridBackHorizontalPositionBuffer);
+    gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, gridBackHorizontalPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, gridBackHorizontalColorBuffer);
+    gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, gridBackHorizontalColorBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+    setMatrixUniforms();
+    gl.drawArrays(gl.LINES, 0, gridBackHorizontalPositionBuffer.numItems);
+
+    mvPopMatrix();
+
+    //vertical lines
+    mvPushMatrix();
+
+    mat4.translate(mvMatrix, [0, 0, -40]);
+    mat4.rotate(mvMatrix, degToRad(-135), [0, 1, 0]);
+    mat4.translate(mvMatrix, [0, 7, -10]);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, gridBackVerticalPositionBuffer);
+    gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, gridBackVerticalPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, gridBackVerticalColorBuffer);
+    gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, gridBackVerticalColorBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+    setMatrixUniforms();
+    gl.drawArrays(gl.LINES, 0, gridBackVerticalPositionBuffer.numItems);
+
+    mvPopMatrix();
+
+    //--side IV--
+    //horizontal lines
+    mvPushMatrix();
+
+    mat4.translate(mvMatrix, [0, 0, -40]);
+    mat4.rotate(mvMatrix, degToRad(-45), [0, 1, 0]);
+    mat4.translate(mvMatrix, [0, 7, 10]);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, gridBackHorizontalPositionBuffer);
+    gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, gridBackHorizontalPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, gridBackHorizontalColorBuffer);
+    gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, gridBackHorizontalColorBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+    setMatrixUniforms();
+    gl.drawArrays(gl.LINES, 0, gridBackHorizontalPositionBuffer.numItems);
+
+    mvPopMatrix();
+
+    //vertical lines
+    mvPushMatrix();
+
+    mat4.translate(mvMatrix, [0, 0, -40]);
+    mat4.rotate(mvMatrix, degToRad(-45), [0, 1, 0]);
+    mat4.translate(mvMatrix, [0, 7, 10]);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, gridBackVerticalPositionBuffer);
+    gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, gridBackVerticalPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, gridBackVerticalColorBuffer);
+    gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, gridBackVerticalColorBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+    setMatrixUniforms();
+    gl.drawArrays(gl.LINES, 0, gridBackVerticalPositionBuffer.numItems);
+
+    mvPopMatrix();
+
 
     //DRAW BACKGROUND
     mvPushMatrix();
