@@ -360,6 +360,7 @@ function drawScene() {
     mat4.multiply(mvMatrix, cameraRotationMatrix);
 
     //DRAW GRID BACK
+    mat4.translate(mvMatrix, [0, 0, -5]);
 
     //--side I horizontal lines--
     mvPushMatrix();
