@@ -120,9 +120,13 @@ function handleKeyUp(event) {
 
 
 function handleKeys() {
-    if (currentlyPressedKeys[37] ) {
-        //LEFT CURSOR
-
+    if (currentlyPressedKeys[83] ) {
+        //s key
+        ++zoom;
+    }
+    if (currentlyPressedKeys[65] ) {
+        //s key
+        --zoom;
     }
 }
 
