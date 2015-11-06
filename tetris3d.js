@@ -120,17 +120,21 @@ function handleKeyUp(event) {
 
 
 function handleKeys() {
-    if (currentlyPressedKeys[83] ) {
+    if ( currentlyPressedKeys[83] ) {
         //s key
         zoom += 0.05;
     }
-    if (currentlyPressedKeys[65] ) {
-        //s key
+    if ( currentlyPressedKeys[65] ) {
+        //a key
         if( zoom > 0 ){
           zoom -= 0.05;
         }else{
           zoom = 0;
         }
+    }
+    if ( currentlyPressedKeys[80] ) {
+        //p key
+        perspectiveView = !perspectiveView;
     }
 }
 
@@ -330,15 +334,21 @@ function initBuffers() {
 }
 
 
+var perspectiveView = true;
 var zoom = 1;
 function drawScene() {
     gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-    mat4.perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0, pMatrix);
-    //mat4.ortho(pMatrix, -1.0, 1.0, -1.0, 1.0, 0.1, 100);
+    if( perspectiveView ){
+        mat4.perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0, pMatrix);
+    }else{
+        mat4.ortho(pMatrix, -1.0, 1.0, -1.0, 1.0, 0.1, 100);
+        console.log("orhto");
+    }
 
     mat4.identity(mvMatrix);
+    mat4.lookAt(mvMatrix, [20,0,0], [0, 0, 0], [0, 1, 0]);
 
     mvPushMatrix();
 
