@@ -119,6 +119,53 @@ function handleKeyUp(event) {
 }
 
 
+function handleKeys() {
+    if (currentlyPressedKeys[37] ) {
+        //LEFT CURSOR
+
+    }
+}
+
+var mouseDown = false;
+var lastMouseX = null;
+var lastMouseY = null;
+
+var cameraRotationMatrix = mat4.create();
+mat4.identity(cameraRotationMatrix);
+
+function handleMouseDown(event) {
+    if (event.which === 3 || event.button === 3) {
+      mouseDown = true;
+      lastMouseX = event.clientX;
+      lastMouseY = event.clientY;
+    }
+}
+
+function handleMouseUp(event) {
+    mouseDown = false;
+}
+
+function handleMouseMove(event) {
+    if (!mouseDown) {
+      return;
+    }
+    var newX = event.clientX;
+    var newY = event.clientY;
+
+    var deltaX = newX - lastMouseX;
+    var newRotationMatrix = mat4.create();
+    mat4.identity(newRotationMatrix);
+    mat4.rotate(newRotationMatrix, degToRad(deltaX / 10), [0, 1, 0]);
+
+    var deltaY = newY - lastMouseY;
+    mat4.rotate(newRotationMatrix, degToRad(deltaY / 10), [1, 0, 0]);
+
+    mat4.multiply(newRotationMatrix, cameraRotationMatrix, cameraRotationMatrix);
+
+    lastMouseX = newX
+    lastMouseY = newY;
+}
+
 
 var redBg;
 var greenBg;
@@ -242,25 +289,31 @@ function initBuffers() {
 }
 
 
-var rotate_tetrimon = 90;
-var tetrimon_beforeRotation = rotate_tetrimon;
-var positionX_tetrimon = 5.0;
-var positionY_tetrimon = 6.5;
-var positionZ_tetrimon = -20.0;
-var gameSize = 45;
-
+var cameraX = 0;
+var cameraY = 0;
+var zoom = -40;
 function drawScene() {
     gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-    mat4.perspective(gameSize, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0, pMatrix);
+    mat4.perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0, pMatrix);
 
     mat4.identity(mvMatrix);
 
+    mvPushMatrix();
+
+    mat4.translate(mvMatrix, [cameraX, cameraY, zoom]);
+
+    //CAMERA START (inverse world)
+/*  mat4.rotate( mvMatrix, degToRad(0), [1, 0, 0] );
+    mat4.rotate( mvMatrix, degToRad(0), [0, 1, 0] );
+    mat4.rotate( mvMatrix, degToRad(0), [0, 0, 1] );
+*/
+
+    //CAMERA (inverse world)
+    mat4.multiply(mvMatrix, cameraRotationMatrix);
 
     //DRAW GRID BACK
-    mvPushMatrix();
-    mat4.translate(mvMatrix, [0, 0, -40]);
 
     //--side I horizontal lines--
     mvPushMatrix();
@@ -555,7 +608,7 @@ var gameOver = false;
 function tick() {
     if( !gameOver ){
         requestAnimFrame(tick);
-        //handleKeys();
+        handleKeys();
         drawScene();
         animate();
     }else{
@@ -574,6 +627,9 @@ function webGLStart() {
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
     gl.enable(gl.DEPTH_TEST);
 
+    canvas.onmousedown = handleMouseDown;
+    document.onmouseup = handleMouseUp;
+    document.onmousemove = handleMouseMove;
     document.onkeydown = handleKeyDown;
     document.onkeyup = handleKeyUp;
 
