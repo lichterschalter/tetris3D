@@ -126,44 +126,77 @@ function handleKeys() {
     }
 }
 
-var mouseDown = false;
+var mouseRightDown = false;
+var mouseLeftDown = false;
 var lastMouseX = null;
 var lastMouseY = null;
 
+var cameraPositionMatrix = mat4.create();
+mat4.identity(cameraPositionMatrix);
 var cameraRotationMatrix = mat4.create();
 mat4.identity(cameraRotationMatrix);
 
 function handleMouseDown(event) {
+    if (event.which === 1 || event.button === 1) {
+        mouseLeftDown = true;
+        lastMouseX = event.clientX;
+        lastMouseY = event.clientY;
+    }
     if (event.which === 3 || event.button === 3) {
-      mouseDown = true;
-      lastMouseX = event.clientX;
-      lastMouseY = event.clientY;
+        mouseRightDown = true;
+        lastMouseX = event.clientX;
+        lastMouseY = event.clientY;
     }
 }
 
 function handleMouseUp(event) {
-    mouseDown = false;
+    mouseRightDown = false;
+    mouseLeftDown = false;
 }
 
 function handleMouseMove(event) {
-    if (!mouseDown) {
-      return;
+
+    if (!mouseRightDown && !mouseLeftDown) {
+        return;
     }
-    var newX = event.clientX;
-    var newY = event.clientY;
 
-    var deltaX = newX - lastMouseX;
-    var newRotationMatrix = mat4.create();
-    mat4.identity(newRotationMatrix);
-    mat4.rotate(newRotationMatrix, degToRad(deltaX / 10), [0, 1, 0]);
+    if( mouseLeftDown){
+        var newX = event.clientX;
+        var newY = event.clientY;
 
-    var deltaY = newY - lastMouseY;
-    mat4.rotate(newRotationMatrix, degToRad(deltaY / 10), [1, 0, 0]);
+        var moveX = newX - lastMouseX;
+        var newPositionMatrix = mat4.create();
+        mat4.identity(newPositionMatrix);
+        mat4.translate(newPositionMatrix, [moveX / 25, 0, 0]);
+        //mat4.rotate(newPositionMatrix, degToRad(deltaX / 10), [0, 1, 0]);
 
-    mat4.multiply(newRotationMatrix, cameraRotationMatrix, cameraRotationMatrix);
+        var moveY = newY - lastMouseY;
+        mat4.translate(newPositionMatrix, [0, -(moveY / 25), 0]);
+        //mat4.rotate(newRotationMatrix, degToRad(deltaY / 10), [1, 0, 0]);
 
-    lastMouseX = newX
-    lastMouseY = newY;
+        mat4.multiply(newPositionMatrix, cameraPositionMatrix, cameraPositionMatrix);
+
+        lastMouseX = newX
+        lastMouseY = newY;
+    }
+
+    if( mouseRightDown){
+        var newX = event.clientX;
+        var newY = event.clientY;
+
+        var deltaX = newX - lastMouseX;
+        var newRotationMatrix = mat4.create();
+        mat4.identity(newRotationMatrix);
+        mat4.rotate(newRotationMatrix, degToRad(deltaX / 10), [0, 1, 0]);
+
+        var deltaY = newY - lastMouseY;
+        mat4.rotate(newRotationMatrix, degToRad(deltaY / 10), [1, 0, 0]);
+
+        mat4.multiply(newRotationMatrix, cameraRotationMatrix, cameraRotationMatrix);
+
+        lastMouseX = newX
+        lastMouseY = newY;
+    }
 }
 
 
@@ -312,6 +345,7 @@ function drawScene() {
 
     //CAMERA (inverse world)
     mat4.multiply(mvMatrix, cameraRotationMatrix);
+    mat4.multiply(mvMatrix, cameraPositionMatrix);
 
     //DRAW GRID BACK
 
