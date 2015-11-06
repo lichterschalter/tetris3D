@@ -128,7 +128,7 @@ function initBuffers() {
 
     //GRID BACK
 
-    //horizontal lines
+    //horizontal lines side
     gridBackHorizontalPositionBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, gridBackHorizontalPositionBuffer);
     vertices = []
@@ -157,7 +157,7 @@ function initBuffers() {
     gridBackHorizontalColorBuffer.itemSize = 4;
     gridBackHorizontalColorBuffer.numItems = 32;
 
-    //vertical lines
+    //vertical lines side
     gridBackVerticalPositionBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, gridBackVerticalPositionBuffer);
     vertices = []
@@ -185,6 +185,35 @@ function initBuffers() {
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
     gridBackVerticalColorBuffer.itemSize = 4;
     gridBackVerticalColorBuffer.numItems = 22;
+
+    //lines bottom
+    gridBackBottomPositionBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, gridBackBottomPositionBuffer);
+    vertices = []
+      for( var y = 0.0; y > -11; --y ){
+        var x = 0.0;
+        var z = 0.0;
+        vertices = vertices.concat([
+          x,        y,        z,
+          (x + 10), y,        z,
+        ]);
+        }
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+    gridBackBottomPositionBuffer.itemSize = 3;
+    gridBackBottomPositionBuffer.numItems = 22; //plus one for every new row, for triangle hiding
+
+    gridBackBottomColorBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, gridBackBottomColorBuffer);
+    colors = []
+    for( var y = 0; y < 11; ++y ){
+        colors = colors.concat([
+          1.0, 1.0, 1.0, 1.0,
+          1.0, 1.0, 1.0, 1.0,
+          ]);
+    }
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
+    gridBackBottomColorBuffer.itemSize = 4;
+    gridBackBottomColorBuffer.numItems = 22;
 
 
     //BACKGROUND
@@ -230,12 +259,12 @@ function drawScene() {
 
 
     //DRAW GRID BACK
+    mvPushMatrix();
+    mat4.translate(mvMatrix, [0, 0, -40]);
 
-    //--side I--
-    //horizontal lines
+    //--side I horizontal lines--
     mvPushMatrix();
 
-    mat4.translate(mvMatrix, [0, 0, -40]);
     mat4.rotate(mvMatrix, degToRad(-135), [0, 1, 0]);
     mat4.translate(mvMatrix, [0, 7, 0]);
 
@@ -250,10 +279,9 @@ function drawScene() {
 
     mvPopMatrix();
 
-    //vertical lines
+    //--side I vertical lines--
     mvPushMatrix();
 
-    mat4.translate(mvMatrix, [0, 0, -40]);
     mat4.rotate(mvMatrix, degToRad(-135), [0, 1, 0]);
     mat4.translate(mvMatrix, [0, 7, 0]);
 
@@ -268,11 +296,9 @@ function drawScene() {
 
     mvPopMatrix();
 
-    //--side II--
-    //horizontal lines
+    //--side II horizontal lines--
     mvPushMatrix();
 
-    mat4.translate(mvMatrix, [0, 0, -40]);
     mat4.rotate(mvMatrix, degToRad(-45), [0, 1, 0]);
     mat4.translate(mvMatrix, [0, 7, 0]);
 
@@ -287,10 +313,9 @@ function drawScene() {
 
     mvPopMatrix();
 
-    //vertical lines
+    //--side II vertical lines--
     mvPushMatrix();
 
-    mat4.translate(mvMatrix, [0, 0, -40]);
     mat4.rotate(mvMatrix, degToRad(-45), [0, 1, 0]);
     mat4.translate(mvMatrix, [0, 7, 0]);
 
@@ -304,12 +329,10 @@ function drawScene() {
     gl.drawArrays(gl.LINES, 0, gridBackVerticalPositionBuffer.numItems);
 
     mvPopMatrix();
-
-    //--side III--
-    //horizontal lines
+/*
+    //--side III horizontal lines--
     mvPushMatrix();
 
-    mat4.translate(mvMatrix, [0, 0, -40]);
     mat4.rotate(mvMatrix, degToRad(-135), [0, 1, 0]);
     mat4.translate(mvMatrix, [0, 7, -10]);
 
@@ -324,10 +347,9 @@ function drawScene() {
 
     mvPopMatrix();
 
-    //vertical lines
+    //--side III vertical lines--
     mvPushMatrix();
 
-    mat4.translate(mvMatrix, [0, 0, -40]);
     mat4.rotate(mvMatrix, degToRad(-135), [0, 1, 0]);
     mat4.translate(mvMatrix, [0, 7, -10]);
 
@@ -342,11 +364,9 @@ function drawScene() {
 
     mvPopMatrix();
 
-    //--side IV--
-    //horizontal lines
+    //--side IV horizontal lines--
     mvPushMatrix();
 
-    mat4.translate(mvMatrix, [0, 0, -40]);
     mat4.rotate(mvMatrix, degToRad(-45), [0, 1, 0]);
     mat4.translate(mvMatrix, [0, 7, 10]);
 
@@ -361,10 +381,9 @@ function drawScene() {
 
     mvPopMatrix();
 
-    //vertical lines
+    //--side IV vertical lines--
     mvPushMatrix();
 
-    mat4.translate(mvMatrix, [0, 0, -40]);
     mat4.rotate(mvMatrix, degToRad(-45), [0, 1, 0]);
     mat4.translate(mvMatrix, [0, 7, 10]);
 
@@ -377,6 +396,48 @@ function drawScene() {
     setMatrixUniforms();
     gl.drawArrays(gl.LINES, 0, gridBackVerticalPositionBuffer.numItems);
 
+    mvPopMatrix();
+*/
+    //--bottom vertical lines--
+    mvPushMatrix();
+
+    mat4.translate(mvMatrix, [0, -8, 0]);
+
+    mat4.rotate(mvMatrix, degToRad(-45), [0, 1, 0]);
+    mat4.rotate(mvMatrix, degToRad(-90), [1, 0, 0]);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, gridBackBottomPositionBuffer);
+    gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, gridBackBottomPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, gridBackBottomColorBuffer);
+    gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, gridBackBottomColorBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+    setMatrixUniforms();
+    gl.drawArrays(gl.LINES, 0, gridBackBottomPositionBuffer.numItems);
+
+    mvPopMatrix();
+
+    //--bottom vertical lines--
+    mvPushMatrix();
+
+    mat4.translate(mvMatrix, [-7, -8, 7]);
+
+    mat4.rotate(mvMatrix, degToRad(45), [0, 1, 0]);
+    mat4.rotate(mvMatrix, degToRad(-90), [1, 0, 0]);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, gridBackBottomPositionBuffer);
+    gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, gridBackBottomPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, gridBackBottomColorBuffer);
+    gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, gridBackBottomColorBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+    setMatrixUniforms();
+    gl.drawArrays(gl.LINES, 0, gridBackBottomPositionBuffer.numItems);
+
+    mvPopMatrix();
+
+
+    //pop general grid mvMatrix
     mvPopMatrix();
 
 
@@ -395,6 +456,7 @@ function drawScene() {
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, bgPositionBuffer.numItems);
 
     mvPopMatrix();
+
 
 }
 
