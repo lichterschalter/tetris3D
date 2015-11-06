@@ -5,6 +5,14 @@ this file is not a documentation file, it just helps me to keep track
 of the things i need to code.
 ---------------------------------------------------------------------
 
+--------
+LAB III:
+--------
+
+1 render grid, just three back sides visible
+2 change viewport
+3 toggle grid
+
 -------
 LAB Ia:
 -------
@@ -69,19 +77,3 @@ LAB Ib:
 - texture
 - user definierte pixel per block
 - translation flüssig
-
-
-OBJEKTORIENTIERUNG ??
-
-- tetris objekt (buffer, draw)
-  -- vars: position, rotation, farbe, form
-  -- zeichnen funktion (position, farbe, zeichnen)
-- class: tetrimon, class: forms
-
-
--------
-QUESTIONS TUTORIUM Lab 1a
--------
-
-x rotation not centered. answer: rotation um den ursprung!!
-x units per block. answer: scale!!
