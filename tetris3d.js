@@ -344,8 +344,8 @@ function drawScene() {
 */
 
     //CAMERA (inverse world)
-    mat4.multiply(mvMatrix, cameraRotationMatrix);
     mat4.multiply(mvMatrix, cameraPositionMatrix);
+    mat4.multiply(mvMatrix, cameraRotationMatrix);
 
     //DRAW GRID BACK
 
