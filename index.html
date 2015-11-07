@@ -36,7 +36,27 @@
 
 <body onload="webGLStart()"; oncontextmenu="return false;">
   <canvas id="lesson03-canvas" style="border: none;" width="800" height="600"></canvas>
+  </br></br>
+  <button type="button" onclick="fullscreen()"> full screen </button>
 
+<script>
+    var canvas = document.getElementById("lesson03-canvas");
+    canvas.width  = ( window.innerWidth - 50);
+    canvas.height = ( window.innerHeight - 70);
+
+    var canvas = document.getElementById('lesson03-canvas');
+    function fullscreen(){
+               var element = document.getElementById('lesson03-canvas');
+
+               if(element.webkitRequestFullScreen) {
+                   element.webkitRequestFullScreen();
+               }
+              else {
+                 element.mozRequestFullScreen();
+              }
+    }
+
+</script>
   <!--
   <h3 id="score3">Score:
     <script>
