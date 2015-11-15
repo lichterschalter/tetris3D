@@ -204,12 +204,14 @@ function handleMouseMove(event) {
         mat4.identity(newRotationMatrix);
         mat4.rotate(newRotationMatrix, degToRad(deltaX / 10), [0, 1, 0]);
         rotYTrace += (deltaX / 10);
-        if( rotYTrace <= -360 || rotYTrace >= 360 ) rotYTrace = 0;
+        if( rotYTrace > 360 ) rotYTrace = 0;
+        if( rotYTrace < 0 )rotYTrace = 360;
 
         var deltaY = newY - lastMouseY;
         mat4.rotate(newRotationMatrix, degToRad(deltaY / 10), [1, 0, 0]);
         rotXTrace += (deltaY / 10);
-        if( rotXTrace <= -360 || rotXTrace >= 360 ) rotXTrace = 0;
+        if( rotXTrace > 360 ) rotXTrace = 0;
+        if( rotXTrace < 0 )rotXTrace = 360;
 
         mat4.multiply(newRotationMatrix, cameraRotationMatrix, cameraRotationMatrix);
 
@@ -352,7 +354,7 @@ function drawScene() {
     if( perspectiveView ){
         mat4.perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0, pMatrix);
     }else{
-        mat4.ortho(pMatrix, -1.0, 1.0, -1.0, 1.0, 0.1, 100);
+        mat4.ortho(pMatrix, -200, 200, -200, 200, 0.1, 100.0);
         console.log("orhto");
     }
 
@@ -374,23 +376,21 @@ function drawScene() {
 
     //DRAW GRID BACK
     mat4.translate(mvMatrix, [0, 0, -7]);
-
+/*
     if(
 
       //x-axis between -90 and 90
-      (rotXTrace >= -90 && rotXTrace <= 90 || rotXTrace >= 270 && rotXTrace <= -270)
+      ( rotXTrace >= 0 && rotXTrace <= 90 || rotXTrace >= 270 && rotXTrace <= 360 )
       &&
-      (rotYTrace <= 0 && rotYTrace >= -135 || rotYTrace <= -315 && rotYTrace <= 0 ||
-       rotYTrace >= 0 && rotYTrace <= 45 || rotYTrace >= 225 && rotYTrace <= 360)
+      ( rotYTrace >= 0 && rotYTrace <= 45 || rotYTrace >= 225 && rotYTrace <= 360 )
       ||
 
       //x-axis not between -90 and 90, so hiding the side for y-axis rot works inverse
-      !(rotXTrace >= -90 && rotXTrace <= 90 || rotXTrace >= 270 && rotXTrace <= -270)
+      ( rotXTrace >= 90 && rotXTrace <= 270 )
       &&
-      (rotYTrace <= 90 && rotYTrace >= -45 || rotYTrace <= -225 && rotYTrace <= 90 ||
-       rotYTrace >= 45 && rotYTrace <= 135 || rotYTrace >= 315 && rotYTrace <= 360)
+      ( rotYTrace >= 0 && rotYTrace <= 135 || rotYTrace >= 315 && rotYTrace <= 360 )
 
-      ){
+    ){*/
 
         //--side I horizontal lines--
         mvPushMatrix();
@@ -425,7 +425,7 @@ function drawScene() {
         gl.drawArrays(gl.LINES, 0, gridBackVerticalPositionBuffer.numItems);
 
         mvPopMatrix();
-    }
+    //}// end if
 
     //--side II horizontal lines--
     mvPushMatrix();
@@ -460,7 +460,7 @@ function drawScene() {
     gl.drawArrays(gl.LINES, 0, gridBackVerticalPositionBuffer.numItems);
 
     mvPopMatrix();
-
+/*
     //--side III horizontal lines--
     mvPushMatrix();
 
@@ -528,7 +528,7 @@ function drawScene() {
     gl.drawArrays(gl.LINES, 0, gridBackVerticalPositionBuffer.numItems);
 
     mvPopMatrix();
-
+*/
     //--bottom vertical lines--
     mvPushMatrix();
 
@@ -566,7 +566,7 @@ function drawScene() {
     gl.drawArrays(gl.LINES, 0, gridBackBottomPositionBuffer.numItems);
 
     mvPopMatrix();
-
+/*
     //--top vertical lines--
     mvPushMatrix();
 
@@ -604,7 +604,7 @@ function drawScene() {
     gl.drawArrays(gl.LINES, 0, gridBackBottomPositionBuffer.numItems);
 
     mvPopMatrix();
-
+*/
 
     //pop general grid mvMatrix
     mvPopMatrix();
