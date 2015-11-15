@@ -166,13 +166,16 @@ function handleMouseUp(event) {
     mouseLeftDown = false;
 }
 
+
+var rotXTrace = 0;
+var rotYTrace = 0;
 function handleMouseMove(event) {
 
     if (!mouseRightDown && !mouseLeftDown) {
         return;
     }
 
-    if( mouseLeftDown){
+    if( mouseRightDown){
         var newX = event.clientX;
         var newY = event.clientY;
 
@@ -192,7 +195,7 @@ function handleMouseMove(event) {
         lastMouseY = newY;
     }
 
-    if( mouseRightDown){
+    if( mouseLeftDown){
         var newX = event.clientX;
         var newY = event.clientY;
 
@@ -200,14 +203,20 @@ function handleMouseMove(event) {
         var newRotationMatrix = mat4.create();
         mat4.identity(newRotationMatrix);
         mat4.rotate(newRotationMatrix, degToRad(deltaX / 10), [0, 1, 0]);
+        rotYTrace += (deltaX / 10);
+        if( rotYTrace <= -360 || rotYTrace >= 360 ) rotYTrace = 0;
 
         var deltaY = newY - lastMouseY;
         mat4.rotate(newRotationMatrix, degToRad(deltaY / 10), [1, 0, 0]);
+        rotXTrace += (deltaY / 10);
+        if( rotXTrace <= -360 || rotXTrace >= 360 ) rotXTrace = 0;
 
         mat4.multiply(newRotationMatrix, cameraRotationMatrix, cameraRotationMatrix);
 
         lastMouseX = newX
         lastMouseY = newY;
+
+        //console.log( rotXTrace, rotYTrace );
     }
 }
 
@@ -348,10 +357,10 @@ function drawScene() {
     }
 
     mat4.identity(mvMatrix);
-    mat4.lookAt(mvMatrix, [20,0,0], [0, 0, 0], [0, 1, 0]);
 
     mvPushMatrix();
 
+    //MOVE TO START POSITION
     mat4.translate(mvMatrix, [0, 0, -40]);
 
     //CAMERA (inverse world)
@@ -359,42 +368,49 @@ function drawScene() {
     mat4.multiply(mvMatrix, cameraPositionMatrix);
     mat4.multiply(mvMatrix, cameraRotationMatrix);
 
+    //START ROTATION
+    mat4.multiply(mvMatrix, rotYStart);
+    mat4.multiply(mvMatrix, rotXStart);
+
     //DRAW GRID BACK
-    mat4.translate(mvMatrix, [0, 0, -5]);
+    mat4.translate(mvMatrix, [0, 0, -7]);
 
-    //--side I horizontal lines--
-    mvPushMatrix();
+    if( rotYTrace <= 0 && rotYTrace >= -135 || rotYTrace <= -315 && rotYTrace <= 0
+     || rotYTrace >= 0 && rotYTrace <= 45 || rotYTrace >= 225 && rotYTrace <= 360){
+        //--side I horizontal lines--
+        mvPushMatrix();
 
-    mat4.rotate(mvMatrix, degToRad(-135), [0, 1, 0]);
-    mat4.translate(mvMatrix, [0, 7, 0]);
+        mat4.rotate(mvMatrix, degToRad(-135), [0, 1, 0]);
+        mat4.translate(mvMatrix, [0, 7, 0]);
 
-    gl.bindBuffer(gl.ARRAY_BUFFER, gridBackHorizontalPositionBuffer);
-    gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, gridBackHorizontalPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+        gl.bindBuffer(gl.ARRAY_BUFFER, gridBackHorizontalPositionBuffer);
+        gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, gridBackHorizontalPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
-    gl.bindBuffer(gl.ARRAY_BUFFER, gridBackHorizontalColorBuffer);
-    gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, gridBackHorizontalColorBuffer.itemSize, gl.FLOAT, false, 0, 0);
+        gl.bindBuffer(gl.ARRAY_BUFFER, gridBackHorizontalColorBuffer);
+        gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, gridBackHorizontalColorBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
-    setMatrixUniforms();
-    gl.drawArrays(gl.LINES, 0, gridBackHorizontalPositionBuffer.numItems);
+        setMatrixUniforms();
+        gl.drawArrays(gl.LINES, 0, gridBackHorizontalPositionBuffer.numItems);
 
-    mvPopMatrix();
+        mvPopMatrix();
 
-    //--side I vertical lines--
-    mvPushMatrix();
+        //--side I vertical lines--
+        mvPushMatrix();
 
-    mat4.rotate(mvMatrix, degToRad(-135), [0, 1, 0]);
-    mat4.translate(mvMatrix, [0, 7, 0]);
+        mat4.rotate(mvMatrix, degToRad(-135), [0, 1, 0]);
+        mat4.translate(mvMatrix, [0, 7, 0]);
 
-    gl.bindBuffer(gl.ARRAY_BUFFER, gridBackVerticalPositionBuffer);
-    gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, gridBackVerticalPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+        gl.bindBuffer(gl.ARRAY_BUFFER, gridBackVerticalPositionBuffer);
+        gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, gridBackVerticalPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
-    gl.bindBuffer(gl.ARRAY_BUFFER, gridBackVerticalColorBuffer);
-    gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, gridBackVerticalColorBuffer.itemSize, gl.FLOAT, false, 0, 0);
+        gl.bindBuffer(gl.ARRAY_BUFFER, gridBackVerticalColorBuffer);
+        gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, gridBackVerticalColorBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
-    setMatrixUniforms();
-    gl.drawArrays(gl.LINES, 0, gridBackVerticalPositionBuffer.numItems);
+        setMatrixUniforms();
+        gl.drawArrays(gl.LINES, 0, gridBackVerticalPositionBuffer.numItems);
 
-    mvPopMatrix();
+        mvPopMatrix();
+    }
 
     //--side II horizontal lines--
     mvPushMatrix();
@@ -622,13 +638,20 @@ function typeOfCurrentTetrimon() {
     }
 }
 
-
+var rotYStart = mat4.create();
+var rotXStart = mat4.create();
 function initGame() {
     redBg = Math.random();
     greenBg = Math.random();
     blueBg = Math.random();
 
     typeOfCurrentTetrimon();
+
+    //Rotation at the beginning of the game
+    mat4.identity(rotXStart);
+    mat4.identity(rotYStart);
+    mat4.rotate(rotXStart, degToRad(0), [1, 0, 0]);
+    mat4.rotate(rotYStart, degToRad(0), [0, 1, 0]);
 
 }
 
