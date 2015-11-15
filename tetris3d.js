@@ -136,6 +136,62 @@ function handleKeys() {
         //p key
         perspectiveView = !perspectiveView;
     }
+    if ( currentlyPressedKeys[88] && !currentlyPressedKeys[16] ) {
+        //x key
+        var newRotationMatrix = mat4.create();
+        mat4.identity(newRotationMatrix);
+        mat4.rotate(newRotationMatrix, degToRad(1), [1, 0, 0]);
+        mat4.multiply(newRotationMatrix, cameraPositionMatrix, cameraPositionMatrix);
+    }
+    if ( currentlyPressedKeys[88] && currentlyPressedKeys[16] ) {
+        //x key + shift
+        var newRotationMatrix = mat4.create();
+        mat4.identity(newRotationMatrix);
+        mat4.rotate(newRotationMatrix, degToRad(-1), [1, 0, 0]);
+        mat4.multiply(newRotationMatrix, cameraPositionMatrix, cameraPositionMatrix);
+    }
+    if ( currentlyPressedKeys[89] && !currentlyPressedKeys[16] ) {
+        //y key
+        var newRotationMatrix = mat4.create();
+        mat4.identity(newRotationMatrix);
+        mat4.rotate(newRotationMatrix, degToRad(1), [0, 1, 0]);
+        mat4.multiply(newRotationMatrix, cameraPositionMatrix, cameraPositionMatrix);
+    }
+    if ( currentlyPressedKeys[89] && currentlyPressedKeys[16] ) {
+        //y key + shift
+        var newRotationMatrix = mat4.create();
+        mat4.identity(newRotationMatrix);
+        mat4.rotate(newRotationMatrix, degToRad(-1), [0, 1, 0]);
+        mat4.multiply(newRotationMatrix, cameraPositionMatrix, cameraPositionMatrix);
+    }
+    if ( currentlyPressedKeys[89] && !currentlyPressedKeys[16] ) {
+        //y key
+        var newRotationMatrix = mat4.create();
+        mat4.identity(newRotationMatrix);
+        mat4.rotate(newRotationMatrix, degToRad(1), [0, 1, 0]);
+        mat4.multiply(newRotationMatrix, cameraPositionMatrix, cameraPositionMatrix);
+    }
+    if ( currentlyPressedKeys[89] && currentlyPressedKeys[16] ) {
+        //y key + shift
+        var newRotationMatrix = mat4.create();
+        mat4.identity(newRotationMatrix);
+        mat4.rotate(newRotationMatrix, degToRad(-1), [0, 1, 0]);
+        mat4.multiply(newRotationMatrix, cameraPositionMatrix, cameraPositionMatrix);
+    }
+    if ( currentlyPressedKeys[67] && !currentlyPressedKeys[16] ) {
+        //y key
+        var newRotationMatrix = mat4.create();
+        mat4.identity(newRotationMatrix);
+        mat4.rotate(newRotationMatrix, degToRad(1), [0, 0, 1]);
+        mat4.multiply(newRotationMatrix, cameraPositionMatrix, cameraPositionMatrix);
+    }
+    if ( currentlyPressedKeys[67] && currentlyPressedKeys[16] ) {
+        //y key + shift
+        var newRotationMatrix = mat4.create();
+        mat4.identity(newRotationMatrix);
+        mat4.rotate(newRotationMatrix, degToRad(-1), [0, 0, 1]);
+        mat4.multiply(newRotationMatrix, cameraPositionMatrix, cameraPositionMatrix);
+    }
 }
 
 var mouseRightDown = false;
