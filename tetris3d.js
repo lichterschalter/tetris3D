@@ -216,7 +216,7 @@ function handleMouseMove(event) {
         lastMouseX = newX
         lastMouseY = newY;
 
-        //console.log( rotXTrace, rotYTrace );
+        console.log( rotXTrace, rotYTrace );
     }
 }
 
@@ -361,7 +361,7 @@ function drawScene() {
     mvPushMatrix();
 
     //MOVE TO START POSITION
-    mat4.translate(mvMatrix, [0, 0, -40]);
+    mat4.translate(mvMatrix, [0, -0.5, -40]);
 
     //CAMERA (inverse world)
     mat4.scale(mvMatrix, [1/zoom,1/zoom,1/zoom]);
@@ -375,8 +375,23 @@ function drawScene() {
     //DRAW GRID BACK
     mat4.translate(mvMatrix, [0, 0, -7]);
 
-    if( rotYTrace <= 0 && rotYTrace >= -135 || rotYTrace <= -315 && rotYTrace <= 0
-     || rotYTrace >= 0 && rotYTrace <= 45 || rotYTrace >= 225 && rotYTrace <= 360){
+    if(
+
+      //x-axis between -90 and 90
+      (rotXTrace >= -90 && rotXTrace <= 90 || rotXTrace >= 270 && rotXTrace <= -270)
+      &&
+      (rotYTrace <= 0 && rotYTrace >= -135 || rotYTrace <= -315 && rotYTrace <= 0 ||
+       rotYTrace >= 0 && rotYTrace <= 45 || rotYTrace >= 225 && rotYTrace <= 360)
+      ||
+
+      //x-axis not between -90 and 90, so hiding the side for y-axis rot works inverse
+      !(rotXTrace >= -90 && rotXTrace <= 90 || rotXTrace >= 270 && rotXTrace <= -270)
+      &&
+      (rotYTrace <= 90 && rotYTrace >= -45 || rotYTrace <= -225 && rotYTrace <= 90 ||
+       rotYTrace >= 45 && rotYTrace <= 135 || rotYTrace >= 315 && rotYTrace <= 360)
+
+      ){
+
         //--side I horizontal lines--
         mvPushMatrix();
 
