@@ -379,10 +379,10 @@ function initBuffers() {
     bgPositionBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, bgPositionBuffer);
     vertices = [
-         100.0,  100.0,  0.0,
-        -100.0,  100.0,  0.0,
-         100.0, -100.0,  0.0,
-        -100.0, -100.0,  0.0
+         200.0,  200.0,  0.0,
+        -200.0,  200.0,  0.0,
+         200.0, -200.0,  0.0,
+        -200.0, -200.0,  0.0
         ];
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
     bgPositionBuffer.itemSize = 3;
@@ -410,7 +410,8 @@ function drawScene() {
     if( perspectiveView ){
         mat4.perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0, pMatrix);
     }else{
-        mat4.ortho(pMatrix, -200, 200, -200, 200, 0.1, 100.0);
+                    //left, right, bottom, top
+        mat4.ortho(-1.0, 1.0, -1.0, 1.0, 0.1, 100, pMatrix);
         console.log("orhto");
     }
 
