@@ -74,7 +74,6 @@ function initShaders() {
 var mvMatrix = mat4.create();
 var mvMatrixStack = [];
 var pMatrix = mat4.create();
-
 function mvPushMatrix() {
     var copy = mat4.create();
     mat4.set(mvMatrix, copy);
@@ -101,7 +100,6 @@ function degToRad(degrees) {
 
 
 var currentlyPressedKeys = {};
-
 function handleKeyDown(event) {
     currentlyPressedKeys[event.keyCode] = true;
 
@@ -265,6 +263,12 @@ function handleKeys() {
         //positionY_tetrimon -= 1;
         currentlyPressedKeys[32] = false;*/
     }
+    if ( currentlyPressedKeys[71] ) {
+        //g key
+        if( gravityIsOn ) switchGravityOff();
+        else switchGravityOn();
+        currentlyPressedKeys[71] = false;
+    }
 }
 
 
@@ -371,7 +375,6 @@ var cameraPositionMatrix = mat4.create();
 mat4.identity(cameraPositionMatrix);
 var cameraRotationMatrix = mat4.create();
 mat4.identity(cameraRotationMatrix);
-
 function handleMouseDown(event) {
     if (event.which === 1 || event.button === 1) {
         mouseLeftDown = true;
@@ -447,10 +450,53 @@ function handleMouseMove(event) {
 }
 
 
+var gravityIsOn = false;
+function switchGravityOn() {
+    gravityIsOn = true;
+    setGravitySpeed();
+    gravityTimeElapsed = ( new Date().getTime() / 1000 );
+}
+
+
+function switchGravityOff() {
+    gravityIsOn = false;
+}
+
+
+var gravSpeed = 1.0;
+function setGravitySpeed( speed ) {
+    if( speed != undefined) gravitySpeed = speed;
+    else gravitySpeed = gravSpeed;
+}
+
+
+var gravitySpeed;
+var gravityTimeElapsed = ( new Date().getTime() / 1000 );
+function gravity() {
+  if( gravityIsOn ){
+    var timeNow = ( new Date().getTime() / 1000 );
+    gravitySpeed -= ( timeNow - gravityTimeElapsed );
+    gravityTimeElapsed = timeNow;
+    if ( gravitySpeed <= 0 ){
+        /*if( currentObject.checkIfBottomOccupied() ){
+            //console.log("collision");
+            checkIfRowFull();
+            makeNewTetrimon();
+            setGravitySpeed();*/
+        //}else{
+            //currentObject.moveObjectGravity();
+            positionY_tetrimon -= 1;
+            setGravitySpeed();
+            //grid.getInfoOccupation();
+        //}
+    }
+  }
+}
+
+
 var redBg;
 var greenBg;
 var blueBg;
-
 function initBuffers() {
 
     //TWO X TWO
@@ -1127,7 +1173,7 @@ function initGame() {
 var lastTime = 0;
 function animate() {
 
-  //gravity();
+  gravity();
 
   var timeNow = new Date().getTime();
   if (lastTime != 0) {
