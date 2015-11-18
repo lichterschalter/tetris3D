@@ -37,7 +37,7 @@
 <body onload="webGLStart()"; oncontextmenu="return false;">
   <canvas id="lesson03-canvas" style="border: none;" width="800" height="600"></canvas>
   </br></br>
-  <button type="button" onclick="fullscreen()"> full screen </button>
+  <button type="button" onclick="stopGame()"> Stop game </button>
 
 <script>
     var canvas = document.getElementById("lesson03-canvas");
@@ -54,6 +54,10 @@
               else {
                  element.mozRequestFullScreen();
               }
+    }
+
+    function stopGame() {
+        gameOver = true;
     }
 
 </script>

@@ -275,7 +275,7 @@ function handleMouseMove(event) {
         lastMouseX = newX
         lastMouseY = newY;
 
-        console.log( rotXTrace, rotYTrace );
+        //console.log( rotXTrace, rotYTrace );
     }
 }
 
@@ -285,6 +285,180 @@ var greenBg;
 var blueBg;
 
 function initBuffers() {
+
+    //TWO X TWO
+
+    two_x_twoVertexPositionBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, two_x_twoVertexPositionBuffer);
+    vertices = [
+        // Front face
+        -1.0, -1.0,  1.0,
+         1.0, -1.0,  1.0,
+         1.0,  1.0,  1.0,
+        -1.0,  1.0,  1.0,
+
+        // Back face
+        -1.0, -1.0, -1.0,
+        -1.0,  1.0, -1.0,
+         1.0,  1.0, -1.0,
+         1.0, -1.0, -1.0,
+
+        // Top face
+        -1.0,  1.0, -1.0,
+        -1.0,  1.0,  1.0,
+         1.0,  1.0,  1.0,
+         1.0,  1.0, -1.0,
+
+        // Bottom face
+        -1.0, -1.0, -1.0,
+         1.0, -1.0, -1.0,
+         1.0, -1.0,  1.0,
+        -1.0, -1.0,  1.0,
+
+        // Right face
+         1.0, -1.0, -1.0,
+         1.0,  1.0, -1.0,
+         1.0,  1.0,  1.0,
+         1.0, -1.0,  1.0,
+
+        // Left face
+        -1.0, -1.0, -1.0,
+        -1.0, -1.0,  1.0,
+        -1.0,  1.0,  1.0,
+        -1.0,  1.0, -1.0
+    ];
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+    two_x_twoVertexPositionBuffer.itemSize = 3;
+    two_x_twoVertexPositionBuffer.numItems = 24;
+
+    two_x_twoVertexColorBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, two_x_twoVertexColorBuffer);
+    var red = Math.random();
+    var green = Math.random();
+    var blue = Math.random();
+    console.log(red, green, blue);
+    colors = [
+        [red, green, blue, 1.0], // Front face
+        [red, green, blue, 1.0], // Back face
+        [red, green, blue, 1.0], // Top face
+        [red, green, blue, 1.0], // Bottom face
+        [red, green, blue, 1.0], // Right face
+        [red, green, blue, 1.0]  // Left face
+    ];
+
+    var unpackedColors = [];
+    for (var i in colors) {
+        var color = colors[i];
+        for (var j = 0; j < 4; j++) {
+            unpackedColors = unpackedColors.concat(color);
+        }
+    }
+    console.log(unpackedColors);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(unpackedColors), gl.STATIC_DRAW);
+    two_x_twoVertexColorBuffer.itemSize = 4;
+    two_x_twoVertexColorBuffer.numItems = 24;
+
+    two_x_twoVertexIndexBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, two_x_twoVertexIndexBuffer);
+    var two_x_twoVertexIndices = [
+        0, 1, 2,      0, 2, 3,    // Front face
+        4, 5, 6,      4, 6, 7,    // Back face
+        8, 9, 10,     8, 10, 11,  // Top face
+        12, 13, 14,   12, 14, 15, // Bottom face
+        16, 17, 18,   16, 18, 19, // Right face
+        20, 21, 22,   20, 22, 23  // Left face
+    ];
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(two_x_twoVertexIndices), gl.STATIC_DRAW);
+    two_x_twoVertexIndexBuffer.itemSize = 1;
+    two_x_twoVertexIndexBuffer.numItems = 36;
+
+
+    //ONE X FOUR
+
+    one_x_fourVertexPositionBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, one_x_fourVertexPositionBuffer);
+    vertices = [
+        // Front face
+        -2.0,  0.0,  1.0,
+         2.0,  0.0,  1.0,
+         2.0,  1.0,  1.0,
+        -2.0,  1.0,  1.0,
+
+        // Back face
+        -2.0,  0.0,  0.0,
+        -2.0,  1.0,  0.0,
+         2.0,  1.0,  0.0,
+         2.0,  0.0,  0.0,
+
+        // Top face
+        -2.0,  1.0,  0.0,
+        -2.0,  1.0,  1.0,
+         2.0,  1.0,  1.0,
+         2.0,  1.0,  0.0,
+
+        // Bottom face
+        -2.0,  0.0,  0.0,
+         2.0,  0.0,  0.0,
+         2.0,  0.0,  1.0,
+        -2.0,  0.0,  1.0,
+
+        // Right face
+         2.0,  0.0,  0.0,
+         2.0,  1.0,  0.0,
+         2.0,  1.0,  1.0,
+         2.0,  0.0,  1.0,
+
+        // Left face
+        -2.0,  0.0,  0.0,
+        -2.0,  0.0,  1.0,
+        -2.0,  1.0,  1.0,
+        -2.0,  1.0,  0.0
+    ];
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+    one_x_fourVertexPositionBuffer.itemSize = 3;
+    one_x_fourVertexPositionBuffer.numItems = 24;
+
+    one_x_fourVertexColorBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, one_x_fourVertexColorBuffer);
+    var red = Math.random();
+    var green = Math.random();
+    var blue = Math.random();
+    console.log(red, green, blue);
+    colors = [
+        [red, green, blue, 1.0], // Front face
+        [red, green, blue, 1.0], // Back face
+        [red, green, blue, 1.0], // Top face
+        [red, green, blue, 1.0], // Bottom face
+        [red, green, blue, 1.0], // Right face
+        [red, green, blue, 1.0]  // Left face
+    ];
+
+    var unpackedColors = [];
+    for (var i in colors) {
+        var color = colors[i];
+        for (var j = 0; j < 4; j++) {
+            unpackedColors = unpackedColors.concat(color);
+        }
+    }
+    console.log(unpackedColors);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(unpackedColors), gl.STATIC_DRAW);
+    one_x_fourVertexColorBuffer.itemSize = 4;
+    one_x_fourVertexColorBuffer.numItems = 24;
+
+    one_x_fourVertexIndexBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, one_x_fourVertexIndexBuffer);
+    var one_x_fourVertexIndices = [
+        0, 1, 2,      0, 2, 3,    // Front face
+        4, 5, 6,      4, 6, 7,    // Back face
+        8, 9, 10,     8, 10, 11,  // Top face
+        12, 13, 14,   12, 14, 15, // Bottom face
+        16, 17, 18,   16, 18, 19, // Right face
+        20, 21, 22,   20, 22, 23  // Left face
+    ];
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(one_x_fourVertexIndices), gl.STATIC_DRAW);
+    one_x_fourVertexIndexBuffer.itemSize = 1;
+    one_x_fourVertexIndexBuffer.numItems = 36;
+
 
     //GRID BACK
 
@@ -408,8 +582,7 @@ function drawScene() {
     gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-    mat4.identity(mvMatrix);
-    mvPushMatrix();
+
 
     if( perspectiveView ){
         mat4.perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0, pMatrix);
@@ -418,6 +591,8 @@ function drawScene() {
         mat4.ortho( -(gl.viewportWidth/50), (gl.viewportWidth/50), -(gl.viewportHeight/50), (gl.viewportHeight/50), 0.1, 100, pMatrix);
     }
 
+    mat4.identity(mvMatrix);
+    mvPushMatrix();
 
     mat4.translate(mvMatrix, [0, -0.5, -40]);
 
@@ -429,6 +604,45 @@ function drawScene() {
     //START ROTATION
     mat4.multiply(mvMatrix, rotYStart);
     mat4.multiply(mvMatrix, rotXStart);
+
+
+    //DRAW TWO X TWO
+
+    mvPushMatrix();
+    mat4.rotate(mvMatrix, degToRad(45), [0, 1, 0]);
+    mat4.translate(mvMatrix, [0, 6, -3.9]);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, two_x_twoVertexPositionBuffer);
+    gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, two_x_twoVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, two_x_twoVertexColorBuffer);
+    gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, two_x_twoVertexColorBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, two_x_twoVertexIndexBuffer);
+    setMatrixUniforms();
+    gl.drawElements(gl.TRIANGLES, two_x_twoVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
+
+    mvPopMatrix();
+
+
+    //DRAW ONE X FOUR
+
+    mvPushMatrix();
+    mat4.rotate(mvMatrix, degToRad(45), [0, 1, 0]);
+    mat4.translate(mvMatrix, [0, 3, -4.9]);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, one_x_fourVertexPositionBuffer);
+    gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, one_x_fourVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, one_x_fourVertexColorBuffer);
+    gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, one_x_fourVertexColorBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, one_x_fourVertexIndexBuffer);
+    setMatrixUniforms();
+    gl.drawElements(gl.TRIANGLES, one_x_fourVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
+
+    mvPopMatrix();
+
 
     //DRAW GRID BACK
     mat4.translate(mvMatrix, [0, 0, -7]);
@@ -694,7 +908,7 @@ function getRandomNumber(min, max) {
 
 
 var tetrimonType;
-//var tetrimonType = "one_x_four";
+//var tetrimonType = "two_x_two";
 function typeOfCurrentTetrimon() {
     type = getRandomNumber(0,1);
 
@@ -704,8 +918,8 @@ function typeOfCurrentTetrimon() {
     }
 
     if( type == 1){
-    //currentObject = new one_x_four();
-    tetrimonType = "one_x_four";
+    //currentObject = new two_x_two();
+    tetrimonType = "two_x_two";
     }
 }
 
@@ -753,7 +967,7 @@ function tick() {
         drawScene();
         animate();
     }else{
-        window.alert("Game Over!");
+        //window.alert("Game Over!");
     }
 }
 
