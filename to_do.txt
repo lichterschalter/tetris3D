@@ -9,13 +9,15 @@ of the things i need to code.
 LAB III:
 --------
 
-1 x render grid, just three back sides visible
-2 x change viewport
-3 - toggle grid
-4 x objects
-  - more objects
-5 - grid
-  - check if not null
+0. draw grid array
+1. trace object in the grid
+   (gravity, key movement, rotation)
+2. make new tetrimon
+3. collision detection
+   - no rotation out of the grid
+   - no movement out of the grid
+4. drop tetrimon
+5. scoring
 
 -------
 LAB Ia:

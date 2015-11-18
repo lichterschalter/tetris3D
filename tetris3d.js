@@ -823,7 +823,99 @@ function initBuffers() {
     one_x_fourVertexIndexBuffer.numItems = 36;
 
 
-    //GRID BACK
+    //DRAW GRID ARRAY
+
+    var xGrid = 1;
+    var yGrid = 1;
+    var zGrid = 1;
+
+    gridVertexPositionBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, gridVertexPositionBuffer);
+    for( var i = 0; i < 2; ++i ){
+        vertices = [
+            // Front face
+            -xGrid, -yGrid,  zGrid,
+             xGrid, -yGrid,  zGrid,
+             xGrid,  yGrid,  zGrid,
+            -xGrid,  yGrid,  zGrid,
+
+            // Back face
+            -xGrid, -yGrid, -zGrid,
+            -xGrid,  yGrid, -zGrid,
+             xGrid,  yGrid, -zGrid,
+             xGrid, -yGrid, -zGrid,
+
+            // Top face
+            -xGrid,  yGrid, -zGrid,
+            -xGrid,  yGrid,  zGrid,
+             xGrid,  yGrid,  zGrid,
+             xGrid,  yGrid, -zGrid,
+
+            // Bottom face
+            -xGrid, -yGrid, -zGrid,
+             xGrid, -yGrid, -zGrid,
+             xGrid, -yGrid,  zGrid,
+            -xGrid, -yGrid,  zGrid,
+
+            // Right face
+             xGrid, -yGrid, -zGrid,
+             xGrid,  yGrid, -zGrid,
+             xGrid,  yGrid,  zGrid,
+             xGrid, -yGrid,  zGrid,
+
+            // Left face
+            -xGrid, -yGrid, -zGrid,
+            -xGrid, -yGrid,  zGrid,
+            -xGrid,  yGrid,  zGrid,
+            -xGrid,  yGrid, -zGrid
+        ];
+    }
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+    gridVertexPositionBuffer.itemSize = 3;
+    gridVertexPositionBuffer.numItems = 24;
+
+    gridVertexColorBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, gridVertexColorBuffer);
+    var red = Math.random();
+    var green = Math.random();
+    var blue = Math.random();
+    colors = [
+        [red, green, blue, 1.0], // Front face
+        [red, green, blue, 1.0], // Back face
+        [red, green, blue, 1.0], // Top face
+        [red, green, blue, 1.0], // Bottom face
+        [red, green, blue, 1.0], // Right face
+        [red, green, blue, 1.0]  // Left face
+    ];
+
+    var unpackedColors = [];
+    for (var i in colors) {
+        var color = colors[i];
+        for (var j = 0; j < 4; j++) {
+            unpackedColors = unpackedColors.concat(color);
+        }
+    }
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(unpackedColors), gl.STATIC_DRAW);
+    gridVertexColorBuffer.itemSize = 4;
+    gridVertexColorBuffer.numItems = 24;
+
+    gridVertexIndexBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, gridVertexIndexBuffer);
+    var gridVertexIndices = [
+        0, 1, 2,      0, 2, 3,    // Front face
+        4, 5, 6,      4, 6, 7,    // Back face
+        8, 9, 10,     8, 10, 11,  // Top face
+        12, 13, 14,   12, 14, 15, // Bottom face
+        16, 17, 18,   16, 18, 19, // Right face
+        20, 21, 22,   20, 22, 23  // Left face
+    ];
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(gridVertexIndices), gl.STATIC_DRAW);
+    gridVertexIndexBuffer.itemSize = 1;
+    gridVertexIndexBuffer.numItems = 36;
+
+
+
+    //GRID BACK (WIREFRAME)
 
     //horizontal lines side
     gridBackHorizontalPositionBuffer = gl.createBuffer();
@@ -1027,7 +1119,29 @@ function drawScene() {
     }
 
 
+
+    //GRID ARRAY
+
+    mvPushMatrix();
+    //mat4.rotate(mvMatrix, degToRad(45), [0, 1, 0]);
+    //mat4.translate(mvMatrix, [0, 6, -4]);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, gridVertexPositionBuffer);
+    gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, gridVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, gridVertexColorBuffer);
+    gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, gridVertexColorBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, gridVertexIndexBuffer);
+    setMatrixUniforms();
+    gl.drawElements(gl.TRIANGLES, gridVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
+
+    mvPopMatrix();
+
+
+
     //DRAW GRID BACK
+
     mat4.translate(mvMatrix, [0, 0, -7]);
 /*
     if(
@@ -1314,7 +1428,7 @@ function initGame() {
 
     setGravitySpeed();
     grid = new gridArray();
-    grid.getInfoOccupation();
+    //grid.getInfoOccupation();
 
     typeOfCurrentTetrimon();
 
