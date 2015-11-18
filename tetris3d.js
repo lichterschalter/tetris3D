@@ -134,6 +134,7 @@ function handleKeys() {
     }
     if ( currentlyPressedKeys[80] ) {
         //p key
+        currentlyPressedKeys[80] = false;
         perspectiveView = !perspectiveView;
     }
     if ( currentlyPressedKeys[88] && !currentlyPressedKeys[16] ) {
@@ -407,19 +408,17 @@ function drawScene() {
     gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
+    mat4.identity(mvMatrix);
+    mvPushMatrix();
+
     if( perspectiveView ){
         mat4.perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0, pMatrix);
     }else{
                     //left, right, bottom, top
-        mat4.ortho(-1.0, 1.0, -1.0, 1.0, 0.1, 100, pMatrix);
-        console.log("orhto");
+        mat4.ortho( -(gl.viewportWidth/50), (gl.viewportWidth/50), -(gl.viewportHeight/50), (gl.viewportHeight/50), 0.1, 100, pMatrix);
     }
 
-    mat4.identity(mvMatrix);
 
-    mvPushMatrix();
-
-    //MOVE TO START POSITION
     mat4.translate(mvMatrix, [0, -0.5, -40]);
 
     //CAMERA (inverse world)
