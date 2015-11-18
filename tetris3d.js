@@ -223,6 +223,47 @@ function handleKeys() {
             rotating = true;
             currentlyPressedKeys[90] = false;
         }
+    }//end if rotating
+    if (currentlyPressedKeys[39] || currentlyPressedKeys[54]) {
+        // Right key or 6
+        //currentObject.moveObjectRight();
+        positionX_tetrimon += 1;
+        currentlyPressedKeys[39] = false;
+        currentlyPressedKeys[54] = false;
+    }
+    if (currentlyPressedKeys[37] || currentlyPressedKeys[52]) {
+        // Left key or 4
+        //currentObject.moveObjectLeft();
+        positionX_tetrimon -= 1;
+        currentlyPressedKeys[37] = false;
+        currentlyPressedKeys[52] = false;
+    }
+    if (currentlyPressedKeys[38] || currentlyPressedKeys[56]) {
+        // Up key or 8
+        //switchGravityOff();
+        //falling = false;
+        positionZ_tetrimon += 1;
+        currentlyPressedKeys[38] = false;
+        currentlyPressedKeys[56] = false;
+    }
+    if (currentlyPressedKeys[40] || currentlyPressedKeys[50]) {
+        // Down key or 2
+        //switchGravityOff();
+        //falling = false;
+        positionZ_tetrimon -= 1;
+        currentlyPressedKeys[40] = false;
+        currentlyPressedKeys[50] = false;
+    }
+    if ( currentlyPressedKeys[32] && !falling  ) {
+        /*// Spacebar
+        if( !gravityIsOn ){
+            switchGravityOn();
+            gravitySpeed = 0.0;
+        }else{
+            currentObject.dropTetrimon();
+        }
+        //positionY_tetrimon -= 1;
+        currentlyPressedKeys[32] = false;*/
     }
 }
 
@@ -703,6 +744,9 @@ var zoom = 1;
 var rotateX_tetrimon = 0;
 var rotateY_tetrimon = 0;
 var rotateZ_tetrimon = 0;
+var positionX_tetrimon = 0;
+var positionY_tetrimon = 0;
+var positionZ_tetrimon = 0;
 function drawScene() {
     gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -760,6 +804,8 @@ function drawScene() {
         mat4.rotate(mvMatrix, degToRad(rotateX_tetrimon), [1, 0, 0]);
         mat4.rotate(mvMatrix, degToRad(rotateY_tetrimon), [0, 1, 0]);
         mat4.rotate(mvMatrix, degToRad(rotateZ_tetrimon), [0, 0, 1]);
+
+        mat4.translate(mvMatrix, [positionX_tetrimon, positionY_tetrimon, positionZ_tetrimon]);
 
         gl.bindBuffer(gl.ARRAY_BUFFER, one_x_fourVertexPositionBuffer);
         gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, one_x_fourVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
