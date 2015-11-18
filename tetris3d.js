@@ -801,9 +801,9 @@ function drawScene() {
         mat4.rotate(mvMatrix, degToRad(45), [0, 1, 0]);
         mat4.translate(mvMatrix, [0.5, 3.5, -4.5]);
 
-        mat4.rotate(mvMatrix, degToRad(rotateX_tetrimon), [1, 0, 0]);
+        mat4.rotate(mvMatrix, degToRad(rotateX_tetrimon), [0, 0, 1]);
         mat4.rotate(mvMatrix, degToRad(rotateY_tetrimon), [0, 1, 0]);
-        mat4.rotate(mvMatrix, degToRad(rotateZ_tetrimon), [0, 0, 1]);
+        mat4.rotate(mvMatrix, degToRad(rotateZ_tetrimon), [1, 0, 0]);
 
         mat4.translate(mvMatrix, [positionX_tetrimon, positionY_tetrimon, positionZ_tetrimon]);
 
