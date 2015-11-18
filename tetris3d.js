@@ -776,10 +776,16 @@ function drawScene() {
 
 
     //DRAW TWO X TWO
-    if( tetrimonType === "two_x_two" ){
+    //if( tetrimonType === "two_x_two" ){
         mvPushMatrix();
         mat4.rotate(mvMatrix, degToRad(45), [0, 1, 0]);
-        mat4.translate(mvMatrix, [0, 6, -3.9]);
+        mat4.translate(mvMatrix, [0, 6, -4]);
+
+        mat4.translate(mvMatrix, [positionX_tetrimon, positionY_tetrimon, positionZ_tetrimon]);
+
+        mat4.rotate(mvMatrix, degToRad(rotateX_tetrimon), [0, 0, 1]);
+        mat4.rotate(mvMatrix, degToRad(rotateY_tetrimon), [0, 1, 0]);
+        mat4.rotate(mvMatrix, degToRad(rotateZ_tetrimon), [1, 0, 0]);
 
         gl.bindBuffer(gl.ARRAY_BUFFER, two_x_twoVertexPositionBuffer);
         gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, two_x_twoVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
@@ -792,20 +798,20 @@ function drawScene() {
         gl.drawElements(gl.TRIANGLES, two_x_twoVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
 
         mvPopMatrix();
-    }
+    //}
 
 
     //DRAW ONE X FOUR
-    if( tetrimonType === "one_x_four" ){
+    //if( tetrimonType === "one_x_four" ){
         mvPushMatrix();
         mat4.rotate(mvMatrix, degToRad(45), [0, 1, 0]);
-        mat4.translate(mvMatrix, [0.5, 3.5, -4.5]);
+        mat4.translate(mvMatrix, [2.5, 3.5, -4.5]);
+
+        mat4.translate(mvMatrix, [positionX_tetrimon, positionY_tetrimon, positionZ_tetrimon]);
 
         mat4.rotate(mvMatrix, degToRad(rotateX_tetrimon), [0, 0, 1]);
         mat4.rotate(mvMatrix, degToRad(rotateY_tetrimon), [0, 1, 0]);
         mat4.rotate(mvMatrix, degToRad(rotateZ_tetrimon), [1, 0, 0]);
-
-        mat4.translate(mvMatrix, [positionX_tetrimon, positionY_tetrimon, positionZ_tetrimon]);
 
         gl.bindBuffer(gl.ARRAY_BUFFER, one_x_fourVertexPositionBuffer);
         gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, one_x_fourVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
@@ -818,7 +824,7 @@ function drawScene() {
         gl.drawElements(gl.TRIANGLES, one_x_fourVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
 
         mvPopMatrix();
-    }
+    //}
 
 
     //DRAW GRID BACK
