@@ -120,6 +120,10 @@ function handleKeyUp(event) {
 
 var rotateX_clockwise = false;
 var rotateX_counterclock = false;
+var rotateY_clockwise = false;
+var rotateY_counterclock = false;
+var rotateZ_clockwise = false;
+var rotateZ_counterclock = false;
 var falling = false;
 var rotating = false;
 function handleKeys() {
@@ -182,40 +186,52 @@ function handleKeys() {
         mat4.rotate(newRotationMatrix, degToRad(-1), [0, 0, 1]);
         mat4.multiply(newRotationMatrix, cameraPositionMatrix, cameraPositionMatrix);
     }
-    if ( currentlyPressedKeys[88] && !currentlyPressedKeys[16] ){
-        //x key
-        rotateX_counterclock = true;
-        rotating = true;
-        currentlyPressedKeys[88] = false;
-    }
-    if ( currentlyPressedKeys[88] && currentlyPressedKeys[16] ){
-        //x key + shift
-        rotateX_clockwise = true;
-        rotating = true;
-        currentlyPressedKeys[88] = false;
-    }
-    if ( currentlyPressedKeys[89] && !currentlyPressedKeys[16] ){
-        //y key
-
-    }
-    if ( currentlyPressedKeys[89] && currentlyPressedKeys[16] ){
-        //y key + shift
-
-    }
-    if ( currentlyPressedKeys[90] && !currentlyPressedKeys[16] ){
-        //z key
-
-    }
-    if ( currentlyPressedKeys[90] && currentlyPressedKeys[16] ){
-        //z key + shift
-
+    if( !rotating ){
+        if ( currentlyPressedKeys[88] && !currentlyPressedKeys[16] ){
+            //x key
+            rotateX_counterclock = true;
+            rotating = true;
+            currentlyPressedKeys[88] = false;
+        }
+        if ( currentlyPressedKeys[88] && currentlyPressedKeys[16] ){
+            //x key + shift
+            rotateX_clockwise = true;
+            rotating = true;
+            currentlyPressedKeys[88] = false;
+        }
+        if ( currentlyPressedKeys[89] && !currentlyPressedKeys[16] ){
+            //y key
+            rotateY_counterclock = true;
+            rotating = true;
+            currentlyPressedKeys[89] = false;
+        }
+        if ( currentlyPressedKeys[89] && currentlyPressedKeys[16] ){
+            //y key + shift
+            rotateY_clockwise = true;
+            rotating = true;
+            currentlyPressedKeys[89] = false;
+        }
+        if ( currentlyPressedKeys[90] && !currentlyPressedKeys[16] ){
+            //z key
+            rotateZ_counterclock = true;
+            rotating = true;
+            currentlyPressedKeys[90] = false;
+        }
+        if ( currentlyPressedKeys[90] && currentlyPressedKeys[16] ){
+            //z key + shift
+            rotateZ_clockwise = true;
+            rotating = true;
+            currentlyPressedKeys[90] = false;
+        }
     }
 }
 
 
 var rotationTrace = 0;
 var rotationSpeed = 5000;
-var rotationFixed = 0;
+var rotationXFixed = 0;
+var rotationYFixed = 0;
+var rotationZFixed = 0;
 function rotateObject( timeElapsed ) {
     var change = degToRad( rotationSpeed );
     if ( rotationTrace <= 90 ){
@@ -225,6 +241,22 @@ function rotateObject( timeElapsed ) {
        }
        if ( rotateX_counterclock ){
          rotateX_tetrimon += ( change * timeElapsed ) / 1000.0;
+         rotationTrace += ( change * timeElapsed ) / 1000.0;
+       }
+       if ( rotateY_clockwise ){
+         rotateY_tetrimon -= ( change * timeElapsed ) / 1000.0;
+         rotationTrace += ( change * timeElapsed ) / 1000.0;
+       }
+       if ( rotateY_counterclock ){
+         rotateY_tetrimon += ( change * timeElapsed ) / 1000.0;
+         rotationTrace += ( change * timeElapsed ) / 1000.0;
+       }
+       if ( rotateZ_clockwise ){
+         rotateZ_tetrimon -= ( change * timeElapsed ) / 1000.0;
+         rotationTrace += ( change * timeElapsed ) / 1000.0;
+       }
+       if ( rotateZ_counterclock ){
+         rotateZ_tetrimon += ( change * timeElapsed ) / 1000.0;
          rotationTrace += ( change * timeElapsed ) / 1000.0;
        }
     }else{
@@ -242,23 +274,45 @@ function rotateObject( timeElapsed ) {
       */
 
       if( rotateX_clockwise ){
-          if( rotationFixed - 90 == -360 ) rotationFixed = 0;
-          else rotationFixed -= 90;
+          if( rotationXFixed - 90 == -360 ) rotationXFixed = 0;
+          else rotationXFixed -= 90;
       }
       if( rotateX_counterclock ) {
-          if( rotationFixed + 90 == 360 ) rotationFixed = 0;
-          else rotationFixed += 90;
+          if( rotationXFixed + 90 == 360 ) rotationXFixed = 0;
+          else rotationXFixed += 90;
+      }
+      if( rotateY_clockwise ){
+          if( rotationYFixed - 90 == -360 ) rotationYFixed = 0;
+          else rotationYFixed -= 90;
+      }
+      if( rotateY_counterclock ) {
+          if( rotationYFixed + 90 == 360 ) rotationYFixed = 0;
+          else rotationYFixed += 90;
+      }
+      if( rotateZ_clockwise ){
+          if( rotationZFixed - 90 == -360 ) rotationZFixed = 0;
+          else rotationZFixed -= 90;
+      }
+      if( rotateZ_counterclock ) {
+          if( rotationZFixed + 90 == 360 ) rotationZFixed = 0;
+          else rotationZFixed += 90;
       }
       //console.log("rotation");
       //console.log( rotationFixed );
       //console.log( rotate_tetrimon );
-      rotateX_tetrimon = rotationFixed;
+      rotateX_tetrimon = rotationXFixed;
+      rotateY_tetrimon = rotationYFixed;
+      rotateZ_tetrimon = rotationZFixed;
 
 
       //currentObject.posRotateToGrid();
-      tetrimon_beforeRotation = rotateX_tetrimon;
+      //tetrimon_beforeRotation = rotateX_tetrimon;
       rotateX_clockwise = false;
       rotateX_counterclock = false;
+      rotateY_clockwise = false;
+      rotateY_counterclock = false;
+      rotateZ_clockwise = false;
+      rotateZ_counterclock = false;
       rotating = false;
       rotationTrace = 0;
 
