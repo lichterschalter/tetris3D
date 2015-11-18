@@ -118,7 +118,10 @@ function handleKeyUp(event) {
     currentlyPressedKeys[event.keyCode] = false;
 }
 
-
+var rotateX_clockwise = false;
+var rotateX_counterclock = false;
+var falling = false;
+var rotating = false;
 function handleKeys() {
     if ( currentlyPressedKeys[83] ) {
         //s key
@@ -137,63 +140,132 @@ function handleKeys() {
         currentlyPressedKeys[80] = false;
         perspectiveView = !perspectiveView;
     }
-    if ( currentlyPressedKeys[88] && !currentlyPressedKeys[16] ) {
-        //x key
+    if ( currentlyPressedKeys[74] && !currentlyPressedKeys[16] ) {
+        //j key
         var newRotationMatrix = mat4.create();
         mat4.identity(newRotationMatrix);
         mat4.rotate(newRotationMatrix, degToRad(1), [1, 0, 0]);
         mat4.multiply(newRotationMatrix, cameraPositionMatrix, cameraPositionMatrix);
     }
-    if ( currentlyPressedKeys[88] && currentlyPressedKeys[16] ) {
-        //x key + shift
+    if ( currentlyPressedKeys[74] && currentlyPressedKeys[16] ) {
+        //j key + shift
         var newRotationMatrix = mat4.create();
         mat4.identity(newRotationMatrix);
         mat4.rotate(newRotationMatrix, degToRad(-1), [1, 0, 0]);
         mat4.multiply(newRotationMatrix, cameraPositionMatrix, cameraPositionMatrix);
     }
-    if ( currentlyPressedKeys[89] && !currentlyPressedKeys[16] ) {
-        //y key
+    if ( currentlyPressedKeys[75] && !currentlyPressedKeys[16] ) {
+        //k key
         var newRotationMatrix = mat4.create();
         mat4.identity(newRotationMatrix);
         mat4.rotate(newRotationMatrix, degToRad(1), [0, 1, 0]);
         mat4.multiply(newRotationMatrix, cameraPositionMatrix, cameraPositionMatrix);
     }
-    if ( currentlyPressedKeys[89] && currentlyPressedKeys[16] ) {
-        //y key + shift
+    if ( currentlyPressedKeys[75] && currentlyPressedKeys[16] ) {
+        //k key + shift
         var newRotationMatrix = mat4.create();
         mat4.identity(newRotationMatrix);
         mat4.rotate(newRotationMatrix, degToRad(-1), [0, 1, 0]);
         mat4.multiply(newRotationMatrix, cameraPositionMatrix, cameraPositionMatrix);
     }
-    if ( currentlyPressedKeys[89] && !currentlyPressedKeys[16] ) {
-        //y key
-        var newRotationMatrix = mat4.create();
-        mat4.identity(newRotationMatrix);
-        mat4.rotate(newRotationMatrix, degToRad(1), [0, 1, 0]);
-        mat4.multiply(newRotationMatrix, cameraPositionMatrix, cameraPositionMatrix);
-    }
-    if ( currentlyPressedKeys[89] && currentlyPressedKeys[16] ) {
-        //y key + shift
-        var newRotationMatrix = mat4.create();
-        mat4.identity(newRotationMatrix);
-        mat4.rotate(newRotationMatrix, degToRad(-1), [0, 1, 0]);
-        mat4.multiply(newRotationMatrix, cameraPositionMatrix, cameraPositionMatrix);
-    }
-    if ( currentlyPressedKeys[67] && !currentlyPressedKeys[16] ) {
-        //y key
+    if ( currentlyPressedKeys[76] && !currentlyPressedKeys[16] ) {
+        //l key
         var newRotationMatrix = mat4.create();
         mat4.identity(newRotationMatrix);
         mat4.rotate(newRotationMatrix, degToRad(1), [0, 0, 1]);
         mat4.multiply(newRotationMatrix, cameraPositionMatrix, cameraPositionMatrix);
     }
-    if ( currentlyPressedKeys[67] && currentlyPressedKeys[16] ) {
-        //y key + shift
+    if ( currentlyPressedKeys[76] && currentlyPressedKeys[16] ) {
+        //l key + shift
         var newRotationMatrix = mat4.create();
         mat4.identity(newRotationMatrix);
         mat4.rotate(newRotationMatrix, degToRad(-1), [0, 0, 1]);
         mat4.multiply(newRotationMatrix, cameraPositionMatrix, cameraPositionMatrix);
     }
+    if ( currentlyPressedKeys[88] && !currentlyPressedKeys[16] ){
+        //x key
+        rotateX_counterclock = true;
+        rotating = true;
+        currentlyPressedKeys[88] = false;
+    }
+    if ( currentlyPressedKeys[88] && currentlyPressedKeys[16] ){
+        //x key + shift
+        rotateX_clockwise = true;
+        rotating = true;
+        currentlyPressedKeys[88] = false;
+    }
+    if ( currentlyPressedKeys[89] && !currentlyPressedKeys[16] ){
+        //y key
+
+    }
+    if ( currentlyPressedKeys[89] && currentlyPressedKeys[16] ){
+        //y key + shift
+
+    }
+    if ( currentlyPressedKeys[90] && !currentlyPressedKeys[16] ){
+        //z key
+
+    }
+    if ( currentlyPressedKeys[90] && currentlyPressedKeys[16] ){
+        //z key + shift
+
+    }
 }
+
+
+var rotationTrace = 0;
+var rotationSpeed = 5000;
+var rotationFixed = 0;
+function rotateObject( timeElapsed ) {
+    var change = degToRad( rotationSpeed );
+    if ( rotationTrace <= 90 ){
+       if ( rotateX_clockwise ){
+         rotateX_tetrimon -= ( change * timeElapsed ) / 1000.0;
+         rotationTrace += ( change * timeElapsed ) / 1000.0;
+       }
+       if ( rotateX_counterclock ){
+         rotateX_tetrimon += ( change * timeElapsed ) / 1000.0;
+         rotationTrace += ( change * timeElapsed ) / 1000.0;
+       }
+    }else{
+
+      /*round
+      if( rotate_tetrimon > 80 && rotate_tetrimon < 110 ) rotate_tetrimon = 90;
+      if( rotate_tetrimon > 170 && rotate_tetrimon < 190 ) rotate_tetrimon = 180;
+      if( rotate_tetrimon > 260 && rotate_tetrimon < 280 ) rotate_tetrimon = 270;
+      if( rotate_tetrimon > 350 ) rotate_tetrimon = 0;
+      if( rotate_tetrimon < -80 && rotate_tetrimon > -110 ) rotate_tetrimon = -90;
+      if( rotate_tetrimon < -170 && rotate_tetrimon > -190 ) rotate_tetrimon = -180;
+      if( rotate_tetrimon < -260 && rotate_tetrimon > -280 ) rotate_tetrimon = -270;
+      if( rotate_tetrimon < -350 ) rotate_tetrimon = 0;
+      if( rotate_tetrimon > -10 && rotate_tetrimon < 10 ) rotate_tetrimon = 0;
+      */
+
+      if( rotateX_clockwise ){
+          if( rotationFixed - 90 == -360 ) rotationFixed = 0;
+          else rotationFixed -= 90;
+      }
+      if( rotateX_counterclock ) {
+          if( rotationFixed + 90 == 360 ) rotationFixed = 0;
+          else rotationFixed += 90;
+      }
+      //console.log("rotation");
+      //console.log( rotationFixed );
+      //console.log( rotate_tetrimon );
+      rotateX_tetrimon = rotationFixed;
+
+
+      //currentObject.posRotateToGrid();
+      tetrimon_beforeRotation = rotateX_tetrimon;
+      rotateX_clockwise = false;
+      rotateX_counterclock = false;
+      rotating = false;
+      rotationTrace = 0;
+
+      //console.log( "rotation: ", rotate_tetrimon );
+    }
+}
+
 
 var mouseRightDown = false;
 var mouseLeftDown = false;
@@ -336,7 +408,6 @@ function initBuffers() {
     var red = Math.random();
     var green = Math.random();
     var blue = Math.random();
-    console.log(red, green, blue);
     colors = [
         [red, green, blue, 1.0], // Front face
         [red, green, blue, 1.0], // Back face
@@ -353,7 +424,6 @@ function initBuffers() {
             unpackedColors = unpackedColors.concat(color);
         }
     }
-    console.log(unpackedColors);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(unpackedColors), gl.STATIC_DRAW);
     two_x_twoVertexColorBuffer.itemSize = 4;
     two_x_twoVertexColorBuffer.numItems = 24;
@@ -379,40 +449,40 @@ function initBuffers() {
     gl.bindBuffer(gl.ARRAY_BUFFER, one_x_fourVertexPositionBuffer);
     vertices = [
         // Front face
-        -2.0,  0.0,  1.0,
-         2.0,  0.0,  1.0,
-         2.0,  1.0,  1.0,
-        -2.0,  1.0,  1.0,
+        -2.0, -0.5,  0.5,
+         2.0, -0.5,  0.5,
+         2.0,  0.5,  0.5,
+        -2.0,  0.5,  0.5,
 
         // Back face
-        -2.0,  0.0,  0.0,
-        -2.0,  1.0,  0.0,
-         2.0,  1.0,  0.0,
-         2.0,  0.0,  0.0,
+        -2.0, -0.5, -0.5,
+        -2.0,  0.5, -0.5,
+         2.0,  0.5, -0.5,
+         2.0, -0.5, -0.5,
 
         // Top face
-        -2.0,  1.0,  0.0,
-        -2.0,  1.0,  1.0,
-         2.0,  1.0,  1.0,
-         2.0,  1.0,  0.0,
+        -2.0,  0.5, -0.5,
+        -2.0,  0.5,  0.5,
+         2.0,  0.5,  0.5,
+         2.0,  0.5, -0.5,
 
         // Bottom face
-        -2.0,  0.0,  0.0,
-         2.0,  0.0,  0.0,
-         2.0,  0.0,  1.0,
-        -2.0,  0.0,  1.0,
+        -2.0, -0.5, -0.5,
+         2.0, -0.5, -0.5,
+         2.0, -0.5,  0.5,
+        -2.0, -0.5,  0.5,
 
         // Right face
-         2.0,  0.0,  0.0,
-         2.0,  1.0,  0.0,
-         2.0,  1.0,  1.0,
-         2.0,  0.0,  1.0,
+         2.0, -0.5, -0.5,
+         2.0,  0.5, -0.5,
+         2.0,  0.5,  0.5,
+         2.0, -0.5,  0.5,
 
         // Left face
-        -2.0,  0.0,  0.0,
-        -2.0,  0.0,  1.0,
-        -2.0,  1.0,  1.0,
-        -2.0,  1.0,  0.0
+        -2.0, -0.5, -0.5,
+        -2.0, -0.5,  0.5,
+        -2.0,  0.5,  0.5,
+        -2.0,  0.5, -0.5
     ];
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
     one_x_fourVertexPositionBuffer.itemSize = 3;
@@ -423,7 +493,6 @@ function initBuffers() {
     var red = Math.random();
     var green = Math.random();
     var blue = Math.random();
-    console.log(red, green, blue);
     colors = [
         [red, green, blue, 1.0], // Front face
         [red, green, blue, 1.0], // Back face
@@ -440,7 +509,6 @@ function initBuffers() {
             unpackedColors = unpackedColors.concat(color);
         }
     }
-    console.log(unpackedColors);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(unpackedColors), gl.STATIC_DRAW);
     one_x_fourVertexColorBuffer.itemSize = 4;
     one_x_fourVertexColorBuffer.numItems = 24;
@@ -578,6 +646,9 @@ function initBuffers() {
 
 var perspectiveView = true;
 var zoom = 1;
+var rotateX_tetrimon = 0;
+var rotateY_tetrimon = 0;
+var rotateZ_tetrimon = 0;
 function drawScene() {
     gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -607,41 +678,47 @@ function drawScene() {
 
 
     //DRAW TWO X TWO
+    if( tetrimonType === "two_x_two" ){
+        mvPushMatrix();
+        mat4.rotate(mvMatrix, degToRad(45), [0, 1, 0]);
+        mat4.translate(mvMatrix, [0, 6, -3.9]);
 
-    mvPushMatrix();
-    mat4.rotate(mvMatrix, degToRad(45), [0, 1, 0]);
-    mat4.translate(mvMatrix, [0, 6, -3.9]);
+        gl.bindBuffer(gl.ARRAY_BUFFER, two_x_twoVertexPositionBuffer);
+        gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, two_x_twoVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
-    gl.bindBuffer(gl.ARRAY_BUFFER, two_x_twoVertexPositionBuffer);
-    gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, two_x_twoVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+        gl.bindBuffer(gl.ARRAY_BUFFER, two_x_twoVertexColorBuffer);
+        gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, two_x_twoVertexColorBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
-    gl.bindBuffer(gl.ARRAY_BUFFER, two_x_twoVertexColorBuffer);
-    gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, two_x_twoVertexColorBuffer.itemSize, gl.FLOAT, false, 0, 0);
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, two_x_twoVertexIndexBuffer);
+        setMatrixUniforms();
+        gl.drawElements(gl.TRIANGLES, two_x_twoVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
 
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, two_x_twoVertexIndexBuffer);
-    setMatrixUniforms();
-    gl.drawElements(gl.TRIANGLES, two_x_twoVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
-
-    mvPopMatrix();
+        mvPopMatrix();
+    }
 
 
     //DRAW ONE X FOUR
+    if( tetrimonType === "one_x_four" ){
+        mvPushMatrix();
+        mat4.rotate(mvMatrix, degToRad(45), [0, 1, 0]);
+        mat4.translate(mvMatrix, [0, 3, -5]);
 
-    mvPushMatrix();
-    mat4.rotate(mvMatrix, degToRad(45), [0, 1, 0]);
-    mat4.translate(mvMatrix, [0, 3, -4.9]);
+        mat4.rotate(mvMatrix, degToRad(rotateX_tetrimon), [1, 0, 0]);
+        mat4.rotate(mvMatrix, degToRad(rotateY_tetrimon), [0, 1, 0]);
+        mat4.rotate(mvMatrix, degToRad(rotateZ_tetrimon), [0, 0, 1]);
 
-    gl.bindBuffer(gl.ARRAY_BUFFER, one_x_fourVertexPositionBuffer);
-    gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, one_x_fourVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+        gl.bindBuffer(gl.ARRAY_BUFFER, one_x_fourVertexPositionBuffer);
+        gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, one_x_fourVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
-    gl.bindBuffer(gl.ARRAY_BUFFER, one_x_fourVertexColorBuffer);
-    gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, one_x_fourVertexColorBuffer.itemSize, gl.FLOAT, false, 0, 0);
+        gl.bindBuffer(gl.ARRAY_BUFFER, one_x_fourVertexColorBuffer);
+        gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, one_x_fourVertexColorBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, one_x_fourVertexIndexBuffer);
-    setMatrixUniforms();
-    gl.drawElements(gl.TRIANGLES, one_x_fourVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, one_x_fourVertexIndexBuffer);
+        setMatrixUniforms();
+        gl.drawElements(gl.TRIANGLES, one_x_fourVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
 
-    mvPopMatrix();
+        mvPopMatrix();
+    }
 
 
     //DRAW GRID BACK
@@ -905,21 +982,20 @@ function getRandomNumber(min, max) {
 }
 
 
-
-
 var tetrimonType;
 //var tetrimonType = "two_x_two";
 function typeOfCurrentTetrimon() {
     type = getRandomNumber(0,1);
+    type = 1;
 
-    if( type == 0){
+    if( type === 0){
     //currentObject = new two_x_two();
     tetrimonType = "two_x_two";
     }
 
-    if( type == 1){
-    //currentObject = new two_x_two();
-    tetrimonType = "two_x_two";
+    if( type === 1){
+    //currentObject = new one_x_four();
+    tetrimonType = "one_x_four";
     }
 }
 
@@ -951,7 +1027,7 @@ function animate() {
   if (lastTime != 0) {
     var elapsed = timeNow - lastTime;
 
-    //rotateObject( elapsed );
+    rotateObject( elapsed );
 
   }
   lastTime = timeNow;
