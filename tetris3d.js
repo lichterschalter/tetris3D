@@ -503,40 +503,40 @@ function initBuffers() {
     gl.bindBuffer(gl.ARRAY_BUFFER, one_x_fourVertexPositionBuffer);
     vertices = [
         // Front face
-        -2.0, -0.5,  0.5,
-         2.0, -0.5,  0.5,
-         2.0,  0.5,  0.5,
-        -2.0,  0.5,  0.5,
+        -1.5, -0.5,  0.5,
+         2.5, -0.5,  0.5,
+         2.5,  0.5,  0.5,
+        -1.5,  0.5,  0.5,
 
         // Back face
-        -2.0, -0.5, -0.5,
-        -2.0,  0.5, -0.5,
-         2.0,  0.5, -0.5,
-         2.0, -0.5, -0.5,
+        -1.5, -0.5, -0.5,
+        -1.5,  0.5, -0.5,
+         2.5,  0.5, -0.5,
+         2.5, -0.5, -0.5,
 
         // Top face
-        -2.0,  0.5, -0.5,
-        -2.0,  0.5,  0.5,
-         2.0,  0.5,  0.5,
-         2.0,  0.5, -0.5,
+        -1.5,  0.5, -0.5,
+        -1.5,  0.5,  0.5,
+         2.5,  0.5,  0.5,
+         2.5,  0.5, -0.5,
 
         // Bottom face
-        -2.0, -0.5, -0.5,
-         2.0, -0.5, -0.5,
-         2.0, -0.5,  0.5,
-        -2.0, -0.5,  0.5,
+        -1.5, -0.5, -0.5,
+         2.5, -0.5, -0.5,
+         2.5, -0.5,  0.5,
+        -1.5, -0.5,  0.5,
 
         // Right face
-         2.0, -0.5, -0.5,
-         2.0,  0.5, -0.5,
-         2.0,  0.5,  0.5,
-         2.0, -0.5,  0.5,
+         2.5, -0.5, -0.5,
+         2.5,  0.5, -0.5,
+         2.5,  0.5,  0.5,
+         2.5, -0.5,  0.5,
 
         // Left face
-        -2.0, -0.5, -0.5,
-        -2.0, -0.5,  0.5,
-        -2.0,  0.5,  0.5,
-        -2.0,  0.5, -0.5
+        -1.5, -0.5, -0.5,
+        -1.5, -0.5,  0.5,
+        -1.5,  0.5,  0.5,
+        -1.5,  0.5, -0.5
     ];
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
     one_x_fourVertexPositionBuffer.itemSize = 3;
@@ -755,7 +755,7 @@ function drawScene() {
     if( tetrimonType === "one_x_four" ){
         mvPushMatrix();
         mat4.rotate(mvMatrix, degToRad(45), [0, 1, 0]);
-        mat4.translate(mvMatrix, [0, 3, -5]);
+        mat4.translate(mvMatrix, [0.5, 3.5, -4.5]);
 
         mat4.rotate(mvMatrix, degToRad(rotateX_tetrimon), [1, 0, 0]);
         mat4.rotate(mvMatrix, degToRad(rotateY_tetrimon), [0, 1, 0]);
