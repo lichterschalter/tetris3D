@@ -9,9 +9,13 @@ of the things i need to code.
 LAB III:
 --------
 
-1 render grid, just three back sides visible
-2 change viewport
-3 toggle grid
+1 x render grid, just three back sides visible
+2 x change viewport
+3 - toggle grid
+4 x objects
+  - more objects
+5 - grid
+  - check if not null
 
 -------
 LAB Ia:

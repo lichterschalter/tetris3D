@@ -272,6 +272,90 @@ function handleKeys() {
 }
 
 
+var mouseRightDown = false;
+var mouseLeftDown = false;
+var lastMouseX = null;
+var lastMouseY = null;
+
+var cameraPositionMatrix = mat4.create();
+mat4.identity(cameraPositionMatrix);
+var cameraRotationMatrix = mat4.create();
+mat4.identity(cameraRotationMatrix);
+function handleMouseDown(event) {
+    if (event.which === 1 || event.button === 1) {
+        mouseLeftDown = true;
+        lastMouseX = event.clientX;
+        lastMouseY = event.clientY;
+    }
+    if (event.which === 3 || event.button === 3) {
+        mouseRightDown = true;
+        lastMouseX = event.clientX;
+        lastMouseY = event.clientY;
+    }
+}
+
+function handleMouseUp(event) {
+    mouseRightDown = false;
+    mouseLeftDown = false;
+}
+
+
+var rotXTrace = 0;
+var rotYTrace = 0;
+function handleMouseMove(event) {
+
+    if (!mouseRightDown && !mouseLeftDown) {
+        return;
+    }
+
+    if( mouseRightDown){
+        var newX = event.clientX;
+        var newY = event.clientY;
+
+        var moveX = newX - lastMouseX;
+        var newPositionMatrix = mat4.create();
+        mat4.identity(newPositionMatrix);
+        mat4.translate(newPositionMatrix, [moveX / 25, 0, 0]);
+        //mat4.rotate(newPositionMatrix, degToRad(deltaX / 10), [0, 1, 0]);
+
+        var moveY = newY - lastMouseY;
+        mat4.translate(newPositionMatrix, [0, -(moveY / 25), 0]);
+        //mat4.rotate(newRotationMatrix, degToRad(deltaY / 10), [1, 0, 0]);
+
+        mat4.multiply(newPositionMatrix, cameraPositionMatrix, cameraPositionMatrix);
+
+        lastMouseX = newX
+        lastMouseY = newY;
+    }
+
+    if( mouseLeftDown){
+        var newX = event.clientX;
+        var newY = event.clientY;
+
+        var deltaX = newX - lastMouseX;
+        var newRotationMatrix = mat4.create();
+        mat4.identity(newRotationMatrix);
+        mat4.rotate(newRotationMatrix, degToRad(deltaX / 10), [0, 1, 0]);
+        rotYTrace += (deltaX / 10);
+        if( rotYTrace > 360 ) rotYTrace = 0;
+        if( rotYTrace < 0 )rotYTrace = 360;
+
+        var deltaY = newY - lastMouseY;
+        mat4.rotate(newRotationMatrix, degToRad(deltaY / 10), [1, 0, 0]);
+        rotXTrace += (deltaY / 10);
+        if( rotXTrace > 360 ) rotXTrace = 0;
+        if( rotXTrace < 0 )rotXTrace = 360;
+
+        mat4.multiply(newRotationMatrix, cameraRotationMatrix, cameraRotationMatrix);
+
+        lastMouseX = newX
+        lastMouseY = newY;
+
+        //console.log( rotXTrace, rotYTrace );
+    }
+}
+
+
 var rotationTrace = 0;
 var rotationSpeed = 5000;
 var rotationXFixed = 0;
@@ -365,91 +449,6 @@ function rotateObject( timeElapsed ) {
     }
 }
 
-
-var mouseRightDown = false;
-var mouseLeftDown = false;
-var lastMouseX = null;
-var lastMouseY = null;
-
-var cameraPositionMatrix = mat4.create();
-mat4.identity(cameraPositionMatrix);
-var cameraRotationMatrix = mat4.create();
-mat4.identity(cameraRotationMatrix);
-function handleMouseDown(event) {
-    if (event.which === 1 || event.button === 1) {
-        mouseLeftDown = true;
-        lastMouseX = event.clientX;
-        lastMouseY = event.clientY;
-    }
-    if (event.which === 3 || event.button === 3) {
-        mouseRightDown = true;
-        lastMouseX = event.clientX;
-        lastMouseY = event.clientY;
-    }
-}
-
-function handleMouseUp(event) {
-    mouseRightDown = false;
-    mouseLeftDown = false;
-}
-
-
-var rotXTrace = 0;
-var rotYTrace = 0;
-function handleMouseMove(event) {
-
-    if (!mouseRightDown && !mouseLeftDown) {
-        return;
-    }
-
-    if( mouseRightDown){
-        var newX = event.clientX;
-        var newY = event.clientY;
-
-        var moveX = newX - lastMouseX;
-        var newPositionMatrix = mat4.create();
-        mat4.identity(newPositionMatrix);
-        mat4.translate(newPositionMatrix, [moveX / 25, 0, 0]);
-        //mat4.rotate(newPositionMatrix, degToRad(deltaX / 10), [0, 1, 0]);
-
-        var moveY = newY - lastMouseY;
-        mat4.translate(newPositionMatrix, [0, -(moveY / 25), 0]);
-        //mat4.rotate(newRotationMatrix, degToRad(deltaY / 10), [1, 0, 0]);
-
-        mat4.multiply(newPositionMatrix, cameraPositionMatrix, cameraPositionMatrix);
-
-        lastMouseX = newX
-        lastMouseY = newY;
-    }
-
-    if( mouseLeftDown){
-        var newX = event.clientX;
-        var newY = event.clientY;
-
-        var deltaX = newX - lastMouseX;
-        var newRotationMatrix = mat4.create();
-        mat4.identity(newRotationMatrix);
-        mat4.rotate(newRotationMatrix, degToRad(deltaX / 10), [0, 1, 0]);
-        rotYTrace += (deltaX / 10);
-        if( rotYTrace > 360 ) rotYTrace = 0;
-        if( rotYTrace < 0 )rotYTrace = 360;
-
-        var deltaY = newY - lastMouseY;
-        mat4.rotate(newRotationMatrix, degToRad(deltaY / 10), [1, 0, 0]);
-        rotXTrace += (deltaY / 10);
-        if( rotXTrace > 360 ) rotXTrace = 0;
-        if( rotXTrace < 0 )rotXTrace = 360;
-
-        mat4.multiply(newRotationMatrix, cameraRotationMatrix, cameraRotationMatrix);
-
-        lastMouseX = newX
-        lastMouseY = newY;
-
-        //console.log( rotXTrace, rotYTrace );
-    }
-}
-
-
 var gravityIsOn = false;
 function switchGravityOn() {
     gravityIsOn = true;
@@ -491,6 +490,161 @@ function gravity() {
         //}
     }
   }
+}
+
+
+function gridArray() {
+    //create grid array
+    this.blocks = new Array(16); //y-axis; last row is bottom and always occupied, but invisible
+    for ( var i = 0; i < this.blocks.length; ++i ){
+        this.blocks[ i ] = new Array(10);
+        for ( var j = 0; j < this.blocks[ i ].length; ++j ){ //x-axis
+            this.blocks[ i ][ j ] = new Array(10);
+            for ( var k = 0; k < this.blocks[ i ][ j ].length; ++k ){
+                this.blocks[ i ][ j ][ k ] = [ redBg, greenBg, blueBg, 1.0, false ];
+                //this.blocks[ i ][ j ] = false;
+                //if( i == 3 && j == 2 ) this.blocks[ i ][ j ] = [ 1.0, 0.0, 0.0, 1.0, true ];
+                //if( i == 1 && j == 1 ) this.blocks[ i ][ j ] = [ 0.0, 1.0, 0.0, 1.0, true ];
+                //if( i == 7 && j == 4 ) this.blocks[ i ][ j ] = [ 0.0, 0.0, 1.0, 1.0, true ];
+            }
+        }
+    }
+
+    //make all bottom blocks true
+    for ( var j = 0; j < this.blocks[ 15 ].length; ++j ){
+        for ( var k = 0; k < this.blocks[ 15 ][ j ].length; ++k ){
+            this.blocks[ 15 ][ j ][ k ] = [ 0.0, 0.0, 0.0, 1.0, true ];
+        }
+    }
+
+    this.getInfo = function() {
+        for ( var i = 0; i < this.blocks.length; ++i ){
+            for ( var j = 0; j < this.blocks[ i ].length; ++j ){
+                console.log(
+                  i + ": " +
+                  "|" +
+                  this.blocks[ i ][ j ][ 0 ].toString() + " | " +
+                  this.blocks[ i ][ j ][ 1 ].toString() + " | " +
+                  this.blocks[ i ][ j ][ 2 ].toString() + " | " +
+                  this.blocks[ i ][ j ][ 3 ].toString() + " | " +
+                  this.blocks[ i ][ j ][ 4 ].toString() + " | " +
+                  this.blocks[ i ][ j ][ 5 ].toString() + " | " +
+                  this.blocks[ i ][ j ][ 6 ].toString() + " | " +
+                  this.blocks[ i ][ j ][ 7 ].toString() + " | " +
+                  this.blocks[ i ][ j ][ 8 ].toString() + " | " +
+                  this.blocks[ i ][ j ][ 9 ].toString() + " | "
+                );
+            }
+            console.log();
+        }
+    }
+
+    this.getInfoOccupation = function( sliceFrom, sliceTo ) {
+      if( sliceFrom >= sliceTo ){
+          var x = sliceFrom;
+          sliceFrom = sliceTo;
+          sliceTo = x;
+      }
+
+      if( sliceFrom === undefined && sliceTo === undefined ){
+          for ( var i = 0; i < this.blocks.length; ++i ){
+              console.log( "Slice: " + i);
+              for ( var j = 0; j < this.blocks[ i ].length; ++j ){
+                  console.log(
+                    j + ": " +
+                    "|" +
+                    this.blocks[ i ][ j ][ 0 ][ 4 ].toString() + " | " +
+                    this.blocks[ i ][ j ][ 1 ][ 4 ].toString() + " | " +
+                    this.blocks[ i ][ j ][ 2 ][ 4 ].toString() + " | " +
+                    this.blocks[ i ][ j ][ 3 ][ 4 ].toString() + " | " +
+                    this.blocks[ i ][ j ][ 4 ][ 4 ].toString() + " | " +
+                    this.blocks[ i ][ j ][ 5 ][ 4 ].toString() + " | " +
+                    this.blocks[ i ][ j ][ 6 ][ 4 ].toString() + " | " +
+                    this.blocks[ i ][ j ][ 7 ][ 4 ].toString() + " | " +
+                    this.blocks[ i ][ j ][ 8 ][ 4 ].toString() + " | " +
+                    this.blocks[ i ][ j ][ 9 ][ 4 ].toString() + " | "
+                  );
+              }
+              console.log();
+          }
+      }//end if
+
+      if( sliceFrom !== undefined && sliceTo === undefined ){
+          console.log( "Slice: " + sliceFrom );
+          for ( var i = 0; i < this.blocks[ sliceFrom ].length; ++i ){
+              console.log(
+                i + ": " +
+                "|" +
+                this.blocks[ sliceFrom ][ i ][ 0 ][ 4 ].toString() + " | " +
+                this.blocks[ sliceFrom ][ i ][ 1 ][ 4 ].toString() + " | " +
+                this.blocks[ sliceFrom ][ i ][ 2 ][ 4 ].toString() + " | " +
+                this.blocks[ sliceFrom ][ i ][ 3 ][ 4 ].toString() + " | " +
+                this.blocks[ sliceFrom ][ i ][ 4 ][ 4 ].toString() + " | " +
+                this.blocks[ sliceFrom ][ i ][ 5 ][ 4 ].toString() + " | " +
+                this.blocks[ sliceFrom ][ i ][ 6 ][ 4 ].toString() + " | " +
+                this.blocks[ sliceFrom ][ i ][ 7 ][ 4 ].toString() + " | " +
+                this.blocks[ sliceFrom ][ i ][ 8 ][ 4 ].toString() + " | " +
+                this.blocks[ sliceFrom ][ i ][ 9 ][ 4 ].toString() + " | "
+              );
+          }
+          console.log();
+      }//end if
+
+      if( sliceFrom !== undefined && sliceTo !== undefined ){
+          var amountOfSlices = sliceTo - sliceFrom;
+          for ( ; amountOfSlices >= 0; --amountOfSlices ){
+              console.log( "Slice: " + sliceFrom );
+              for( var i = 0; i < 10; ++i ){
+                  console.log(
+                    i + ": " +
+                    "|" +
+                    this.blocks[ sliceFrom ][ i ][ 0 ][ 4 ].toString() + " | " +
+                    this.blocks[ sliceFrom ][ i ][ 1 ][ 4 ].toString() + " | " +
+                    this.blocks[ sliceFrom ][ i ][ 2 ][ 4 ].toString() + " | " +
+                    this.blocks[ sliceFrom ][ i ][ 3 ][ 4 ].toString() + " | " +
+                    this.blocks[ sliceFrom ][ i ][ 4 ][ 4 ].toString() + " | " +
+                    this.blocks[ sliceFrom ][ i ][ 5 ][ 4 ].toString() + " | " +
+                    this.blocks[ sliceFrom ][ i ][ 6 ][ 4 ].toString() + " | " +
+                    this.blocks[ sliceFrom ][ i ][ 7 ][ 4 ].toString() + " | " +
+                    this.blocks[ sliceFrom ][ i ][ 8 ][ 4 ].toString() + " | " +
+                    this.blocks[ sliceFrom ][ i ][ 9 ][ 4 ].toString() + " | "
+                  );
+              }
+              ++sliceFrom;
+              console.log();
+          }
+      }//end if
+
+
+    }
+
+    this.setBlock = function( i, j, k, content ) {
+        this.blocks[ i ][ j ][ k ] = content;
+    }
+
+    this.setBlockOccupied = function( i, j, k, occupied ){
+        this.blocks[ i ][ j ][ k ][ 4 ] = occupied;
+    }
+
+    this.getBlock = function( x, y, z, color ){
+        return this.blocks[ x ][ y ][ z ][ color ];
+    }
+
+    this.getSlice = function( slice ){
+        return this.blocks[ slice ];
+    }
+
+    this.getRow = function( slice, row ){
+        return this.blocks[ slice ][ row ];
+    }
+
+    this.setSlice = function( slice, content ){
+        this.blocks[ slice ] = content;
+    }
+
+    this.setRow = function( slice, row, content ){
+        this.blocks[ slice ][ row ] = content;
+    }
 }
 
 
@@ -822,7 +976,7 @@ function drawScene() {
 
 
     //DRAW TWO X TWO
-    //if( tetrimonType === "two_x_two" ){
+    if( tetrimonType === "two_x_two" ){
         mvPushMatrix();
         mat4.rotate(mvMatrix, degToRad(45), [0, 1, 0]);
         mat4.translate(mvMatrix, [0, 6, -4]);
@@ -844,11 +998,11 @@ function drawScene() {
         gl.drawElements(gl.TRIANGLES, two_x_twoVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
 
         mvPopMatrix();
-    //}
+    }
 
 
     //DRAW ONE X FOUR
-    //if( tetrimonType === "one_x_four" ){
+    if( tetrimonType === "one_x_four" ){
         mvPushMatrix();
         mat4.rotate(mvMatrix, degToRad(45), [0, 1, 0]);
         mat4.translate(mvMatrix, [2.5, 3.5, -4.5]);
@@ -870,7 +1024,7 @@ function drawScene() {
         gl.drawElements(gl.TRIANGLES, one_x_fourVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
 
         mvPopMatrix();
-    //}
+    }
 
 
     //DRAW GRID BACK
@@ -1157,6 +1311,10 @@ function initGame() {
     redBg = Math.random();
     greenBg = Math.random();
     blueBg = Math.random();
+
+    setGravitySpeed();
+    grid = new gridArray();
+    grid.getInfoOccupation();
 
     typeOfCurrentTetrimon();
 
