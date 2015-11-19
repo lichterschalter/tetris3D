@@ -924,7 +924,7 @@ function initBuffers() {
     gridBlocksVertexIndexBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, gridBlocksVertexIndexBuffer);
     var gridBlocksVertexIndices = [];
-    for( var i = 0; i < 984; i += 4 ){
+    for( var i = 0; i < 5016; i += 4 ){
       gridBlocksVertexIndices = gridBlocksVertexIndices.concat([
         (0 + i), (1 + i), (2 + i),      (2 + i), (3 + i), (0 + i),    // Back face
         (3 + i), (0 + i), (4 + i),      (4 + i), (7 + i), (3 + i),    // Bottom face
@@ -937,7 +937,7 @@ function initBuffers() {
 
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(gridBlocksVertexIndices), gl.STATIC_DRAW);
     gridBlocksVertexIndexBuffer.itemSize = 1;
-    gridBlocksVertexIndexBuffer.numItems = 1476;
+    gridBlocksVertexIndexBuffer.numItems = 7524;
 
 
 
