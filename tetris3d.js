@@ -847,6 +847,15 @@ function initBuffers() {
               (x + 1),  (y + 1),  z,
               (x + 1),  y,        z,
             ]);
+            if( z > 0 ){
+              ++points;
+              vertices = vertices.concat([
+                x,        y,        z,
+                x,        (y + 1),  z,
+                (x + 1),  (y + 1),  z,
+                (x + 1),  y,        z,
+              ]);
+            }
           }
         }
       }
@@ -883,7 +892,7 @@ function initBuffers() {
     var unpackedColors = [];
     for (var i in colors) {
         var color = colors[i];
-        for (var j = 0; j < 4; j++) {
+        for (var j = 0; j < 8; j++) {
             unpackedColors = unpackedColors.concat(color);
         }
     }
@@ -894,7 +903,7 @@ function initBuffers() {
     gridBlocksVertexIndexBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, gridBlocksVertexIndexBuffer);
     var gridBlocksVertexIndices = [];
-    for( var i = 0; i < 128; i += 4 ){
+    for( var i = 0; i < 48; i += 4 ){
       gridBlocksVertexIndices = gridBlocksVertexIndices.concat([
         (0 + i), (1 + i), (2 + i),      (2 + i), (3 + i), (0 + i),    // Back face
         (3 + i), (0 + i), (4 + i),      (4 + i), (7 + i), (3 + i),    // Bottom face
@@ -907,7 +916,7 @@ function initBuffers() {
 
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(gridBlocksVertexIndices), gl.STATIC_DRAW);
     gridBlocksVertexIndexBuffer.itemSize = 1;
-    gridBlocksVertexIndexBuffer.numItems = 66;
+    gridBlocksVertexIndexBuffer.numItems = 148;
 
 
 
@@ -1120,7 +1129,8 @@ function drawScene() {
 
     mvPushMatrix();
 
-    mat4.translate(mvMatrix, [ 0.0, 0, 15]);
+    mat4.rotate(mvMatrix, degToRad(45), [0, 1, 0]);
+    mat4.translate(mvMatrix, [-5, 6, -5]);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, gridBlocksOnePositionBuffer);
     gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, gridBlocksOnePositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
