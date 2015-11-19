@@ -124,6 +124,7 @@ var rotateZ_clockwise = false;
 var rotateZ_counterclock = false;
 var falling = false;
 var rotating = false;
+var showGrid = false;
 function handleKeys() {
     if ( currentlyPressedKeys[83] ) {
         //s key
@@ -263,10 +264,15 @@ function handleKeys() {
         //positionY_tetrimon -= 1;
         currentlyPressedKeys[32] = false;*/
     }
-    if ( currentlyPressedKeys[71] ) {
-        //g key
+    if ( currentlyPressedKeys[13] ) {
+        //enter
         if( gravityIsOn ) switchGravityOff();
         else switchGravityOn();
+        currentlyPressedKeys[13] = false;
+    }
+    if ( currentlyPressedKeys[71] ){
+        //g key + shift
+        showGrid = !showGrid;
         currentlyPressedKeys[71] = false;
     }
 }
@@ -823,95 +829,79 @@ function initBuffers() {
     one_x_fourVertexIndexBuffer.numItems = 36;
 
 
-    //DRAW GRID ARRAY
 
-    var xGrid = 1;
-    var yGrid = 1;
-    var zGrid = 1;
+    //GRID BLOCKS
 
-    gridVertexPositionBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, gridVertexPositionBuffer);
-    for( var i = 0; i < 2; ++i ){
-        vertices = [
-            // Front face
-            -xGrid, -yGrid,  zGrid,
-             xGrid, -yGrid,  zGrid,
-             xGrid,  yGrid,  zGrid,
-            -xGrid,  yGrid,  zGrid,
-
-            // Back face
-            -xGrid, -yGrid, -zGrid,
-            -xGrid,  yGrid, -zGrid,
-             xGrid,  yGrid, -zGrid,
-             xGrid, -yGrid, -zGrid,
-
-            // Top face
-            -xGrid,  yGrid, -zGrid,
-            -xGrid,  yGrid,  zGrid,
-             xGrid,  yGrid,  zGrid,
-             xGrid,  yGrid, -zGrid,
-
-            // Bottom face
-            -xGrid, -yGrid, -zGrid,
-             xGrid, -yGrid, -zGrid,
-             xGrid, -yGrid,  zGrid,
-            -xGrid, -yGrid,  zGrid,
-
-            // Right face
-             xGrid, -yGrid, -zGrid,
-             xGrid,  yGrid, -zGrid,
-             xGrid,  yGrid,  zGrid,
-             xGrid, -yGrid,  zGrid,
-
-            // Left face
-            -xGrid, -yGrid, -zGrid,
-            -xGrid, -yGrid,  zGrid,
-            -xGrid,  yGrid,  zGrid,
-            -xGrid,  yGrid, -zGrid
-        ];
-    }
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
-    gridVertexPositionBuffer.itemSize = 3;
-    gridVertexPositionBuffer.numItems = 24;
-
-    gridVertexColorBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, gridVertexColorBuffer);
-    var red = Math.random();
-    var green = Math.random();
-    var blue = Math.random();
-    colors = [
-        [red, green, blue, 1.0], // Front face
-        [red, green, blue, 1.0], // Back face
-        [red, green, blue, 1.0], // Top face
-        [red, green, blue, 1.0], // Bottom face
-        [red, green, blue, 1.0], // Right face
-        [red, green, blue, 1.0]  // Left face
-    ];
-
-    var unpackedColors = [];
-    for (var i in colors) {
-        var color = colors[i];
-        for (var j = 0; j < 4; j++) {
-            unpackedColors = unpackedColors.concat(color);
+    gridBlocksOnePositionBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, gridBlocksOnePositionBuffer);
+    var points = 0;
+    vertices = []
+      for( var y = 0.0; y > -15; --y ){
+        for( var x = 0.0; x <= 10; ++x ){
+          for( var z = 0.0; z <= 10; ++z ){
+            ++points;
+            vertices = vertices.concat([
+              x,        y,        z,
+              x,        (y + 1),  z,
+              (x + 1),  (y + 1),  z,
+              (x + 1),  y,        z,
+            ]);
+          }
         }
-    }
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(unpackedColors), gl.STATIC_DRAW);
-    gridVertexColorBuffer.itemSize = 4;
-    gridVertexColorBuffer.numItems = 24;
+      }
+      console.log(points);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+    gridBlocksOnePositionBuffer.itemSize = 3;
+    gridBlocksOnePositionBuffer.numItems = 7260; //plus one for every new row, for triangle hiding
 
-    gridVertexIndexBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, gridVertexIndexBuffer);
-    var gridVertexIndices = [
-        0, 1, 2,      0, 2, 3,    // Front face
-        4, 5, 6,      4, 6, 7,    // Back face
-        8, 9, 10,     8, 10, 11,  // Top face
-        12, 13, 14,   12, 14, 15, // Bottom face
-        16, 17, 18,   16, 18, 19, // Right face
-        20, 21, 22,   20, 22, 23  // Left face
-    ];
-    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(gridVertexIndices), gl.STATIC_DRAW);
-    gridVertexIndexBuffer.itemSize = 1;
-    gridVertexIndexBuffer.numItems = 36;
+    gridBlocksOneColorBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, gridBlocksOneColorBuffer);
+    colors = []
+    for( var y = 0; y <= 15; ++y ){
+      for( var x = 0; x <= 10; ++x ){
+        for( var z = 0.0; z <= 10; ++z ){
+          for( var fourVertices = 0; fourVertices < 4; ++fourVertices){
+            red = Math.random();
+            green = Math.random();
+            blue = Math.random();
+            colors = colors.concat([
+              [red, blue, green, 1.0],
+              [red, blue, green, 1.0],
+              [red, blue, green, 1.0],
+              [red, blue, green, 1.0],
+            ]);
+            /*
+            colors = colors.concat([
+            grid.getBlock(y,x,0),
+            grid.getBlock(y,x,1),
+            grid.getBlock(y,x,2),
+            grid.getBlock(y,x,3),
+            ]);*/
+          }
+        }
+      }
+    }
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
+    gridBlocksOneColorBuffer.itemSize = 4;
+    gridBlocksOneColorBuffer.numItems =7260;
+
+    gridBlocksVertexIndexBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, gridBlocksVertexIndexBuffer);
+    var gridBlocksVertexIndices = [];
+    for( var i = 0; i < 8; i += 4 ){
+      gridBlocksVertexIndices = gridBlocksVertexIndices.concat([
+        (0 + i), (1 + i), (2 + i),      (0 + i), (2 + i), (3 + i),    // Front face
+        (4 + i), (5 + i), (6 + i),      (4 + i), (6 + i), (7 + i),    // Back face
+        (0 + i), (1 + i), (5 + i),      (2 + i), (5 + i), (6 + i),    // Top face
+        (0 + i), (4 + i), (3 + i),      (3 + i), (4 + i), (7 + i),    // Bottom face
+        (3 + i), (2 + i), (6 + i),      (3 + i), (6 + i), (7 + i),    // Right face
+        (0 + i), (1 + i), (5 + i),      (0 + i), (5 + i), (4 + i),    // Left face
+      ]);
+    }
+
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(gridBlocksVertexIndices), gl.STATIC_DRAW);
+    gridBlocksVertexIndexBuffer.itemSize = 1;
+    gridBlocksVertexIndexBuffer.numItems = 64;
 
 
 
@@ -1123,18 +1113,23 @@ function drawScene() {
     //GRID ARRAY
 
     mvPushMatrix();
-    //mat4.rotate(mvMatrix, degToRad(45), [0, 1, 0]);
-    //mat4.translate(mvMatrix, [0, 6, -4]);
 
-    gl.bindBuffer(gl.ARRAY_BUFFER, gridVertexPositionBuffer);
-    gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, gridVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+    mat4.translate(mvMatrix, [ 0.0, 6.5, 0]);
 
-    gl.bindBuffer(gl.ARRAY_BUFFER, gridVertexColorBuffer);
-    gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, gridVertexColorBuffer.itemSize, gl.FLOAT, false, 0, 0);
+    gl.bindBuffer(gl.ARRAY_BUFFER, gridBlocksOnePositionBuffer);
+    gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, gridBlocksOnePositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, gridVertexIndexBuffer);
+    gl.bindBuffer(gl.ARRAY_BUFFER, gridBlocksOneColorBuffer);
+    gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, gridBlocksOneColorBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, gridBlocksVertexIndexBuffer);
     setMatrixUniforms();
-    gl.drawElements(gl.TRIANGLES, gridVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
+
+    if( showGrid ){
+      gl.drawElements(gl.TRIANGLE_STRIP, gridBlocksVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
+    }else{
+      gl.drawElements(gl.LINE_LOOP, gridBlocksVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
+    }
 
     mvPopMatrix();
 
