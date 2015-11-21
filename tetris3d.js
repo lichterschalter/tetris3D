@@ -451,7 +451,7 @@ function rotateObject( timeElapsed ) {
       rotating = false;
       rotationTrace = 0;
 
-      //console.log( "rotation: ", rotate_tetrimon );
+      console.log( "--rotation-- |x: " + rotateX_tetrimon + "| |y: " + rotateY_tetrimon + "| |z: " + rotateZ_tetrimon + "|");
     }
 }
 
@@ -660,7 +660,8 @@ var blueBg;
 function initBuffers() {
 
 
-  //TETRIMON BLOCK
+  //TWO X TWO
+
   two_x_twoVertexPositionBuffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, two_x_twoVertexPositionBuffer);
   var vertices = [];
@@ -1017,9 +1018,25 @@ function drawScene() {
 
         mat4.translate(mvMatrix, [positionX_tetrimon, positionY_tetrimon, positionZ_tetrimon]);
 
-        mat4.rotate(mvMatrix, degToRad(rotateX_tetrimon), [0, 0, 1]);
-        mat4.rotate(mvMatrix, degToRad(rotateY_tetrimon), [0, 1, 0]);
-        mat4.rotate(mvMatrix, degToRad(rotateZ_tetrimon), [1, 0, 0]);
+        //x-axis
+        if( (0 >= rotateX_tetrimon && rotateX_tetrimon > -90) || (270 < rotateX_tetrimon && rotateX_tetrimon <= 360) ){
+          mat4.rotate(mvMatrix, degToRad(rotateY_tetrimon),  [0, 1, 0]);
+          mat4.rotate(mvMatrix, degToRad(rotateZ_tetrimon),  [1, 0, 0]);
+        }
+        if( -90 >= rotateX_tetrimon && rotateX_tetrimon > -180 || 180 < rotateX_tetrimon && rotateX_tetrimon <= 270 ){
+          mat4.rotate(mvMatrix, degToRad(rotateY_tetrimon), [0, 1, 0]);
+          mat4.rotate(mvMatrix, degToRad(rotateZ_tetrimon),  [1, 0, 0]);
+        }
+        if( -180 >= rotateX_tetrimon && rotateX_tetrimon > -270 || 90 < rotateX_tetrimon && rotateX_tetrimon <= 180 ){
+          mat4.rotate(mvMatrix, degToRad(rotateY_tetrimon),  [0, 1, 0]);
+          mat4.rotate(mvMatrix, degToRad(rotateZ_tetrimon), [1, 0, 0]);
+        }
+        if( -270 >= rotateX_tetrimon && rotateX_tetrimon > -360 || 0 < rotateX_tetrimon && rotateX_tetrimon <= 90 ){
+          mat4.rotate(mvMatrix, degToRad(rotateY_tetrimon),  [0, 1, 0]);
+          mat4.rotate(mvMatrix, degToRad(rotateZ_tetrimon), [1, 0, 0]);
+        }
+        mat4.rotate(mvMatrix, degToRad(rotateX_tetrimon),    [0, 0, 1]);
+
 
         gl.bindBuffer(gl.ARRAY_BUFFER, two_x_twoVertexPositionBuffer);
         gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, two_x_twoVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
@@ -1036,7 +1053,7 @@ function drawScene() {
 
 
     //DRAW ONE X FOUR
-    if( tetrimonType === "one_x_four" ){
+    //if( tetrimonType === "one_x_four" ){
         mvPushMatrix();
         mat4.rotate(mvMatrix, degToRad(45), [0, 1, 0]);
         mat4.translate(mvMatrix, [2.5, 3.5, -4.5]);
@@ -1058,7 +1075,7 @@ function drawScene() {
         gl.drawElements(gl.TRIANGLES, one_x_fourVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
 
         mvPopMatrix();
-    }
+    //}
 
 
 
