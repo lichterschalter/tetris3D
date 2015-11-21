@@ -659,6 +659,95 @@ var greenBg;
 var blueBg;
 function initBuffers() {
 
+  //TETRIMON BLOCK
+
+  var tetBlockX = 2.0;
+  var tetBlockY = 2.0;
+  var tetBlockZ = 2.0;
+  tetrimonBlockVertexPositionBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, tetrimonBlockVertexPositionBuffer);
+  vertices = [
+      // Front face
+       0.0,        0.0,        tetBlockZ,
+       tetBlockX,  0.0,        tetBlockZ,
+       tetBlockX,  tetBlockY,  tetBlockZ,
+       0.0,        tetBlockY,  tetBlockZ,
+
+      // Back face
+       0.0,        0.0,        0.0,
+       0.0,        tetBlockY,  0.0,
+       tetBlockX,  tetBlockY,  0.0,
+       tetBlockX,  0.0,        0.0,
+
+      // Top face
+       0.0,        tetBlockY,  0.0,
+       0.0,        tetBlockY,  tetBlockZ,
+       tetBlockX,  tetBlockY,  tetBlockZ,
+       tetBlockX,  tetBlockY,  0.0,
+
+      // Bottom face
+       0.0,        0.0,        0.0,
+       tetBlockX,  0.0,        0.0,
+       tetBlockX,  0.0,        tetBlockZ,
+       0.0,        0.0,        tetBlockZ,
+
+      // Right face
+       tetBlockX,  0.0,        0.0,
+       tetBlockX,  tetBlockY,  0.0,
+       tetBlockX,  tetBlockY,  tetBlockZ,
+       tetBlockX,  0.0,        tetBlockZ,
+
+      // Left face
+       0.0,        0.0,        0.0,
+       0.0,        0.0,        tetBlockZ,
+       0.0,        tetBlockY,  tetBlockZ,
+       0.0,        tetBlockY,  0.0,
+  ];
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+  tetrimonBlockVertexPositionBuffer.itemSize = 3;
+  tetrimonBlockVertexPositionBuffer.numItems = 24;
+
+  tetrimonBlockVertexColorBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, tetrimonBlockVertexColorBuffer);
+  var red = Math.random();
+  var green = Math.random();
+  var blue = Math.random();
+  colors = [
+      [red, green, blue, 1.0], // Front face
+      [red, green, blue, 1.0], // Back face
+      [red, green, blue, 1.0], // Top face
+      [red, green, blue, 1.0], // Bottom face
+      [red, green, blue, 1.0], // Right face
+      [red, green, blue, 1.0]  // Left face
+  ];
+
+  var unpackedColors = [];
+  for (var i in colors) {
+      var color = colors[i];
+      for (var j = 0; j < 4; j++) {
+          unpackedColors = unpackedColors.concat(color);
+      }
+  }
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(unpackedColors), gl.STATIC_DRAW);
+  tetrimonBlockVertexColorBuffer.itemSize = 4;
+  tetrimonBlockVertexColorBuffer.numItems = 24;
+
+  tetrimonBlockVertexIndexBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, tetrimonBlockVertexIndexBuffer);
+  var tetrimonBlockVertexIndices = [
+      0, 1, 2,      0, 2, 3,    // Front face
+      4, 5, 6,      4, 6, 7,    // Back face
+      8, 9, 10,     8, 10, 11,  // Top face
+      12, 13, 14,   12, 14, 15, // Bottom face
+      16, 17, 18,   16, 18, 19, // Right face
+      20, 21, 22,   20, 22, 23  // Left face
+  ];
+  gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(tetrimonBlockVertexIndices), gl.STATIC_DRAW);
+  tetrimonBlockVertexIndexBuffer.itemSize = 1;
+  tetrimonBlockVertexIndexBuffer.numItems = 36;
+
+
+
     //TWO X TWO
 
     two_x_twoVertexPositionBuffer = gl.createBuffer();
@@ -829,118 +918,6 @@ function initBuffers() {
     one_x_fourVertexIndexBuffer.numItems = 36;
 
 
-/*
-    //GRID BLOCKS
-    //improve performance here!
-
-    gridBlocksOnePositionBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, gridBlocksOnePositionBuffer);
-    var points = 0;
-    vertices = [];
-      for( var y = 0.0; y > -15; --y ){
-        for( var x = 0.0; x < 10; ++x ){
-          if( x % 2 == 0 ){
-            for( var z = 0.0; z <= 10; ++z ){
-              ++points;
-              vertices = vertices.concat([
-                x,        y,        z,
-                x,        (y + 1),  z,
-                (x + 1),  (y + 1),  z,
-                (x + 1),  y,        z,
-              ]);
-              if( z > 0 ){
-                ++points;
-                vertices = vertices.concat([
-                  x,        y,        z,
-                  x,        (y + 1),  z,
-                  (x + 1),  (y + 1),  z,
-                  (x + 1),  y,        z,
-                ]);
-              }
-            }
-          }else{
-            for( var z = 10.0; z >= 0; --z ){
-              ++points;
-              vertices = vertices.concat([
-                x,        y,        z,
-                x,        (y + 1),  z,
-                (x + 1),  (y + 1),  z,
-                (x + 1),  y,        z,
-              ]);
-              if( z > 0 ){
-                ++points;
-                vertices = vertices.concat([
-                  x,        y,        z,
-                  x,        (y + 1),  z,
-                  (x + 1),  (y + 1),  z,
-                  (x + 1),  y,        z,
-                ]);
-              }
-            }
-          }
-        }
-      }
-      console.log(points);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
-    gridBlocksOnePositionBuffer.itemSize = 3;
-    gridBlocksOnePositionBuffer.numItems = 9900; //plus one for every new row, for triangle hiding
-
-    gridBlocksOneColorBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, gridBlocksOneColorBuffer);
-    colors = [];
-    for( var y = 0; y < 15; ++y ){
-      for( var x = 0; x < 10; ++x ){
-        for( var z = 0; z <= 10; ++z ){
-            var red = Math.random();
-            var green = Math.random();
-            var blue = Math.random();
-            //for (var j = 0; j < 4; j++) {
-              colors = colors.concat([
-                [red, green, blue, 1.0],
-              ]);
-            //}
-
-            /*
-            colors = colors.concat([
-            grid.getBlock(y,x,0),
-            grid.getBlock(y,x,1),
-            grid.getBlock(y,x,2),
-            grid.getBlock(y,x,3),
-            ]);
-        }
-      }
-    }
-    var unpackedColors = [];
-    for (var i in colors) {
-        var color = colors[i];
-        for (var j = 0; j < 8; j++) {
-            unpackedColors = unpackedColors.concat(color);
-        }
-    }
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(unpackedColors), gl.STATIC_DRAW);
-    gridBlocksOneColorBuffer.itemSize = 4;
-    gridBlocksOneColorBuffer.numItems = 6600;
-
-    gridBlocksVertexIndexBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, gridBlocksVertexIndexBuffer);
-    var gridBlocksVertexIndices = [];
-    for( var i = 0; i < 75666; i += 4 ){
-      gridBlocksVertexIndices = gridBlocksVertexIndices.concat([
-        (0 + i), (1 + i), (2 + i),      (2 + i), (3 + i), (0 + i),    // Back face
-        (3 + i), (0 + i), (4 + i),      (4 + i), (7 + i), (3 + i),    // Bottom face
-        (4 + i), (5 + i), (6 + i),      (4 + i), (6 + i), (7 + i),    // Front face
-        (0 + i), (1 + i), (5 + i),      (0 + i), (5 + i), (4 + i),    // Left face
-        (1 + i), (2 + i), (5 + i),      (5 + i), (6 + i), (2 + i),    // Top face
-        (3 + i), (2 + i), (6 + i),      (3 + i), (6 + i), (7 + i),    // Right face
-      ]);
-    }
-
-    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(gridBlocksVertexIndices), gl.STATIC_DRAW);
-    gridBlocksVertexIndexBuffer.itemSize = 1;
-    gridBlocksVertexIndexBuffer.numItems = 113364;
-*/
-
-
     //GRID BACK (WIREFRAME)
 
     //horizontal lines side
@@ -1093,6 +1070,32 @@ function drawScene() {
     mat4.multiply(mvMatrix, rotXStart);
 
 
+    //DRAW TETRIMON BLOCK
+    mvPushMatrix();
+    mat4.rotate(mvMatrix, degToRad(45), [0, 1, 0]);
+    mat4.translate(mvMatrix, [0, 6, -5]);
+
+    mat4.translate(mvMatrix, [positionX_tetrimon, positionY_tetrimon, positionZ_tetrimon]);
+
+    mat4.rotate(mvMatrix, degToRad(rotateX_tetrimon), [0, 0, 1]);
+    mat4.rotate(mvMatrix, degToRad(rotateY_tetrimon), [0, 1, 0]);
+    mat4.rotate(mvMatrix, degToRad(rotateZ_tetrimon), [1, 0, 0]);
+
+    mat4.translate(mvMatrix, [-1, -1, -1]);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, tetrimonBlockVertexPositionBuffer);
+    gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, tetrimonBlockVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, tetrimonBlockVertexColorBuffer);
+    gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, tetrimonBlockVertexColorBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, tetrimonBlockVertexIndexBuffer);
+    setMatrixUniforms();
+    gl.drawElements(gl.TRIANGLES, tetrimonBlockVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
+
+    mvPopMatrix();
+
+
     //DRAW TWO X TWO
     if( tetrimonType === "two_x_two" ){
         mvPushMatrix();
@@ -1144,32 +1147,6 @@ function drawScene() {
         mvPopMatrix();
     }
 
-
-/*
-    //GRID ARRAY
-
-    mvPushMatrix();
-
-    mat4.rotate(mvMatrix, degToRad(45), [0, 1, 0]);
-    mat4.translate(mvMatrix, [-5, 6, -5]);
-
-    gl.bindBuffer(gl.ARRAY_BUFFER, gridBlocksOnePositionBuffer);
-    gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, gridBlocksOnePositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
-
-    gl.bindBuffer(gl.ARRAY_BUFFER, gridBlocksOneColorBuffer);
-    gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, gridBlocksOneColorBuffer.itemSize, gl.FLOAT, false, 0, 0);
-
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, gridBlocksVertexIndexBuffer);
-    setMatrixUniforms();
-
-    if( showGrid ){
-      gl.drawElements(gl.TRIANGLE_STRIP, gridBlocksVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
-    }else{
-      gl.drawElements(gl.LINE_LOOP, gridBlocksVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
-    }
-
-    mvPopMatrix();
-*/
 
 
     //DRAW GRID BACK
