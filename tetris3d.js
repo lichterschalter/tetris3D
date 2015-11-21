@@ -829,7 +829,7 @@ function initBuffers() {
     one_x_fourVertexIndexBuffer.numItems = 36;
 
 
-
+/*
     //GRID BLOCKS
     //improve performance here!
 
@@ -906,7 +906,7 @@ function initBuffers() {
             grid.getBlock(y,x,1),
             grid.getBlock(y,x,2),
             grid.getBlock(y,x,3),
-            ]);*/
+            ]);
         }
       }
     }
@@ -931,14 +931,14 @@ function initBuffers() {
         (4 + i), (5 + i), (6 + i),      (4 + i), (6 + i), (7 + i),    // Front face
         (0 + i), (1 + i), (5 + i),      (0 + i), (5 + i), (4 + i),    // Left face
         (1 + i), (2 + i), (5 + i),      (5 + i), (6 + i), (2 + i),    // Top face
-        (3 + i), (2 + i), (6 + i),      (3 + i), (6 + i), (7 + i),    // Right face*/
+        (3 + i), (2 + i), (6 + i),      (3 + i), (6 + i), (7 + i),    // Right face
       ]);
     }
 
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(gridBlocksVertexIndices), gl.STATIC_DRAW);
     gridBlocksVertexIndexBuffer.itemSize = 1;
     gridBlocksVertexIndexBuffer.numItems = 113364;
-
+*/
 
 
     //GRID BACK (WIREFRAME)
@@ -1145,7 +1145,7 @@ function drawScene() {
     }
 
 
-
+/*
     //GRID ARRAY
 
     mvPushMatrix();
@@ -1169,7 +1169,7 @@ function drawScene() {
     }
 
     mvPopMatrix();
-
+*/
 
 
     //DRAW GRID BACK
@@ -1189,8 +1189,8 @@ function drawScene() {
       &&
       ( rotYTrace >= 0 && rotYTrace <= 135 || rotYTrace >= 315 && rotYTrace <= 360 )
 
-    ){*/
-
+    ){
+*/
         //--side I horizontal lines--
         mvPushMatrix();
 
