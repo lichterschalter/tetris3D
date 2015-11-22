@@ -124,7 +124,7 @@ var rotateZ_clockwise = false;
 var rotateZ_counterclock = false;
 var falling = false;
 var rotating = false;
-var showGrid = false;
+var showGridArray = false;
 function handleKeys() {
     if ( currentlyPressedKeys[83] ) {
         //s key
@@ -271,8 +271,8 @@ function handleKeys() {
         currentlyPressedKeys[13] = false;
     }
     if ( currentlyPressedKeys[71] ){
-        //g key + shift
-        showGrid = !showGrid;
+        //g key
+        showGridArray = !showGridArray;
         currentlyPressedKeys[71] = false;
     }
 }
@@ -1018,24 +1018,28 @@ function drawScene() {
 
         mat4.translate(mvMatrix, [positionX_tetrimon, positionY_tetrimon, positionZ_tetrimon]);
 
-        //x-axis
+        /*x-axis
         if( (0 >= rotateX_tetrimon && rotateX_tetrimon > -90) || (270 < rotateX_tetrimon && rotateX_tetrimon <= 360) ){
           mat4.rotate(mvMatrix, degToRad(rotateY_tetrimon),  [0, 1, 0]);
           mat4.rotate(mvMatrix, degToRad(rotateZ_tetrimon),  [1, 0, 0]);
         }
         if( -90 >= rotateX_tetrimon && rotateX_tetrimon > -180 || 180 < rotateX_tetrimon && rotateX_tetrimon <= 270 ){
-          mat4.rotate(mvMatrix, degToRad(rotateY_tetrimon), [0, 1, 0]);
+          mat4.rotate(mvMatrix, degToRad(rotateY_tetrimon),  [0, 1, 0]);
           mat4.rotate(mvMatrix, degToRad(rotateZ_tetrimon),  [1, 0, 0]);
         }
         if( -180 >= rotateX_tetrimon && rotateX_tetrimon > -270 || 90 < rotateX_tetrimon && rotateX_tetrimon <= 180 ){
           mat4.rotate(mvMatrix, degToRad(rotateY_tetrimon),  [0, 1, 0]);
-          mat4.rotate(mvMatrix, degToRad(rotateZ_tetrimon), [1, 0, 0]);
+          mat4.rotate(mvMatrix, degToRad(rotateZ_tetrimon),  [1, 0, 0]);
         }
         if( -270 >= rotateX_tetrimon && rotateX_tetrimon > -360 || 0 < rotateX_tetrimon && rotateX_tetrimon <= 90 ){
           mat4.rotate(mvMatrix, degToRad(rotateY_tetrimon),  [0, 1, 0]);
-          mat4.rotate(mvMatrix, degToRad(rotateZ_tetrimon), [1, 0, 0]);
-        }
-        mat4.rotate(mvMatrix, degToRad(rotateX_tetrimon),    [0, 0, 1]);
+          mat4.rotate(mvMatrix, degToRad(rotateZ_tetrimon),  [1, 0, 0]);
+        }*/
+
+
+        mat4.rotate(mvMatrix, degToRad(rotateZ_tetrimon),  [1, 0, 0]);
+        mat4.rotate(mvMatrix, degToRad(rotateY_tetrimon),  [0, 1, 0]);
+        mat4.rotate(mvMatrix, degToRad(rotateX_tetrimon),  [0, 0, 1]);
 
 
         gl.bindBuffer(gl.ARRAY_BUFFER, two_x_twoVertexPositionBuffer);
@@ -1311,6 +1315,82 @@ function drawScene() {
 
     mvPopMatrix();
 */
+
+    if( showGridArray ){
+      for( var i = 0; i <= 15; ++i ){
+          mvPushMatrix();
+
+          mat4.translate(mvMatrix, [0, -8 + i, 0]);
+
+          mat4.rotate(mvMatrix, degToRad(-45), [0, 1, 0]);
+          mat4.rotate(mvMatrix, degToRad(-90), [1, 0, 0]);
+
+          gl.bindBuffer(gl.ARRAY_BUFFER, gridBackBottomPositionBuffer);
+          gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, gridBackBottomPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+          gl.bindBuffer(gl.ARRAY_BUFFER, gridBackBottomColorBuffer);
+          gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, gridBackBottomColorBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+          setMatrixUniforms();
+          gl.drawArrays(gl.LINES, 0, gridBackBottomPositionBuffer.numItems);
+
+          mvPopMatrix();
+
+          //--bottom vertical lines--
+          mvPushMatrix();
+
+          mat4.translate(mvMatrix, [-7, -8 + i, 7]);
+
+          mat4.rotate(mvMatrix, degToRad(45), [0, 1, 0]);
+          mat4.rotate(mvMatrix, degToRad(-90), [1, 0, 0]);
+
+          gl.bindBuffer(gl.ARRAY_BUFFER, gridBackBottomPositionBuffer);
+          gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, gridBackBottomPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+          gl.bindBuffer(gl.ARRAY_BUFFER, gridBackBottomColorBuffer);
+          gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, gridBackBottomColorBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+          setMatrixUniforms();
+          gl.drawArrays(gl.LINES, 0, gridBackBottomPositionBuffer.numItems);
+
+          mvPopMatrix();
+      }
+      for( var i = 0; i <= 10; ++i ){
+          //--side II horizontal lines--
+          mvPushMatrix();
+
+          mat4.rotate(mvMatrix, degToRad(-45), [0, 1, 0]);
+          mat4.translate(mvMatrix, [0, 7, i]);
+
+          gl.bindBuffer(gl.ARRAY_BUFFER, gridBackHorizontalPositionBuffer);
+          gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, gridBackHorizontalPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+          gl.bindBuffer(gl.ARRAY_BUFFER, gridBackHorizontalColorBuffer);
+          gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, gridBackHorizontalColorBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+          setMatrixUniforms();
+          gl.drawArrays(gl.LINES, 0, gridBackHorizontalPositionBuffer.numItems);
+
+          mvPopMatrix();
+
+          //--side II vertical lines--
+          mvPushMatrix();
+
+          mat4.rotate(mvMatrix, degToRad(-45), [0, 1, 0]);
+          mat4.translate(mvMatrix, [0, 7, i]);
+
+          gl.bindBuffer(gl.ARRAY_BUFFER, gridBackVerticalPositionBuffer);
+          gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, gridBackVerticalPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+          gl.bindBuffer(gl.ARRAY_BUFFER, gridBackVerticalColorBuffer);
+          gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, gridBackVerticalColorBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+          setMatrixUniforms();
+          gl.drawArrays(gl.LINES, 0, gridBackVerticalPositionBuffer.numItems);
+
+          mvPopMatrix();
+      }
+    }
 
     //pop general grid mvMatrix
     mvPopMatrix();
