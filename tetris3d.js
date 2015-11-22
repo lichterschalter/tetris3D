@@ -1104,12 +1104,23 @@ function drawScene() {
 
         //DRAW ONE X FOUR
         if( tetrimonType === "one_x_four" ){
+
+            mvPushMatrix();
+
+            //mat4.translate(mvMatrix, [1.5, -3.5, +4.5]);
+
             for( var i = 0; i < 4; ++i ){
               mvPushMatrix();
               mat4.rotate(mvMatrix, degToRad(45), [0, 1, 0]);
               mat4.translate(mvMatrix, [i+1.5, 3.5, -4.5]);
 
               mat4.translate(mvMatrix, [positionX_tetrimon, positionY_tetrimon, positionZ_tetrimon]);
+
+              mat4.translate(mvMatrix, [-i+1, 0, 0]);
+              mat4.rotate(mvMatrix, degToRad(rotateZ_tetrimon),  [1, 0, 0]);
+              mat4.rotate(mvMatrix, degToRad(rotateY_tetrimon),  [0, 1, 0]);
+              mat4.rotate(mvMatrix, degToRad(rotateX_tetrimon),  [0, 0, 1]);
+              mat4.translate(mvMatrix, [i-1, 0, 0]);
 
               gl.bindBuffer(gl.ARRAY_BUFFER, moonVertexPositionBuffer);
               gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, moonVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
@@ -1123,6 +1134,7 @@ function drawScene() {
 
               mvPopMatrix();
             }
+            mvPopMatrix();
         }
     }else{
 
@@ -1182,9 +1194,9 @@ function drawScene() {
 
           mat4.translate(mvMatrix, [positionX_tetrimon, positionY_tetrimon, positionZ_tetrimon]);
 
-          mat4.rotate(mvMatrix, degToRad(rotateX_tetrimon), [0, 0, 1]);
-          mat4.rotate(mvMatrix, degToRad(rotateY_tetrimon), [0, 1, 0]);
           mat4.rotate(mvMatrix, degToRad(rotateZ_tetrimon), [1, 0, 0]);
+          mat4.rotate(mvMatrix, degToRad(rotateY_tetrimon), [0, 1, 0]);
+          mat4.rotate(mvMatrix, degToRad(rotateX_tetrimon), [0, 0, 1]);
 
           gl.bindBuffer(gl.ARRAY_BUFFER, one_x_fourVertexPositionBuffer);
           gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, one_x_fourVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
