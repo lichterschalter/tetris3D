@@ -127,12 +127,12 @@ var rotating = false;
 var showGridArray = false;
 var showSpheres = false;
 function handleKeys() {
-    if ( currentlyPressedKeys[65] && currentlyPressedKeys[16] ) {
-        //a key + shift
+    if ( currentlyPressedKeys[83] && currentlyPressedKeys[16] ) {
+        //s key + shift
         zoom += 0.05;
     }
-    if ( currentlyPressedKeys[65] && !currentlyPressedKeys[16] ) {
-        //a key
+    if ( currentlyPressedKeys[83] && !currentlyPressedKeys[16] ) {
+        //s key
         if( zoom > 0 ){
           zoom -= 0.05;
         }else{
@@ -227,14 +227,14 @@ function handleKeys() {
     if (currentlyPressedKeys[39] || currentlyPressedKeys[54]) {
         // Right key or 6
         //currentObject.moveObjectRight();
-        positionX_tetrimon += 1;
+        positionZ_tetrimon += 1;
         currentlyPressedKeys[39] = false;
         currentlyPressedKeys[54] = false;
     }
     if (currentlyPressedKeys[37] || currentlyPressedKeys[52]) {
         // Left key or 4
         //currentObject.moveObjectLeft();
-        positionX_tetrimon -= 1;
+        positionZ_tetrimon -= 1;
         currentlyPressedKeys[37] = false;
         currentlyPressedKeys[52] = false;
     }
@@ -242,7 +242,7 @@ function handleKeys() {
         // Up key or 8
         //switchGravityOff();
         //falling = false;
-        positionZ_tetrimon += 1;
+        positionX_tetrimon -= 1;
         currentlyPressedKeys[38] = false;
         currentlyPressedKeys[56] = false;
     }
@@ -250,7 +250,7 @@ function handleKeys() {
         // Down key or 2
         //switchGravityOff();
         //falling = false;
-        positionZ_tetrimon -= 1;
+        positionX_tetrimon += 1;
         currentlyPressedKeys[40] = false;
         currentlyPressedKeys[50] = false;
     }
@@ -320,7 +320,7 @@ function handleMouseMove(event) {
         return;
     }
 
-    if( mouseRightDown){
+    if( mouseLeftDown){
         var newX = event.clientX;
         var newY = event.clientY;
 
@@ -340,7 +340,7 @@ function handleMouseMove(event) {
         lastMouseY = newY;
     }
 
-    if( mouseLeftDown){
+    if( mouseRightDown){
         var newX = event.clientX;
         var newY = event.clientY;
 
@@ -1064,7 +1064,7 @@ function initBuffers() {
 }
 
 
-var perspectiveView = true;
+var perspectiveView;
 var zoom = 1;
 var rotateX_tetrimon = 0;
 var rotateY_tetrimon = 0;
@@ -1639,8 +1639,10 @@ function initGame() {
     //Rotation at the beginning of the game
     mat4.identity(rotXStart);
     mat4.identity(rotYStart);
-    mat4.rotate(rotXStart, degToRad(0), [1, 0, 0]);
+    mat4.rotate(rotXStart, degToRad(90), [1, 0, 0]);
     mat4.rotate(rotYStart, degToRad(0), [0, 1, 0]);
+
+    perspectiveView = false;
 
 }
 
