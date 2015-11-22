@@ -320,7 +320,7 @@ function handleMouseMove(event) {
         return;
     }
 
-    if( mouseLeftDown){
+    if( mouseRightDown){
         var newX = event.clientX;
         var newY = event.clientY;
 
@@ -340,7 +340,7 @@ function handleMouseMove(event) {
         lastMouseY = newY;
     }
 
-    if( mouseRightDown){
+    if( mouseLeftDown){
         var newX = event.clientX;
         var newY = event.clientY;
 
@@ -460,6 +460,7 @@ function rotateObject( timeElapsed ) {
       console.log( "--rotation-- |x: " + rotateX_tetrimon + "| |y: " + rotateY_tetrimon + "| |z: " + rotateZ_tetrimon + "|");
     }
 }
+
 
 var gravityIsOn = false;
 function switchGravityOn() {
@@ -669,6 +670,9 @@ var greenTwo_x_two;
 var redOne_x_four;
 var blueOne_x_four;
 var greenOne_x_four;
+var redlTetrimon;
+var bluelTetrimon;
+var greenlTetrimon;
 function initBuffers() {
 
   //COLOR OF THE TETRIMONS
@@ -678,6 +682,9 @@ function initBuffers() {
   redOne_x_four = Math.random();
   greenOne_x_four = Math.random();
   blueOne_x_four = Math.random();
+  redlTetrimon = Math.random();
+  bluelTetrimon = Math.random();
+  greenlTetrimon = Math.random();
 
   //SPHERE
   var latitudeBands = 30;
@@ -749,6 +756,17 @@ function initBuffers() {
       colors = []
       for ( var i = 0; i < (vertexPositionData.length / 3); i++ ) {
           colors = colors.concat([redOne_x_four, greenOne_x_four, blueOne_x_four, 1.0]);
+      }
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
+      moonColorBuffer.itemSize = 4;
+      moonColorBuffer.numItems = vertexPositionData.length / 3;
+  }
+  if( tetrimonType === "lTetrimon" ){
+      moonColorBuffer = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, moonColorBuffer);
+      colors = []
+      for ( var i = 0; i < (vertexPositionData.length / 3); i++ ) {
+          colors = colors.concat([redlTetrimon, greenlTetrimon, bluelTetrimon, 1.0]);
       }
       gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
       moonColorBuffer.itemSize = 4;
@@ -864,6 +882,116 @@ function initBuffers() {
   gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(two_x_twoVertexIndices), gl.STATIC_DRAW);
   two_x_twoVertexIndexBuffer.itemSize = 1;
   two_x_twoVertexIndexBuffer.numItems = 144;
+
+
+  //L-TETRIMON
+
+  lTetrimonVertexPositionBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, lTetrimonVertexPositionBuffer);
+  var vertices = [];
+  for( var i = 0; i < 4; ++i ){
+    if( i === 0 ){
+      var tetBlockX =  1.0;
+      var tetBlockY =  1.0;
+      var tetBlockZ =  1.0;
+    }
+    if( i === 1 ){
+      var tetBlockX = -1.0;
+      var tetBlockY =  1.0;
+      var tetBlockZ =  1.0;
+    }
+    if( i === 2 ){
+      var tetBlockX = -2.0;
+      var tetBlockY =  1.0;
+      var tetBlockZ =  1.0;
+    }
+    if( i === 3 ){
+      var tetBlockX =  1.0;
+      var tetBlockY = -1.0;
+      var tetBlockZ =  1.0;
+    }
+    vertices = vertices.concat([
+        // Front face
+         0.0,        0.0,        tetBlockZ,
+         tetBlockX,  0.0,        tetBlockZ,
+         tetBlockX,  tetBlockY,  tetBlockZ,
+         0.0,        tetBlockY,  tetBlockZ,
+
+        // Back face
+         0.0,        0.0,        0.0,
+         0.0,        tetBlockY,  0.0,
+         tetBlockX,  tetBlockY,  0.0,
+         tetBlockX,  0.0,        0.0,
+
+        // Top face
+         0.0,        tetBlockY,  0.0,
+         0.0,        tetBlockY,  tetBlockZ,
+         tetBlockX,  tetBlockY,  tetBlockZ,
+         tetBlockX,  tetBlockY,  0.0,
+
+        // Bottom face
+         0.0,        0.0,        0.0,
+         tetBlockX,  0.0,        0.0,
+         tetBlockX,  0.0,        tetBlockZ,
+         0.0,        0.0,        tetBlockZ,
+
+        // Right face
+         tetBlockX,  0.0,        0.0,
+         tetBlockX,  tetBlockY,  0.0,
+         tetBlockX,  tetBlockY,  tetBlockZ,
+         tetBlockX,  0.0,        tetBlockZ,
+
+        // Left face
+         0.0,        0.0,        0.0,
+         0.0,        0.0,        tetBlockZ,
+         0.0,        tetBlockY,  tetBlockZ,
+         0.0,        tetBlockY,  0.0,
+    ]);
+  }
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+  lTetrimonVertexPositionBuffer.itemSize = 3;
+  lTetrimonVertexPositionBuffer.numItems = 96;
+
+  lTetrimonVertexColorBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, lTetrimonVertexColorBuffer);
+  colors = [
+      [redlTetrimon, greenlTetrimon, bluelTetrimon, 1.0], // Front face
+      [redlTetrimon, greenlTetrimon, bluelTetrimon, 1.0], // Back face
+      [redlTetrimon, greenlTetrimon, bluelTetrimon, 1.0], // Top face
+      [redlTetrimon, greenlTetrimon, bluelTetrimon, 1.0], // Bottom face
+      [redlTetrimon, greenlTetrimon, bluelTetrimon, 1.0], // Right face
+      [redlTetrimon, greenlTetrimon, bluelTetrimon, 1.0]  // Left face
+  ];
+
+  var unpackedColors = [];
+  for ( var k = 0; k < 4; ++k ){
+    for ( var i in colors) {
+        var color = colors[i];
+        for (var j = 0; j < 4; j++) {
+            unpackedColors = unpackedColors.concat(color);
+        }
+    }
+  }
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(unpackedColors), gl.STATIC_DRAW);
+  lTetrimonVertexColorBuffer.itemSize = 4;
+  lTetrimonVertexColorBuffer.numItems = 96;
+
+  lTetrimonVertexIndexBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, lTetrimonVertexIndexBuffer);
+  var lTetrimonVertexIndices = [];
+  for( var i = 0; i < 96; i += 24){
+    lTetrimonVertexIndices = lTetrimonVertexIndices.concat([
+        (0+i), (1+i), (2+i),      (0+i),  (2+i), (3+i),    // Front face
+        (4+i), (5+i), (6+i),      (4+i),  (6+i), (7+i),    // Back face
+        (8+i), (9+i), (10+i),     (8+i), (10+i), (11+i),   // Top face
+        (12+i), (13+i), (14+i),   (12+i), (14+i), (15+i),  // Bottom face
+        (16+i), (17+i), (18+i),   (16+i), (18+i), (19+i),  // Right face
+        (20+i), (21+i), (22+i),   (20+i), (22+i), (23+i)   // Left face
+    ]);
+  }
+  gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(lTetrimonVertexIndices), gl.STATIC_DRAW);
+  lTetrimonVertexIndexBuffer.itemSize = 1;
+  lTetrimonVertexIndexBuffer.numItems = 144;
 
 
     //ONE X FOUR
@@ -1065,7 +1193,7 @@ function initBuffers() {
 
 
 var perspectiveView;
-var zoom = 1;
+var zoom = 0.5;
 var rotateX_tetrimon = 0;
 var rotateY_tetrimon = 0;
 var rotateZ_tetrimon = 0;
@@ -1132,6 +1260,7 @@ function drawScene() {
             }
         }
 
+        //DRAW TWO X TWO
         if( tetrimonType === "two_x_two" ){
             for( var i = 0; i < 2; ++i ){
               mvPushMatrix();
@@ -1183,7 +1312,61 @@ function drawScene() {
 
               mvPopMatrix();
             }
-        }
+
+          }
+
+          //DRAW L-TETRIMON
+          if( tetrimonType === "lTetrimon" ){
+              for( var i = 0; i < 3; ++i ){
+                mvPushMatrix();
+                mat4.rotate(mvMatrix, degToRad(45), [0, 1, 0]);
+                mat4.translate(mvMatrix, [i-1.5, 6.5, -4.5]);
+
+                mat4.translate(mvMatrix, [positionX_tetrimon, positionY_tetrimon, positionZ_tetrimon]);
+
+                mat4.translate(mvMatrix, [-i+1.5, -0.5, -0.5]);
+                mat4.rotate(mvMatrix, degToRad(rotateZ_tetrimon),  [1, 0, 0]);
+                mat4.rotate(mvMatrix, degToRad(rotateY_tetrimon),  [0, 1, 0]);
+                mat4.rotate(mvMatrix, degToRad(rotateX_tetrimon),  [0, 0, 1]);
+                mat4.translate(mvMatrix, [i-1.5, 0.5, 0.5]);
+
+                gl.bindBuffer(gl.ARRAY_BUFFER, moonVertexPositionBuffer);
+                gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, moonVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+                gl.bindBuffer(gl.ARRAY_BUFFER, moonColorBuffer);
+                gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, moonColorBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, moonVertexIndexBuffer);
+                setMatrixUniforms();
+                gl.drawElements(gl.TRIANGLES, moonVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
+
+                mvPopMatrix();
+              }
+
+              mvPushMatrix();
+              mat4.rotate(mvMatrix, degToRad(45), [0, 1, 0]);
+              mat4.translate(mvMatrix, [0.5, 5.5, -4.5]);
+
+              mat4.translate(mvMatrix, [positionX_tetrimon, positionY_tetrimon, positionZ_tetrimon]);
+
+              mat4.translate(mvMatrix, [-0.5, 0.5, -0.5]);
+              mat4.rotate(mvMatrix, degToRad(rotateZ_tetrimon),  [1, 0, 0]);
+              mat4.rotate(mvMatrix, degToRad(rotateY_tetrimon),  [0, 1, 0]);
+              mat4.rotate(mvMatrix, degToRad(rotateX_tetrimon),  [0, 0, 1]);
+              mat4.translate(mvMatrix, [0.5, -0.5, 0.5]);
+
+              gl.bindBuffer(gl.ARRAY_BUFFER, moonVertexPositionBuffer);
+              gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, moonVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+              gl.bindBuffer(gl.ARRAY_BUFFER, moonColorBuffer);
+              gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, moonColorBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+              gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, moonVertexIndexBuffer);
+              setMatrixUniforms();
+              gl.drawElements(gl.TRIANGLES, moonVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
+
+              mvPopMatrix();
+          }
 
     }else{
 
@@ -1215,7 +1398,6 @@ function drawScene() {
             mat4.rotate(mvMatrix, degToRad(rotateZ_tetrimon),  [1, 0, 0]);
           }*/
 
-
           mat4.rotate(mvMatrix, degToRad(rotateZ_tetrimon),  [1, 0, 0]);
           mat4.rotate(mvMatrix, degToRad(rotateY_tetrimon),  [0, 1, 0]);
           mat4.rotate(mvMatrix, degToRad(rotateX_tetrimon),  [0, 0, 1]);
@@ -1230,6 +1412,33 @@ function drawScene() {
           gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, two_x_twoVertexIndexBuffer);
           setMatrixUniforms();
           gl.drawElements(gl.TRIANGLES, two_x_twoVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
+
+          mvPopMatrix();
+      }
+
+
+      //DRAW L-Tetrimon
+      if( tetrimonType === "lTetrimon" ){
+          mvPushMatrix();
+          mat4.rotate(mvMatrix, degToRad(45), [0, 1, 0]);
+          mat4.translate(mvMatrix, [0, 6, -5]);
+
+          mat4.translate(mvMatrix, [positionX_tetrimon, positionY_tetrimon, positionZ_tetrimon]);
+
+          mat4.rotate(mvMatrix, degToRad(rotateZ_tetrimon),  [1, 0, 0]);
+          mat4.rotate(mvMatrix, degToRad(rotateY_tetrimon),  [0, 1, 0]);
+          mat4.rotate(mvMatrix, degToRad(rotateX_tetrimon),  [0, 0, 1]);
+
+
+          gl.bindBuffer(gl.ARRAY_BUFFER, lTetrimonVertexPositionBuffer);
+          gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, lTetrimonVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+          gl.bindBuffer(gl.ARRAY_BUFFER, lTetrimonVertexColorBuffer);
+          gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, lTetrimonVertexColorBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+          gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, lTetrimonVertexIndexBuffer);
+          setMatrixUniforms();
+          gl.drawElements(gl.TRIANGLES, lTetrimonVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
 
           mvPopMatrix();
       }
@@ -1609,17 +1818,21 @@ function getRandomNumber(min, max) {
 var tetrimonType;
 //var tetrimonType = "two_x_two";
 function typeOfCurrentTetrimon() {
-    type = getRandomNumber(0,1);
-    type = 0;
+    type = getRandomNumber(0,2);
+    type = 2;
 
     if( type === 0){
-    //currentObject = new two_x_two();
-    tetrimonType = "two_x_two";
+        //currentObject = new two_x_two();
+        tetrimonType = "two_x_two";
     }
 
     if( type === 1){
-    //currentObject = new one_x_four();
-    tetrimonType = "one_x_four";
+        //currentObject = new one_x_four();
+        tetrimonType = "one_x_four";
+    }
+
+    if( type === 2){
+        tetrimonType = "lTetrimon";
     }
 }
 
@@ -1639,10 +1852,10 @@ function initGame() {
     //Rotation at the beginning of the game
     mat4.identity(rotXStart);
     mat4.identity(rotYStart);
-    mat4.rotate(rotXStart, degToRad(90), [1, 0, 0]);
+    mat4.rotate(rotXStart, degToRad(0), [1, 0, 0]);
     mat4.rotate(rotYStart, degToRad(0), [0, 1, 0]);
 
-    perspectiveView = false;
+    perspectiveView = true;
 
 }
 
