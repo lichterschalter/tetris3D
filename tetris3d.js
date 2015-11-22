@@ -126,11 +126,11 @@ var falling = false;
 var rotating = false;
 var showGridArray = false;
 function handleKeys() {
-    if ( currentlyPressedKeys[83] ) {
-        //s key
+    if ( currentlyPressedKeys[65] && currentlyPressedKeys[16] ) {
+        //a key + shift
         zoom += 0.05;
     }
-    if ( currentlyPressedKeys[65] ) {
+    if ( currentlyPressedKeys[65] && !currentlyPressedKeys[16] ) {
         //a key
         if( zoom > 0 ){
           zoom -= 0.05;
@@ -659,6 +659,71 @@ var greenBg;
 var blueBg;
 function initBuffers() {
 
+  //SPHERE
+  var latitudeBands = 30;
+  var longitudeBands = 30;
+  var radius = 0.5;
+
+  var vertexPositionData = [];
+  for (var latNumber=0; latNumber <= latitudeBands; latNumber++) {
+      var theta = latNumber * Math.PI / latitudeBands;
+      var sinTheta = Math.sin(theta);
+      var cosTheta = Math.cos(theta);
+
+      for (var longNumber=0; longNumber <= longitudeBands; longNumber++) {
+          var phi = longNumber * 2 * Math.PI / longitudeBands;
+          var sinPhi = Math.sin(phi);
+          var cosPhi = Math.cos(phi);
+
+          var x = cosPhi * sinTheta;
+          var y = cosTheta;
+          var z = sinPhi * sinTheta;
+
+          vertexPositionData.push(radius * x);
+          vertexPositionData.push(radius * y);
+          vertexPositionData.push(radius * z);
+      }
+  }
+
+  var indexData = [];
+  for (var latNumber=0; latNumber < latitudeBands; latNumber++) {
+      for (var longNumber=0; longNumber < longitudeBands; longNumber++) {
+          var first = (latNumber * (longitudeBands + 1)) + longNumber;
+          var second = first + longitudeBands + 1;
+          indexData.push(first);
+          indexData.push(second);
+          indexData.push(first + 1);
+
+          indexData.push(second);
+          indexData.push(second + 1);
+          indexData.push(first + 1);
+      }
+  }
+
+  moonVertexPositionBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, moonVertexPositionBuffer);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertexPositionData), gl.STATIC_DRAW);
+  moonVertexPositionBuffer.itemSize = 3;
+  moonVertexPositionBuffer.numItems = vertexPositionData.length / 3;
+
+  moonVertexIndexBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, moonVertexIndexBuffer);
+  gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indexData), gl.STATIC_DRAW);
+  moonVertexIndexBuffer.itemSize = 1;
+  moonVertexIndexBuffer.numItems = indexData.length;
+
+  moonColorBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, moonColorBuffer);
+  red = Math.random();
+  green = Math.random();
+  blue = Math.random();
+  colors = []
+  for ( var i = 0; i < (vertexPositionData.length / 3); i++ ) {
+      colors = colors.concat([red, green, blue, 1.0]);
+  }
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
+  moonColorBuffer.itemSize = 4;
+  moonColorBuffer.numItems = vertexPositionData.length / 3;
 
   //TWO X TWO
 
@@ -1008,6 +1073,24 @@ function drawScene() {
     //START ROTATION
     mat4.multiply(mvMatrix, rotYStart);
     mat4.multiply(mvMatrix, rotXStart);
+
+
+    //DRAW SPHERE
+    mvPushMatrix();
+    mat4.translate(mvMatrix, [0, 0, -10]);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, moonVertexPositionBuffer);
+    gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, moonVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, moonColorBuffer);
+    gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, moonColorBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, moonVertexIndexBuffer);
+    setMatrixUniforms();
+    gl.drawElements(gl.TRIANGLES, moonVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
+
+    mvPopMatrix();
+
 
 
     //DRAW TWO X TWO
